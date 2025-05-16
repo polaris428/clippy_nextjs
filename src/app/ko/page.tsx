@@ -2,8 +2,7 @@ import WelcomeLayout from '@/app/ko/WelcomeLayout';
 import styles from './Welcome.module.css';
 
 import LoginButton from './LoginButton';
-
-
+import Image from 'next/image';
 
 const Welcome = () => {
   return (
@@ -23,12 +22,14 @@ const Welcome = () => {
         </section>
 
         <section className={styles.right}>
-          <img
-            src="/img/welcome_illustration.svg"
-            alt="일러스트"
-            className={styles.image}
-            draggable={false}
-          />
+          <div className="relative w-full h-full">
+            <Image
+              src="/img/welcome_illustration.svg"
+              alt="예시 이미지"
+              fill
+              className="object-contain"
+            />
+          </div>
         </section>
       </main>
     </WelcomeLayout>

@@ -2,9 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 @import 'pretendard/dist/web/static/pretendard.css';
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --primary-color: #FDBF0AFF;
+  --primary-color-hover : #e6b009;
 }
 
 @theme inline {
