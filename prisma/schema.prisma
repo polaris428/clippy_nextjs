@@ -1,0 +1,67 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String    @id @default(cuid())
+  firebaseUid    String    @unique
+  email          String    @unique
+  name           String    
+  folders        Folder[]  @relation("OwnerFolders")
+  sharedFolders  UserFolderShare[] // 폴더 공유받은 목록
+  createdAt      DateTime  @default(now())
+}
+
+model Folder {
+  id         String    @id @default(cuid())
+  name       String
+  ownerId    String
+  owner      User      @relation("OwnerFolders", fields: [ownerId], references: [id])
+  links      Link[]
+  shares     UserFolderShare[]
+  createdAt  DateTime  @default(now())
+}
+
+model UserFolderShare {
+  id       String    @id @default(cuid())
+  userId   String
+  folderId String
+
+  user     User   @relation(fields: [userId], references: [id])
+  folder   Folder @relation(fields: [folderId], references: [id])
+
+  @@unique([userId, folderId])
+}
+
+model Link {
+  id         String    @id @default(cuid())
+  title      String
+  url        String
+  folderId   String
+  folder     Folder    @relation(fields: [folderId], references: [id])
+  linkTags   LinkTag[]
+  createdAt  DateTime  @default(now())
+}
+
+model Tag {
+  id        String       @id @default(cuid())
+  name      String    @unique
+  linkTags  LinkTag[]
+}
+
+model LinkTag {
+  id       String    @id @default(cuid())
+  linkId   String
+  tagId    String
+  link     Link   @relation(fields: [linkId], references: [id])
+  tag      Tag    @relation(fields: [tagId], references: [id])
+
+  @@unique([linkId, tagId])
+}
