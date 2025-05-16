@@ -1,0 +1,37 @@
+/* src/components/Welcome/Welcome.module.css */
+
+.main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4rem 6rem;
+  padding-left: 15%;
+  gap: 4rem;
+}
+
+.left {
+  flex: 1;
+}
+
+.right {
+  flex: 1;
+  text-align: center;
+}
+
+.HomepageHero_Heading {
+  font-size: 3rem;
+  font-weight: bold;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.HomepageHero_Subheading {
+  font-size: 1.25rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.image {
+  max-width: 100%;
+  height: auto;
+}
