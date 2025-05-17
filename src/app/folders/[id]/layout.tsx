@@ -1,4 +1,3 @@
-// app/folders/layout.tsx
 import Sidebar from '@/components/Sidebar';
 
 export default function FolderLayout({ children }: { children: React.ReactNode }) {

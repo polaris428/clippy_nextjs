@@ -8,8 +8,8 @@ type FolderPageProps = {
     };
 };
 
-export async function generateMetadata({ params }: FolderPageProps): Promise<Metadata> {
-    const { id } = await params
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+    const id = (await params).id
     const folder = await prisma.folder.findUnique({
         where: { id: id },
     });

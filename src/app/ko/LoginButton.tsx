@@ -12,8 +12,7 @@ export default function LoginButton() {
       const user = await signInWithGoogle();
       if (!user) return;
 
-      const token = await user.getIdToken(); // ✅ 자동 갱신됨
-      localStorage.setItem('token', token);
+      const token = await user.getIdToken(); // Firebase에서 JWT 발급
       const name = user.displayName || '익명';
 
       const res = await fetch('/api/auth/login', {
@@ -23,6 +22,7 @@ export default function LoginButton() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ name }),
+        credentials: 'include', // ✅ 쿠키로 저장하려면 꼭 필요
       });
 
       if (!res.ok) {
@@ -32,9 +32,9 @@ export default function LoginButton() {
       }
 
       const { folders } = await res.json();
-      localStorage.setItem('folders', JSON.stringify(folders));
-
       const firstFolderId = folders?.[0]?.id;
+
+      // ✅ 서버에서 받은 폴더 ID로 라우팅
       if (firstFolderId) {
         router.push(`/folders/${encodeURIComponent(firstFolderId)}`);
       } else {
