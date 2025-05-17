@@ -1,12 +1,17 @@
-'use client'; import React from 'react';
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
 import styles from './DefaultButton.module.css';
 
-interface ButtonProps {
+interface CDSButtonProps {
   buttonText: string;
   onClick?: () => void;
   disabled?: boolean;
   fullWidth?: boolean;
   children?: React.ReactNode;
+  as?: 'div' | 'link';
+  href?: string;
 }
 
 const CDSButton = ({
@@ -15,16 +20,41 @@ const CDSButton = ({
   disabled = false,
   fullWidth = true,
   children,
-}: ButtonProps) => {
+  as = 'div',
+  href,
+}: CDSButtonProps) => {
+  const className = `${styles.button} ${fullWidth ? styles.fullWidth : ''} ${disabled ? styles.disabled : ''}`;
+
+  if (as === 'link' && href) {
+    return (
+      <Link href={href} className={className} aria-disabled={disabled}>
+        <span className={styles.text}>{buttonText}</span>
+        {children}
+      </Link>
+    );
+  }
+
+  // ⛳ div 모드 (기본)
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (disabled) return;
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   return (
-    <button
-      className={`${styles.button} ${fullWidth ? styles.fullWidth : ''}`}
-      onClick={onClick}
-      disabled={disabled}
+    <div
+      role="button"
+      tabIndex={disabled ? -1 : 0}
+      className={className}
+      onClick={disabled ? undefined : onClick}
+      onKeyDown={handleKeyDown}
+      aria-disabled={disabled}
     >
       <span className={styles.text}>{buttonText}</span>
       {children}
-    </button>
+    </div>
   );
 };
 

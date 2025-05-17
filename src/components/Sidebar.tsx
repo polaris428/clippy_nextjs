@@ -1,16 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-
+import { DefaultButton } from "@/components/design-system";
+import { useRouter } from "next/navigation";
 interface Folder {
     id: string;
     name: string;
 }
 
 export default function Sidebar() {
+    const router = useRouter();
     const [folders, setFolders] = useState<Folder[]>([]);
-
+    const handleAddFolder = () => {
+        router.push("/folders/new"); // 또는 모달 열기
+    };
     useEffect(() => {
         const stored = localStorage.getItem('folders');
         if (stored) {
@@ -29,12 +32,13 @@ export default function Sidebar() {
             <ul>
                 {folders.map((folder) => (
                     <li key={folder.id} className="mb-1">
-                        <Link href={`/folders/${folder.id}`} className="text-blue-600 hover:underline">
-                            {folder.name}
-                        </Link>
+                        <DefaultButton as="link" href={`/folders/${folder.id}`} buttonText={folder.name} />
                     </li>
                 ))}
             </ul>
+            <div className="mt-6">
+                <DefaultButton buttonText="➕ 폴더 추가" onClick={handleAddFolder} />
+            </div>
         </div>
     );
 }

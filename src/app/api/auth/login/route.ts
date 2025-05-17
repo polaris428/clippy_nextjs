@@ -12,15 +12,7 @@ export async function POST(req: NextRequest) {
 
    
     const res = NextResponse.json({ folders: result.folders });
-    res.cookies.set({
-      name: 'token',
-      value: token,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 60 * 60 * 24,
-      path: '/',
-    });
+  
 
     return res;
   } catch (err) {

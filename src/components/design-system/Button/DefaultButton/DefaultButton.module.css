@@ -1,31 +1,16 @@
 .button {
-  background-color:  var(--primary-color);
-  color: black;
-  padding: 12px 16px;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @apply flex items-center justify-start w-full px-4 py-2 rounded-lg
+         text-sm font-medium bg-gray-50 text-gray-900 transition-colors;
 }
 
-.button:hover:not(:disabled) {
-  background-color: var(--primary-color-hover);
+.button:hover:not([aria-disabled="true"]) {
+  @apply bg-gray-200;
 }
 
-.button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.button[aria-disabled="true"] {
+  @apply opacity-60 cursor-not-allowed;
 }
 
 .fullWidth {
-  width: 100%;
-}
-
-.text {
-  padding: 6px;
-  font-weight: 500;
+  @apply w-full;
 }

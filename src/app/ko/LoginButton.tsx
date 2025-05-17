@@ -3,16 +3,17 @@
 import { useRouter } from 'next/navigation';
 import { signInWithGoogle } from '@/lib/firebase/signInWithGoogle';
 import { PrimaryButton } from "@/components/design-system";
+
 export default function LoginButton() {
   const router = useRouter();
 
   const handleLogin = async () => {
     try {
-      const token = await signInWithGoogle();
-      if (!token) return;
+      const user = await signInWithGoogle();
+      if (!user) return;
 
-      const userInfo = JSON.parse(atob(token.split('.')[1]));
-      const name = userInfo.name || '익명';
+      const token = await user.getIdToken(); // ✅ 자동 갱신됨
+      const name = user.displayName || '익명';
 
       const res = await fetch('/api/auth/login', {
         method: 'POST',
@@ -30,14 +31,12 @@ export default function LoginButton() {
       }
 
       const { folders } = await res.json();
-      localStorage.setItem('token', token);
       localStorage.setItem('folders', JSON.stringify(folders));
 
       const firstFolderId = folders?.[0]?.id;
       if (firstFolderId) {
         router.push(`/folders/${encodeURIComponent(firstFolderId)}`);
       } else {
-        console.warn('📭 폴더 없음: 폴더 생성 페이지로 이동 필요');
         router.push('/no-folders');
       }
     } catch (err) {
