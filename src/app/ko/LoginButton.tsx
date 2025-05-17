@@ -13,6 +13,7 @@ export default function LoginButton() {
       if (!user) return;
 
       const token = await user.getIdToken(); // ✅ 자동 갱신됨
+      localStorage.setItem('token', token);
       const name = user.displayName || '익명';
 
       const res = await fetch('/api/auth/login', {

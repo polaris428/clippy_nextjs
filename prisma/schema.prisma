@@ -26,6 +26,7 @@ model Folder {
   owner      User      @relation("OwnerFolders", fields: [ownerId], references: [id])
   links      Link[]
   shares     UserFolderShare[]
+  isShared  Boolean  @default(false)
   createdAt  DateTime  @default(now())
 }
 
