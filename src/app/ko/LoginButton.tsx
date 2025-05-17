@@ -2,8 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { signInWithGoogle } from '@/lib/firebase/signInWithGoogle';
-import { CDSButton } from '@/components/design-system';
-
+import { PrimaryButton } from "@/components/design-system";
 export default function LoginButton() {
   const router = useRouter();
 
@@ -30,9 +29,9 @@ export default function LoginButton() {
         return;
       }
 
-      const { user, folders } = await res.json();
+      const { folders } = await res.json();
       localStorage.setItem('token', token);
-      localStorage.setItem('folders', JSON.stringify(folders)); // ✅ 폴더 리스트 저장
+      localStorage.setItem('folders', JSON.stringify(folders));
 
       const firstFolderId = folders?.[0]?.id;
       if (firstFolderId) {
@@ -46,5 +45,5 @@ export default function LoginButton() {
     }
   };
 
-  return <CDSButton buttonText="무료로 사용하기" onClick={handleLogin} />;
+  return <PrimaryButton buttonText="무료로 사용하기" onClick={handleLogin} />;
 }

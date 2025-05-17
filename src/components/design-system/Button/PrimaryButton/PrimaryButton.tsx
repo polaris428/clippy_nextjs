@@ -1,5 +1,5 @@
-'use client';import React from 'react';
-import styles from './Button.module.css';
+'use client'; import React from 'react';
+import styles from './PrimaryButton.module.css';
 
 interface ButtonProps {
   buttonText: string;
@@ -11,7 +11,7 @@ interface ButtonProps {
 
 const CDSButton = ({
   buttonText,
-  onClick = () => {},
+  onClick = () => { },
   disabled = false,
   fullWidth = true,
   children,

@@ -1,1 +1,1 @@
-export { default as CDSButton } from './Button';
+export * from "./Button";
