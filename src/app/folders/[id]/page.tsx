@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { verifyIdToken } from '@/lib/firebase';
 import prisma from '@/lib/prisma';
 import type { Metadata } from 'next';
-
+import LinkList from '@/components/LinkList';
 interface FolderPageProps {
     params: {
         id: string;
@@ -60,26 +60,14 @@ export default async function FolderPage({ params }: FolderPageProps) {
 
     return (
         <div className="p-6">
-            <h1 className="text-2xl font-bold mb-4">📁 {folder.name}</h1>
+            <h1 className="text-2xl font-bold mb-6">📁 {folder.name}</h1>
 
             {folder.links.length > 0 ? (
-                <ul className="space-y-2">
-                    {folder.links.map((link) => (
-                        <li key={link.id} className="p-3 border rounded">
-                            <a
-                                href={link.url.startsWith('http') ? link.url : `https://${link.url}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 hover:underline"
-                            >
-                                {link.title || link.url}
-                            </a>
-                        </li>
-                    ))}
-                </ul>
+                <LinkList links={folder.links} />
             ) : (
                 <p className="text-gray-500">이 폴더에는 아직 링크가 없습니다.</p>
             )}
         </div>
     );
+
 }

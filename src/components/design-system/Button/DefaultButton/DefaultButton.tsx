@@ -34,7 +34,7 @@ const CDSButton = ({
     );
   }
 
-
+  // ⛳ div 모드 (기본)
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (disabled) return;
     if (e.key === 'Enter' || e.key === ' ') {
