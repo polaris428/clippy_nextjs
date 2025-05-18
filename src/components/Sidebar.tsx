@@ -16,6 +16,7 @@ interface SidebarProps {
 export default function Sidebar({ initialFolders }: SidebarProps) {
     const pathname = usePathname();
     const currentFolderId = pathname.split('/folders/')[1]?.split('/')[0];
+
     const [folders, setFolders] = useState<Folder[]>(initialFolders);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
@@ -27,9 +28,9 @@ export default function Sidebar({ initialFolders }: SidebarProps) {
 
     useEffect(() => {
         fetch('/api/folders', { credentials: 'include' })
-            .then(res => res.json())
-            .then(data => setFolders(data.folders || []))
-            .catch(err => console.error('폴더 로딩 실패:', err));
+            .then((res) => res.json())
+            .then((data) => setFolders(data.folders || []))
+            .catch((err) => console.error('폴더 로딩 실패:', err));
     }, []);
 
     const handleCreateFolder = async () => {
@@ -43,7 +44,7 @@ export default function Sidebar({ initialFolders }: SidebarProps) {
             });
             if (!res.ok) return alert('폴더 생성 실패');
             const newFolder = await res.json();
-            setFolders(prev => [...prev, newFolder]);
+            setFolders((prev) => [...prev, newFolder]);
             setIsModalOpen(false);
             setNewFolderName('');
             setIsShared(false);
@@ -76,22 +77,19 @@ export default function Sidebar({ initialFolders }: SidebarProps) {
 
     return (
         <div className="p-5 bg-gray-50 h-full flex flex-col border-r">
-            <h2 className="font-semibold text-gray-800 mb-3 flex items-center text-sm">
-                📁 <span className="ml-2">내 폴더</span>
-            </h2>
-
-            <div className="mb-6">
-                <SidebarButton label="📌 모든 클립" href="/all" />
-                <SidebarButton label="📂 미분류 클립" href="/uncategorized" />
+            {/* 상단 공통 네비게이션 */}
+            <div className="mb-4 space-y-1">
+                <SidebarButton label="📌 모든 클립" href="/all" selected={pathname === '/all'} />
+                <SidebarButton label="📂 미분류 클립" href="/uncategorized" selected={pathname === '/uncategorized'} />
             </div>
 
             <hr className="my-2" />
 
-            {/* 폴더 리스트 */}
+            {/* 개인 폴더 컬렉션 */}
             <div className="flex-1 overflow-y-auto">
-                <h2 className="text-sm text-gray-500 mb-2">📁 개인 컬렉션</h2>
+                <h2 className="text-xs font-semibold text-gray-500 mb-2 px-1">📁 개인 컬렉션</h2>
                 <ul className="space-y-1">
-                    {folders.map(folder => (
+                    {folders.map((folder) => (
                         <li key={folder.id}>
                             <SidebarButton
                                 label={folder.name}
@@ -105,8 +103,8 @@ export default function Sidebar({ initialFolders }: SidebarProps) {
 
             <hr className="my-2" />
 
-            {/* 하단 버튼 */}
-            <div className="pt-4 space-y-2">
+            {/* 하단 폴더/링크 관리 */}
+            <div className="space-y-2 pt-3">
                 <SidebarButton label="➕ 폴더 추가" onClick={() => setIsModalOpen(true)} />
                 <SidebarButton label="🔗 링크 저장" onClick={() => setIsLinkModalOpen(true)} />
             </div>
@@ -165,7 +163,7 @@ export default function Sidebar({ initialFolders }: SidebarProps) {
                             onChange={(e) => setSelectedFolderId(e.target.value)}
                         >
                             <option value="">폴더 선택</option>
-                            {folders.map(folder => (
+                            {folders.map((folder) => (
                                 <option key={folder.id} value={folder.id}>
                                     {folder.name}
                                 </option>
