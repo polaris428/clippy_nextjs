@@ -11,20 +11,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'No token provided' }, { status: 400 });
     }
 
-    // Firebase 토큰을 디코드하고, Prisma로 유저 생성 or 조회
+    
     const result = await loginUser(token);
 
-    // ✅ 쿠키 설정 (Next.js 15 기준)
+   
     const cookieStore = await cookies();
     cookieStore.set('token', token, {
       httpOnly: true,
       path: '/',
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 60 * 60 * 24 * 7, // 7일
+      maxAge: 60 * 60 * 24 * 7, 
     });
 
-    // 클라이언트에서 폴더로 redirect할 수 있도록 folderId 포함
+
     return NextResponse.json({
       user: result.user,
       folders: result.folders,
