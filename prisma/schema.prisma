@@ -49,6 +49,7 @@ model Link {
   favicon    String?   // 사이트 아이콘 URL
   description String?  // 미리보기 텍스트 (description 메타태그)
   folderId   String
+  isPin      Boolean   @default(false)
   folder     Folder    @relation(fields: [folderId], references: [id])
   linkTags   LinkTag[]
   createdAt  DateTime  @default(now())
