@@ -2,22 +2,20 @@ import { injectable } from 'tsyringe';
 import { prisma } from '@/lib/prisma';
 import { Folder } from '@/domain/folder/Folder';
 import { IFolderRepository } from '@/domain/folder/IFolderRepository';
-
 @injectable()
 export class PrismaFolderRepository implements IFolderRepository {
   /**
    * 폴더 생성
    */
-  async createFolder(
-    userId: string,
-    name: string,
-    isShared: boolean = false
-  ): Promise<Folder> {
+  async createFolder(userId: string, name: string, isShared: boolean = false): Promise<Folder> {
     const folder = await prisma.folder.create({
       data: {
         name,
         ownerId: userId,
         isShared,
+      },
+      include: {
+        links: true, // ✅ 링크 포함
       },
     });
 
@@ -27,6 +25,7 @@ export class PrismaFolderRepository implements IFolderRepository {
       ownerId: folder.ownerId,
       isShared: folder.isShared,
       createdAt: folder.createdAt,
+      links: folder.links,
     };
   }
 
@@ -37,6 +36,9 @@ export class PrismaFolderRepository implements IFolderRepository {
     const folders = await prisma.folder.findMany({
       where: { ownerId: userId },
       orderBy: { createdAt: 'asc' },
+      include: {
+        links: true, // ✅ 링크 포함
+      },
     });
 
     return folders.map(folder => ({
@@ -45,6 +47,7 @@ export class PrismaFolderRepository implements IFolderRepository {
       ownerId: folder.ownerId,
       isShared: folder.isShared,
       createdAt: folder.createdAt,
+      links: folder.links,
     }));
   }
 
@@ -54,6 +57,9 @@ export class PrismaFolderRepository implements IFolderRepository {
   async findById(folderId: string): Promise<Folder | null> {
     const folder = await prisma.folder.findUnique({
       where: { id: folderId },
+      include: {
+        links: true, // ✅ 링크 포함
+      },
     });
 
     if (!folder) return null;
@@ -64,6 +70,7 @@ export class PrismaFolderRepository implements IFolderRepository {
       ownerId: folder.ownerId,
       isShared: folder.isShared,
       createdAt: folder.createdAt,
+      links: folder.links,
     };
   }
 }

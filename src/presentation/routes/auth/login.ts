@@ -16,14 +16,18 @@ export async function POST() {
   if (!token) {
     return NextResponse.json({ error: 'No token provided' }, { status: 401 });
   }
-
+  console.log('서버버 토큰', token);
   try {
     const login = container.resolve(LoginWithFirebase);
     const folderRepository = container.resolve<IFolderRepository>('IFolderRepository');
     const user = await login.execute(token);
     const folders = await folderRepository.findFoldersByUserId(user.id);
-    setAuthCookie(token);
-    return NextResponse.json({ user, folders });
+    const response = NextResponse.json({ user, folders });
+
+    // ✅ 응답에 쿠키 추가
+    setAuthCookie(response, token);
+
+    return response;
   } catch (err) {
     console.error('❌ Login failed:', err);
     return NextResponse.json({ error: 'Login failed' }, { status: 500 });

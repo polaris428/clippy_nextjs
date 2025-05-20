@@ -3,18 +3,17 @@
 import { useRouter } from 'next/navigation';
 import { signInWithGoogle } from '@/lib/firebase/signInWithGoogle';
 import { PrimaryButton } from "@/components/design-system";
-
+import { useAuthStore } from '@/stores/useAuthStore';
 export default function LoginButton() {
   const router = useRouter();
 
   const handleLogin = async () => {
     try {
-      const user = await signInWithGoogle();
-      if (!user) return;
+      const googleUser = await signInWithGoogle();
+      if (!googleUser) return;
 
-      const token = await user.getIdToken(); // Firebase에서 JWT 발급
-      const name = user.displayName || '익명';
-
+      const token = await googleUser.getIdToken(); // Firebase에서 JWT 발급
+      const name = googleUser.displayName || '익명';
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -31,10 +30,16 @@ export default function LoginButton() {
         return;
       }
 
-      const { folders } = await res.json();
+      const body = await res.json()
+      const { user, folders } = body
+      useAuthStore.getState().setUser(user);
+      console.log("asdf", folders)
+      useAuthStore.getState().setFolders(folders);
+
+
       const firstFolderId = folders?.[0]?.id;
-      console.log(folders)
-      // ✅ 서버에서 받은 폴더 ID로 라우팅
+
+
       if (firstFolderId) {
         console.log("folders")
         router.push(`/folders/${encodeURIComponent(firstFolderId)}`);

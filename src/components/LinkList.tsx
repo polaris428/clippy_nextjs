@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Link } from '@prisma/client';
+import { Link } from '@/domain/links/Link';
 import { format } from 'date-fns';
 
 export default function LinkList({ links }: { links: Link[] }) {

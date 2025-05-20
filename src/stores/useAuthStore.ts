@@ -1,15 +1,9 @@
-// store/useAuthStore.ts
 import { create } from 'zustand';
-
+import { Folder } from '@/domain/folder/Folder';
 interface User {
   id: string;
   name: string;
   email: string;
-}
-
-interface Folder {
-  id: string;
-  name: string;
 }
 
 interface AuthStore {
