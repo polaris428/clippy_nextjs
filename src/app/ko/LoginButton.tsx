@@ -33,11 +33,13 @@ export default function LoginButton() {
 
       const { folders } = await res.json();
       const firstFolderId = folders?.[0]?.id;
-
+      console.log(folders)
       // ✅ 서버에서 받은 폴더 ID로 라우팅
       if (firstFolderId) {
+        console.log("folders")
         router.push(`/folders/${encodeURIComponent(firstFolderId)}`);
       } else {
+        console.log("no-folders")
         router.push('/no-folders');
       }
     } catch (err) {

@@ -1,6 +1,6 @@
 import Sidebar from '@/components/Sidebar';
 import prisma from '@/lib/prisma';
-import { cookies } from 'next/headers';
+import { getAuthCookie } from '@/lib/utils/cookies';
 import { verifyIdToken } from '@/lib/firebase';
 import { redirect } from 'next/navigation';
 
@@ -9,7 +9,7 @@ interface FolderLayoutProps {
 }
 
 export default async function FolderLayout({ children }: FolderLayoutProps) {
-  const token = (await cookies()).get('token')?.value;
+  const token = await getAuthCookie();
   if (!token) return redirect('/');
 
   let uid = '';

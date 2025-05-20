@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getVerifiedUser } from '@/lib/utils/getVerifiedUser';
-import prisma from '@/lib/prisma';
+import { getFoldersByUserId } from '@/lib/services/folderService';
 
 export async function GET() {
   try {
@@ -10,25 +10,8 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // 2️⃣ 유저의 폴더 목록 + 링크 포함 조회
-    const folders = await prisma.folder.findMany({
-      where: { ownerId: user.id },
-      orderBy: { createdAt: 'asc' },
-      select: {
-        id: true,
-        name: true,
-        links: {
-          select: {
-            id: true,
-            title: true,
-            url: true,
-            description: true,
-            thumbnail: true,
-            createdAt: true,
-          },
-        },
-      },
-    });
+    // 2️⃣ 폴더 조회 (서비스 분리)
+    const folders = await getFoldersByUserId(user.id);
 
     return NextResponse.json({ user, folders });
   } catch (err) {
