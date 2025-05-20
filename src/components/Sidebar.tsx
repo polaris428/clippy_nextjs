@@ -79,7 +79,7 @@ export default function Sidebar({ initialFolders }: SidebarProps) {
         <div className="p-5 bg-gray-50 h-full flex flex-col border-r">
             {/* 상단 공통 네비게이션 */}
             <div className="mb-4 space-y-1">
-                <SidebarButton label="📌 모든 클립" href="/all" selected={pathname === '/all'} />
+                <SidebarButton label="📌 모든 클립" href="/home" selected={pathname === '/all'} />
                 <SidebarButton label="📂 미분류 클립" href="/uncategorized" selected={pathname === '/uncategorized'} />
             </div>
 

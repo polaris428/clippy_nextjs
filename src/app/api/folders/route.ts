@@ -4,7 +4,7 @@ import { verifyIdToken } from '@/lib/firebase';
 import { cookies } from 'next/headers';
 
 export async function GET() {
-   const cookieStore = await cookies();
+  const cookieStore = await cookies();
   const token = cookieStore.get('token')?.value;
 
   if (!token) {
@@ -15,9 +15,13 @@ export async function GET() {
     const decoded = await verifyIdToken(token);
     const folders = await prisma.folder.findMany({
       where: { owner: { firebaseUid: decoded.uid } },
-      select: { id: true, name: true },
+      select: {
+        id: true,
+        name: true,
+        links: {},
+      },
     });
-
+    console.log('유저 폴더 리스트', JSON.stringify(folders, null, 2));
     return NextResponse.json({ folders });
   } catch (err) {
     console.error('❌ 폴더 목록 로드 실패:', err);
