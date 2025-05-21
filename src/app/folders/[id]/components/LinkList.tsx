@@ -4,11 +4,11 @@
 import { useState } from 'react';
 import { Link } from '@/domain/link/Link';
 import { format } from 'date-fns';
-import { useLinkActions } from '../components/hooks/useLinkActions';
+import { useDeleteLink } from '@/hooks/useDeleteLink';
 
 export default function LinkList({ links }: { links: Link[] }) {
     const [localLinks, setLocalLinks] = useState(links);
-    const { deleteLink } = useLinkActions(setLocalLinks);
+    const { deleteLink } = useDeleteLink();
 
     const togglePin = async (id: string, current: boolean) => {
         try {

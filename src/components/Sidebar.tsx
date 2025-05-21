@@ -55,14 +55,19 @@ export default function Sidebar({ initialFolders }: SidebarProps) {
     };
 
     const handleSaveLink = async () => {
-        if (!linkTitle.trim() || !linkUrl.trim() || !selectedFolderId)
+        if (!linkTitle.trim() || !linkUrl.trim() || !selectedFolderId) {
             return alert('모든 값을 입력하세요.');
+        }
         try {
-            const res = await fetch(`/api/folders/${selectedFolderId}/links`, {
+            const res = await fetch('/api/links', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify({ title: linkTitle, url: linkUrl }),
+                body: JSON.stringify({
+                    title: linkTitle,
+                    url: linkUrl,
+                    folderId: selectedFolderId,
+                }),
             });
             if (!res.ok) return alert('링크 저장 실패');
             setIsLinkModalOpen(false);
@@ -74,6 +79,7 @@ export default function Sidebar({ initialFolders }: SidebarProps) {
             alert('링크 저장 실패');
         }
     };
+
 
     return (
         <div className="p-5 bg-gray-50 h-full flex flex-col border-r">
