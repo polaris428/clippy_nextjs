@@ -16,7 +16,7 @@ export class PrismaLinkRepository implements ILinkRepository {
 
     await prisma.link.delete({ where: { id: linkId } });
   }
-  async createLink({ title, url, folderId, userId }: { title: string; url: string; folderId: string; userId: string }): Promise<void> {
+  async createLink({ title, url, thumbnail, description, favicon, folderId, userId }: { url: string; title: string; thumbnail: string; favicon: string; folderId: string; description: string; userId: string }): Promise<void> {
     const folder = await prisma.folder.findUnique({
       where: { id: folderId },
     });
@@ -29,7 +29,7 @@ export class PrismaLinkRepository implements ILinkRepository {
     }
 
     await prisma.link.create({
-      data: { title, url, folderId },
+      data: { title, url, thumbnail, description, favicon, folderId },
     });
   }
 }

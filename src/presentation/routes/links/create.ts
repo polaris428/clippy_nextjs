@@ -7,10 +7,10 @@ export async function POST(req: NextRequest) {
   try {
     const userId = await getCurrentUserId();
 
-    const { title, url, folderId } = await req.json();
+    const { url, folderId } = await req.json();
 
     const createLink = container.resolve(CreateLink);
-    await createLink.execute({ title, url, folderId, userId });
+    await createLink.execute({ url, folderId, userId });
 
     return NextResponse.json({ success: true });
   } catch (err) {
