@@ -3,7 +3,7 @@ import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { verifyIdToken } from '@/lib/firebase';
 import { scrapeMetadata } from '@/lib/scrapeMetadata';
-
+import 'reflect-metadata';
 interface Params {
   params: { id: string };
 }
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest, { params }: Params) {
     const decoded = await verifyIdToken(token);
     uid = decoded.uid;
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return NextResponse.json({ error: '토큰 검증 실패' }, { status: 403 });
   }
 

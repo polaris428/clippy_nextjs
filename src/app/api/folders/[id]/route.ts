@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { verifyIdToken } from '@/lib/firebase';
 import { cookies } from 'next/headers';
-
+import 'reflect-metadata';
 export async function GET() {
   const cookieStore = await cookies();
   const token = cookieStore.get('token')?.value;

@@ -1,4 +1,4 @@
-import { Link } from '../links/Link';
+import { Link } from '../link/Link';
 export interface Folder {
   id: string;
   name: string;

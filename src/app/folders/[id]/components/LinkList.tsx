@@ -2,11 +2,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Link } from '@/domain/links/Link';
+import { Link } from '@/domain/link/Link';
 import { format } from 'date-fns';
+import { useLinkActions } from '../components/hooks/useLinkActions';
 
 export default function LinkList({ links }: { links: Link[] }) {
     const [localLinks, setLocalLinks] = useState(links);
+    const { deleteLink } = useLinkActions(setLocalLinks);
 
     const togglePin = async (id: string, current: boolean) => {
         try {
@@ -70,7 +72,7 @@ export default function LinkList({ links }: { links: Link[] }) {
                                 <div
                                     title="북마크"
                                     onClick={(e) => {
-                                        e.stopPropagation(); // 링크 열기 방지
+                                        e.stopPropagation();
                                         togglePin(link.id, !!link.isPin);
                                     }}
                                     className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-red-500 text-sm hover:bg-gray-100"
@@ -85,6 +87,10 @@ export default function LinkList({ links }: { links: Link[] }) {
                                 </div>
                                 <div
                                     title="삭제"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        deleteLink(link.id);
+                                    }}
                                     className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-gray-700 text-sm hover:bg-gray-100"
                                 >
                                     🗑️

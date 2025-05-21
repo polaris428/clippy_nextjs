@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/useAuthStore';
-import LinkList from '@/components/LinkList';
+import LinkList from '@/app/folders/[id]/components/LinkList';
 import { useParams } from 'next/navigation'
 export default function FolderPage() {
     const params = useParams<{ id: string }>()
