@@ -4,11 +4,7 @@ export interface IFolderRepository {
   /**
    * 폴더 생성
    */
-  createFolder(
-    userId: string,
-    name: string,
-    isShared?: boolean
-  ): Promise<Folder>;
+  createFolder(userId: string, name: string, isShared?: boolean): Promise<Folder>;
 
   /**
    * 유저의 전체 폴더 조회
@@ -19,4 +15,8 @@ export interface IFolderRepository {
    * 단일 폴더 조회
    */
   findById(folderId: string): Promise<Folder | null>;
+  /**
+   * 단일 공유
+   */
+  updateShare(folderId: string, data: { isShared: boolean; shareKey: string | null }): Promise<void>;
 }

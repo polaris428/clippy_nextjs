@@ -1,4 +1,3 @@
-// lib/utils/getVerifiedUser.ts
 import { cookies } from 'next/headers';
 import { verifyIdToken } from '@/lib/firebase';
 import prisma from '@/lib/prisma';

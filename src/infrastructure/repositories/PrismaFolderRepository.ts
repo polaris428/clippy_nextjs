@@ -73,4 +73,14 @@ export class PrismaFolderRepository implements IFolderRepository {
       links: folder.links,
     };
   }
+
+  async updateShare(folderId: string, data: { isShared: boolean; shareKey: string | null }): Promise<void> {
+    await prisma.folder.update({
+      where: { id: folderId },
+      data: {
+        isShared: data.isShared,
+        shareKey: data.shareKey,
+      },
+    });
+  }
 }

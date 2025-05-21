@@ -5,5 +5,6 @@ export interface Folder {
   ownerId: string;
   isShared: boolean;
   createdAt: Date;
+  shareKey?: string | null;
   links: Link[];
 }
