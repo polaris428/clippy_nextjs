@@ -83,4 +83,47 @@ export class PrismaFolderRepository implements IFolderRepository {
       },
     });
   }
+
+  async findByInviteCode(inviteCode: string): Promise<Folder | null> {
+    const folder = await prisma.folder.findUnique({
+      where: { inviteCode },
+      include: {
+        links: true, // ✅ 링크 포함
+      },
+    });
+
+    if (!folder) return null;
+
+    return {
+      id: folder.id,
+      name: folder.name,
+      ownerId: folder.ownerId,
+      isShared: folder.isShared,
+      createdAt: folder.createdAt,
+      links: folder.links,
+    };
+  }
+  async updateInviteCode(folderId: string, code: string): Promise<void> {
+    await prisma.folder.update({
+      where: { id: folderId },
+      data: { inviteCode: code },
+    });
+  }
+
+  async addCollaborator(data: { folderId: string; userId: string }): Promise<void> {
+    await prisma.userFolderShare.upsert({
+      where: {
+        folderId_userId: {
+          folderId: data.folderId,
+          userId: data.userId,
+        },
+      },
+      update: {},
+      create: {
+        folderId: data.folderId,
+        userId: data.userId,
+        permission: 'write', // default to write, 또는 필요에 따라 확장 가능
+      },
+    });
+  }
 }

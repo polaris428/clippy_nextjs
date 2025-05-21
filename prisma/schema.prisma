@@ -25,6 +25,7 @@ model Folder {
   ownerId    String
   owner      User      @relation("OwnerFolders", fields: [ownerId], references: [id])
   links      Link[]
+  inviteCode String?   @unique  
   shareKey   String?  @unique
   shares     UserFolderShare[]
   isShared  Boolean  @default(false)
@@ -32,16 +33,15 @@ model Folder {
 }
 
 model UserFolderShare {
-  id       String    @id @default(cuid())
-  userId   String
-  folderId String
+  id        String   @id @default(cuid())
+  folderId  String
+  userId    String
+  permission String
+  folder    Folder   @relation(fields: [folderId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 
-  user     User   @relation(fields: [userId], references: [id])
-  folder   Folder @relation(fields: [folderId], references: [id])
-
-  @@unique([userId, folderId])
+  @@unique([folderId, userId])
 }
-
 model Link {
   id         String    @id @default(cuid())
   title      String

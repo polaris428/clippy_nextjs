@@ -19,4 +19,8 @@ export interface IFolderRepository {
    * 단일 공유
    */
   updateShare(folderId: string, data: { isShared: boolean; shareKey: string | null }): Promise<void>;
+
+  findByInviteCode(inviteCode: string): Promise<Folder | null>;
+  addCollaborator(data: { folderId: string; userId: string }): Promise<void>;
+  updateInviteCode(folderId: string, code: string): Promise<void>;
 }

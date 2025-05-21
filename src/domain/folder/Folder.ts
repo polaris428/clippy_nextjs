@@ -7,4 +7,5 @@ export interface Folder {
   createdAt: Date;
   shareKey?: string | null;
   links: Link[];
+  inviteCode?: string | null;
 }

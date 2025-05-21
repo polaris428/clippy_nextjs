@@ -2,7 +2,7 @@ import { container } from 'tsyringe';
 import { DeleteLink } from '@/application/usecases/link/DeleteLink';
 import { getAuthCookie } from '@/lib/utils/cookies';
 import { NextResponse } from 'next/server';
-import { getCurrentUserId } from '@/lib/utils/getCurrentUserId.ts';
+import { getCurrentUserId } from '@/lib/utils/getCurrentUserId';
 
 export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
   const token = getAuthCookie();

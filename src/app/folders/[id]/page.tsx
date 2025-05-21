@@ -6,6 +6,7 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import LinkList from '@/app/folders/[id]/components/LinkList';
 import { useParams } from 'next/navigation'
 import { useShareFolder } from '@/hooks/folder/useShareFolder';
+import { useGenerateInviteCode } from '@/hooks/useGenerateInviteCode';
 export default function FolderPage() {
     const params = useParams<{ id: string }>()
     const router = useRouter();
@@ -14,6 +15,7 @@ export default function FolderPage() {
     const folders = useAuthStore((s) => s.folders);
     const folder = folders.find((f) => f.id === linkId);
     const { shareFolder } = useShareFolder();
+    const generateInviteCode = useGenerateInviteCode();
     useEffect(() => {
 
 
@@ -38,6 +40,21 @@ export default function FolderPage() {
     return (
         <div className="p-6">
             <h1 className="text-2xl font-bold mb-6">📁 {folder.name}</h1>
+            <div
+                className="inline-block cursor-pointer text-sm bg-green-600 text-white px-4 py-2 rounded mb-4 ml-2"
+                onClick={async () => {
+                    try {
+                        const inviteCode = await generateInviteCode(linkId);
+                        await navigator.clipboard.writeText(inviteCode);
+                        alert(`초대 코드가 복사되었습니다:\n${inviteCode}`);
+                    } catch (err) {
+                        alert('초대 코드 생성 실패');
+                        console.error(err);
+                    }
+                }}
+            >
+                📨 초대 코드 만들기
+            </div>
             {/* ✅ 공유 div */}
             <div
                 className="inline-block cursor-pointer text-sm bg-blue-500 text-white px-4 py-2 rounded mb-4"

@@ -4,7 +4,7 @@ import { container } from 'tsyringe';
 import { UpdateFolderShare } from '@/application/usecases/folder/UpdateFolderShare';
 import { NextRequest, NextResponse } from 'next/server';
 import { getVerifiedUser } from '@/lib/utils/getVerifiedUser';
-import { getCurrentUserId } from '@/lib/utils/getCurrentUserId.ts';
+import { getCurrentUserId } from '@/lib/utils/getCurrentUserId';
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = await getVerifiedUser();

@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+import '@/infrastructure/di/container';
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { verifyIdToken } from '@/lib/firebase';

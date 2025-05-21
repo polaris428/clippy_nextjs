@@ -1,7 +1,7 @@
 import { container } from 'tsyringe';
 import { CreateLink } from '@/application/usecases/link/CreateLink';
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUserId } from '@/lib/utils/getCurrentUserId.ts';
+import { getCurrentUserId } from '@/lib/utils/getCurrentUserId';
 
 export async function POST(req: NextRequest) {
   try {
