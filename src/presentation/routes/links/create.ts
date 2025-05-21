@@ -3,11 +3,11 @@ import { CreateLink } from '@/application/usecases/link/CreateLink';
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUserId } from '@/lib/utils/getCurrentUserId.ts';
 
-export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(req: NextRequest) {
   try {
     const userId = await getCurrentUserId();
-    const folderId = (await params).id;
-    const { url } = await req.json();
+
+    const { url, folderId } = await req.json();
 
     const createLink = container.resolve(CreateLink);
     await createLink.execute({ url, folderId, userId });

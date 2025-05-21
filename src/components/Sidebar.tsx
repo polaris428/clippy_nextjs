@@ -59,6 +59,7 @@ export default function Sidebar({ initialFolders }: SidebarProps) {
             return alert('모든 값을 입력하세요.');
         }
         try {
+
             const res = await fetch('/api/links', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

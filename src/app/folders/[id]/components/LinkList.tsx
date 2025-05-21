@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { useState } from 'react';
@@ -6,7 +5,7 @@ import { Link } from '@/domain/link/Link';
 import { format } from 'date-fns';
 import { useDeleteLink } from '@/hooks/useDeleteLink';
 
-export default function LinkList({ links }: { links: Link[] }) {
+export default function LinkList({ links, readOnly = false }: { links: Link[]; readOnly?: boolean }) {
     const [localLinks, setLocalLinks] = useState(links);
     const { deleteLink } = useDeleteLink();
 
@@ -68,34 +67,37 @@ export default function LinkList({ links }: { links: Link[] }) {
                             />
 
                             {/* 오른쪽 상단 버튼들 */}
-                            <div className="absolute right-3 top-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
-                                <div
-                                    title="북마크"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        togglePin(link.id, !!link.isPin);
-                                    }}
-                                    className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-red-500 text-sm hover:bg-gray-100"
-                                >
-                                    {link.isPin ? '📌' : '📍'}
+                            {!readOnly && (
+                                <div className="absolute right-3 top-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                                    <div
+                                        title="북마크"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            togglePin(link.id, !!link.isPin);
+                                        }}
+                                        className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-red-500 text-sm hover:bg-gray-100"
+                                    >
+                                        {link.isPin ? '📌' : '📍'}
+                                    </div>
+                                    <div
+                                        title="편집"
+                                        className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-gray-700 text-sm hover:bg-gray-100"
+                                    >
+                                        ✏️
+                                    </div>
+                                    <div
+                                        title="삭제"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            deleteLink(link.id);
+                                            setLocalLinks(prev => prev.filter(l => l.id !== link.id));
+                                        }}
+                                        className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-gray-700 text-sm hover:bg-gray-100"
+                                    >
+                                        🗑️
+                                    </div>
                                 </div>
-                                <div
-                                    title="편집"
-                                    className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-gray-700 text-sm hover:bg-gray-100"
-                                >
-                                    ✏️
-                                </div>
-                                <div
-                                    title="삭제"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        deleteLink(link.id);
-                                    }}
-                                    className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-gray-700 text-sm hover:bg-gray-100"
-                                >
-                                    🗑️
-                                </div>
-                            </div>
+                            )}
 
                             {/* 우측 하단 파비콘 */}
                             <div className="absolute right-3 bottom-3 w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md">
