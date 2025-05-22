@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { signInWithGoogle } from '@/lib/firebase/signInWithGoogle';
 import { PrimaryButton } from "@/components/design-system";
 import { useAuthStore } from '@/stores/useAuthStore';
+
 export default function LoginButton() {
   const router = useRouter();
 
@@ -31,11 +32,10 @@ export default function LoginButton() {
       }
 
       const body = await res.json()
-      const { user, folders } = body
+      const { user, folders, sharedFolders } = body
       useAuthStore.getState().setUser(user);
-      console.log("asdf", folders)
       useAuthStore.getState().setFolders(folders);
-
+      useAuthStore.getState().setSharedFolders(sharedFolders);
 
       const firstFolderId = folders?.[0]?.id;
 

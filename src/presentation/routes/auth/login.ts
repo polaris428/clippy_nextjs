@@ -16,15 +16,14 @@ export async function POST() {
   if (!token) {
     return NextResponse.json({ error: 'No token provided' }, { status: 401 });
   }
-  console.log('서버버 토큰', token);
+
   try {
     const login = container.resolve(LoginWithFirebase);
     const folderRepository = container.resolve<IFolderRepository>('IFolderRepository');
     const user = await login.execute(token);
     const folders = await folderRepository.findFoldersByUserId(user.id);
-    const response = NextResponse.json({ user, folders });
-
-    // ✅ 응답에 쿠키 추가
+    const sharedFolders = await folderRepository.findShareFoldersByUserId(user.id);
+    const response = NextResponse.json({ user, folders, sharedFolders });
     setAuthCookie(response, token);
 
     return response;

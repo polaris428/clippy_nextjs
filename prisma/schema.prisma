@@ -39,7 +39,7 @@ model UserFolderShare {
   permission String
   folder    Folder   @relation(fields: [folderId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
-
+  createdAt  DateTime  @default(now())
   @@unique([folderId, userId])
 }
 model Link {

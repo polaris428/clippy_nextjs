@@ -30,10 +30,7 @@ export async function createDefaultFolder(userId: string, userName: string) {
   });
 }
 
-export async function getUserFoldersOrCreateDefault(
-  userId: string,
-  userName: string
-) {
+export async function getUserFoldersOrCreateDefault(userId: string, userName: string) {
   const folders = await getFoldersByUserId(userId);
   if (folders.length > 0) return folders;
 
