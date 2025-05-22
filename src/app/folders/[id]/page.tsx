@@ -1,74 +1,46 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useAuthStore } from '@/stores/useAuthStore';
-import LinkList from '@/app/folders/[id]/components/LinkList';
-import { useParams } from 'next/navigation'
-import { useShareFolder } from '@/hooks/folder/useShareFolder';
-import { useGenerateInviteCode } from '@/hooks/useGenerateInviteCode';
+import { useFolderPageActions } from '@/hooks/folder/useFolderPageActions';
+import LinkList from './components/LinkList';
+
 export default function FolderPage() {
-    const params = useParams<{ id: string }>()
+    const params = useParams<{ id: string }>();
+    const folderId = params.id;
     const router = useRouter();
-    const linkId = (params.id)
-    const user = useAuthStore((s) => s.user);
+    //const user = useAuthStore((s) => s.user);
     const folders = useAuthStore((s) => s.folders);
-    const folder = folders.find((f) => f.id === linkId);
-    const { shareFolder } = useShareFolder();
-    const generateInviteCode = useGenerateInviteCode();
+    const folder = folders.find((f) => f.id === folderId);
+    const { fetchFolder, generateInviteCode, shareFolder } = useFolderPageActions(folderId);
+
     useEffect(() => {
-
-
-        const fetchFolders = async () => {
-            const res = await fetch(`/api/folders/${linkId}`, { credentials: 'include' });
-            if (!res.ok) {
-                router.replace('/');
-                return;
-            }
-            const data = await res.json();
-            useAuthStore.getState().setFolders(data.folders); // ✅ 전역 상태 갱신
-        };
-
-        // 폴더가 없으면 새로 가져오기
         if (!folder) {
-            fetchFolders();
+            fetchFolder().catch(() => router.replace('/'));
         }
-    }, [user, folder, linkId, router]);
+    }, [folder, fetchFolder, router]);
 
-    if (!folder) return
+    if (!folder) return;
 
     return (
         <div className="p-6">
             <h1 className="text-2xl font-bold mb-6">📁 {folder.name}</h1>
+
             <div
                 className="inline-block cursor-pointer text-sm bg-green-600 text-white px-4 py-2 rounded mb-4 ml-2"
-                onClick={async () => {
-                    try {
-                        const inviteCode = await generateInviteCode(linkId);
-                        await navigator.clipboard.writeText(inviteCode);
-                        alert(`초대 코드가 복사되었습니다:\n${inviteCode}`);
-                    } catch (err) {
-                        alert('초대 코드 생성 실패');
-                        console.error(err);
-                    }
-                }}
+                onClick={generateInviteCode}
             >
                 📨 초대 코드 만들기
             </div>
-            {/* ✅ 공유 div */}
+
             <div
                 className="inline-block cursor-pointer text-sm bg-blue-500 text-white px-4 py-2 rounded mb-4"
-                onClick={async () => {
-                    const shareKey = await shareFolder(linkId);
-                    if (shareKey) {
-                        alert(`공유 링크: ${window.location.origin}/shared/${shareKey}`);
-                    } else {
-                        alert('공유 실패');
-                    }
-                }}
+                onClick={shareFolder}
             >
                 🔗 공유하기
             </div>
+
             {folder.links?.length ? (
                 <LinkList links={folder.links} />
             ) : (

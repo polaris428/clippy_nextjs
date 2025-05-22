@@ -1,0 +1,27 @@
+export const FolderService = {
+  async getFolderById(id: string) {
+    const res = await fetch(`/api/folders/${id}`, { credentials: 'include' });
+    if (!res.ok) throw new Error('폴더 조회 실패');
+    return await res.json();
+  },
+
+  async generateInviteCode(id: string): Promise<string> {
+    const res = await fetch(`/api/folders/${id}/invite`, {
+      method: 'PATCH',
+      credentials: 'include',
+    });
+    if (!res.ok) throw new Error('초대 코드 생성 실패');
+    const data = await res.json();
+    return data.inviteCode;
+  },
+
+  async shareFolder(id: string): Promise<string | null> {
+    const res = await fetch(`/api/folders/${id}/share`, {
+      method: 'PATCH',
+      credentials: 'include',
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.shareKey;
+  },
+};
