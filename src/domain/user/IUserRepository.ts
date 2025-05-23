@@ -1,15 +1,12 @@
 import { User } from './User';
 
 export interface IUserRepository {
+  /*
+   * Firebase UID로 유저 조회
+   */
   findByFirebaseUid(firebaseUid: string): Promise<User | null>;
-  create(data: {
-    firebaseUid: string;
-    email: string;
-    name: string;
-  }): Promise<User>;
-  findOrCreate(data: {
-    firebaseUid: string;
-    email: string;
-    name: string;
-  }): Promise<User>;
+  /*
+   * 유저 생성
+   */
+  create(data: { firebaseUid: string; email: string; name: string; profileImage: string | null }): Promise<User>;
 }

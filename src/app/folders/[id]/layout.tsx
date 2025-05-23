@@ -42,12 +42,10 @@ export default async function FolderLayout({ children }: FolderLayoutProps) {
       name: true,
     },
   });
-
+  console.log(user.profileImage)
   return (
     <div className="h-screen flex flex-col overflow-hidden">
-      <AppHeader
-        userImageUrl="/img/avatar_me.png"
-      />
+      <AppHeader userImageUrl={user.profileImage ?? ""} />
       <div className="flex flex-1 overflow-y-auto">
         <aside className="w-80 flex-shrink-0 h-full overflow-y-auto ">
 

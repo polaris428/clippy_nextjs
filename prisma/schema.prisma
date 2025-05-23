@@ -14,6 +14,7 @@ model User {
   firebaseUid    String    @unique
   email          String    @unique
   name           String    
+  profileImage  String?
   folders        Folder[]  @relation("OwnerFolders")
   sharedFolders  UserFolderShare[] // 폴더 공유받은 목록
   createdAt      DateTime  @default(now())
