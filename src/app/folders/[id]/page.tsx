@@ -5,7 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useFolderPageActions } from '@/hooks/folder/useFolderPageActions';
 import LinkList from './components/LinkList';
-import DefaultButton from '@/components/design-system/Button/DefaultButton/DefaultButton';
+import { DefaultButton } from '@/components/design-system';
 import ShareDialog from './components/ShareDialog'; // folders/[id]/ 내에 위치
 
 export default function FolderPage() {
