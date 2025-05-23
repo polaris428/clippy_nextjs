@@ -1,5 +1,6 @@
+
 import Sidebar from '@/components/sidebar/Sidebar';
-import AppLayout from '@/components/layout/layout';
+import AppHeader from '@/components/Header/AppHeader';
 import prisma from '@/lib/prisma';
 import { getAuthCookie } from '@/lib/utils/cookies';
 import { verifyIdToken } from '@/lib/firebase';
@@ -43,16 +44,18 @@ export default async function FolderLayout({ children }: FolderLayoutProps) {
   });
 
   return (
-    <div>
-      <AppLayout>
-        <div className="flex min-h-screen">
-          <aside className="w-64 border-r bg-gray-50 shadow-sm">
-            {/* props로 초기 폴더 목록 전달 */}
-            <Sidebar initialFolders={folders} />
-          </aside>
-          <main className="flex-1 p-6 bg-white">{children}</main>
-        </div>
-      </AppLayout>
+    <div className="h-screen flex flex-col overflow-hidden">
+      <AppHeader
+        userImageUrl="/img/avatar_me.png"
+      />
+      <div className="flex flex-1 overflow-y-auto">
+        <aside className="w-80 flex-shrink-0 h-full overflow-y-auto ">
+
+          <Sidebar initialFolders={folders} />
+        </aside>
+        <main className="flex-1 overflow-y-auto bg-white p-6">{children}</main>
+      </div>
+
 
     </div>
 

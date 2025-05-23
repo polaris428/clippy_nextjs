@@ -89,51 +89,53 @@ export default function Sidebar({ initialFolders }: SidebarProps) {
     };
 
     return (
-        <div className="p-5 bg-white h-full flex flex-col border-r">
-            {/* 상단 네비게이션 */}
-            <div className="mb-4 space-y-1">
-                <SidebarButton
-                    icon={<BookmarkSimple size={18} />}
-                    label="모든 클립"
-                    href="/home"
-                    selected={pathname === '/home'}
-                />
-                <SidebarButton
-                    icon={<FolderSimple size={18} />}
-                    label="미분류 클립"
-                    href="/uncategorized"
-                    selected={pathname === '/uncategorized'}
-                />
-                <SidebarButton
-                    icon={<Users size={18} />}
-                    label="공유받은 폴더"
-                    href="/shared"
-                    selected={pathname === '/shared'}
-                />
+        <div className="h-full flex flex-col justify-between p-6 bg-white">
+            {/* 상단 고정 + 스크롤 감싼 영역 */}
+            <div className="flex flex-col flex-1 min-h-0">
+                {/* 상단 네비게이션 */}
+                <div className="mb-4 space-y-1">
+                    <SidebarButton
+                        icon={<BookmarkSimple size={18} />}
+                        label="모든 클립"
+                        href="/home"
+                        selected={pathname === '/home'}
+                    />
+                    <SidebarButton
+                        icon={<FolderSimple size={18} />}
+                        label="미분류 클립"
+                        href="/uncategorized"
+                        selected={pathname === '/uncategorized'}
+                    />
+                    <SidebarButton
+                        icon={<Users size={18} />}
+                        label="공유받은 폴더"
+                        href="/shared"
+                        selected={pathname === '/shared'}
+                    />
+                </div>
+
+                <hr className="my-2" />
+
+                {/* 폴더 리스트 - 스크롤 */}
+                <div className="flex-1 overflow-y-auto min-h-0">
+                    <ul className="space-y-1">
+                        {folders.map((folder) => (
+                            <li key={folder.id}>
+                                <SidebarButton
+                                    icon={<Folders size={18} />}
+                                    label={folder.name}
+                                    href={`/folders/${folder.id}`}
+                                    selected={folder.id === currentFolderId}
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
 
             <hr className="my-2" />
 
-            {/* 개인 폴더 컬렉션 */}
-            <div className="flex-1 overflow-y-auto">
-
-                <ul className="space-y-1">
-                    {folders.map((folder) => (
-                        <li key={folder.id}>
-                            <SidebarButton
-                                icon={<Folders size={18} />}
-                                label={folder.name}
-                                href={`/folders/${folder.id}`}
-                                selected={folder.id === currentFolderId}
-                            />
-                        </li>
-                    ))}
-                </ul>
-            </div>
-
-            <hr className="my-2" />
-
-            {/* 하단 폴더/링크 관리 */}
+            {/* 하단 고정 버튼 */}
             <div className="space-y-2 pt-3">
                 <SidebarButton
                     icon={<PlusCircle size={18} />}
