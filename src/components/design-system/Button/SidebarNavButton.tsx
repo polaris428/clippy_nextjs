@@ -40,8 +40,8 @@ export default function SidebarNavButton({
             {content}
         </Link>
     ) : (
-        <button onClick={onClick} className={baseClass}>
+        <div role="button" onClick={onClick} className={baseClass}>
             {content}
-        </button>
+        </div>
     );
 }
