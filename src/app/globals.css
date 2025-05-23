@@ -31,3 +31,13 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   height: 100%;
 }
+* {
+  user-select: none;
+  caret-color: transparent;
+}
+
+/* 입력 가능한 필드는 다시 켜주기 */
+input, textarea, [contenteditable="true"] {
+  user-select: text;
+  caret-color: auto;
+}
