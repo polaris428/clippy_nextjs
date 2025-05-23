@@ -5,35 +5,36 @@ import { ReactNode } from 'react';
 import clsx from 'clsx';
 
 interface SidebarNavButtonProps {
-    href?: string;                    // 링크 이동
-    icon?: ReactNode;                 // 아이콘
-    label: string;                    // 라벨 텍스트
-    isActive?: boolean;              // 선택 여부
-    onClick?: () => void;            // 클릭 이벤트
-    selected?: boolean;              // 선택 여부 대체 필드 (선택)
+    href?: string;                // 링크 이동 경로 (있으면 Link, 없으면 버튼)
+    icon?: ReactNode;             // 아이콘 컴포넌트 (Phosphor 등)
+    label: string;                // 버튼 텍스트
+    onClick?: () => void;         // 클릭 이벤트
+    isActive?: boolean;           // 선택 상태
+    selected?: boolean;           // 선택 상태 (isActive 대체)
 }
 
 export default function SidebarNavButton({
     href,
     icon,
     label,
-    isActive,
     onClick,
+    isActive,
     selected,
 }: SidebarNavButtonProps) {
     const baseClass = clsx(
-        'w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm hover:bg-gray-100 transition',
-        (isActive || selected) ? 'bg-gray-200 font-medium text-black' : 'text-gray-700'
+        'w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition',
+        (isActive || selected)
+            ? 'bg-gray-200 text-black'
+            : 'text-gray-700 hover:bg-gray-100'
     );
 
     const content = (
         <>
-            <span className="text-base">{icon}</span>
-            {label}
+            {icon && <span className="text-base">{icon}</span>}
+            <span className="truncate">{label}</span>
         </>
     );
 
-    // href가 있으면 Link로, 없으면 div 버튼으로 렌더링
     return href ? (
         <Link href={href} className={baseClass}>
             {content}

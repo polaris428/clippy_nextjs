@@ -2,7 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import SidebarButton from './design-system/Button/SidebarNavButton';
+import SidebarButton from '../design-system/Button/SidebarNavButton';
+import {
+    BookmarkSimple,
+    FolderSimple,
+    Users,
+    Folders,
+    PlusCircle,
+    LinkSimple,
+} from 'phosphor-react';
 
 interface Folder {
     id: string;
@@ -59,7 +67,6 @@ export default function Sidebar({ initialFolders }: SidebarProps) {
             return alert('모든 값을 입력하세요.');
         }
         try {
-
             const res = await fetch('/api/links', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -81,24 +88,40 @@ export default function Sidebar({ initialFolders }: SidebarProps) {
         }
     };
 
-
     return (
-        <div className="p-5 bg-gray-50 h-full flex flex-col border-r">
-            {/* 상단 공통 네비게이션 */}
+        <div className="p-5 bg-white h-full flex flex-col border-r">
+            {/* 상단 네비게이션 */}
             <div className="mb-4 space-y-1">
-                <SidebarButton label="📌 모든 클립" href="/home" selected={pathname === '/all'} />
-                <SidebarButton label="📂 미분류 클립" href="/uncategorized" selected={pathname === '/uncategorized'} />
+                <SidebarButton
+                    icon={<BookmarkSimple size={18} />}
+                    label="모든 클립"
+                    href="/home"
+                    selected={pathname === '/home'}
+                />
+                <SidebarButton
+                    icon={<FolderSimple size={18} />}
+                    label="미분류 클립"
+                    href="/uncategorized"
+                    selected={pathname === '/uncategorized'}
+                />
+                <SidebarButton
+                    icon={<Users size={18} />}
+                    label="공유받은 폴더"
+                    href="/shared"
+                    selected={pathname === '/shared'}
+                />
             </div>
 
             <hr className="my-2" />
 
             {/* 개인 폴더 컬렉션 */}
             <div className="flex-1 overflow-y-auto">
-                <h2 className="text-xs font-semibold text-gray-500 mb-2 px-1">📁 개인 컬렉션</h2>
+
                 <ul className="space-y-1">
                     {folders.map((folder) => (
                         <li key={folder.id}>
                             <SidebarButton
+                                icon={<Folders size={18} />}
                                 label={folder.name}
                                 href={`/folders/${folder.id}`}
                                 selected={folder.id === currentFolderId}
@@ -112,8 +135,16 @@ export default function Sidebar({ initialFolders }: SidebarProps) {
 
             {/* 하단 폴더/링크 관리 */}
             <div className="space-y-2 pt-3">
-                <SidebarButton label="➕ 폴더 추가" onClick={() => setIsModalOpen(true)} />
-                <SidebarButton label="🔗 링크 저장" onClick={() => setIsLinkModalOpen(true)} />
+                <SidebarButton
+                    icon={<PlusCircle size={18} />}
+                    label="폴더 추가"
+                    onClick={() => setIsModalOpen(true)}
+                />
+                <SidebarButton
+                    icon={<LinkSimple size={18} />}
+                    label="링크 저장"
+                    onClick={() => setIsLinkModalOpen(true)}
+                />
             </div>
 
             {/* 폴더 추가 모달 */}

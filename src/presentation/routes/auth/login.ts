@@ -17,6 +17,7 @@ export async function POST() {
     return NextResponse.json({ error: 'No token provided' }, { status: 401 });
   }
 
+  //유스케이스 통해서 호출해야함
   try {
     const login = container.resolve(LoginWithFirebase);
     const folderRepository = container.resolve<IFolderRepository>('IFolderRepository');
