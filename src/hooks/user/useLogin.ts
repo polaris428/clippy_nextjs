@@ -15,23 +15,18 @@ export function useLogin() {
     setLoading(true);
     setError(null);
     try {
-      // 1. Firebase 로그인 → Google 사용자
       const googleUser = await signInWithGoogle();
       if (!googleUser) return;
 
-      // 2. ID 토큰 가져오기
       const token = await googleUser.getIdToken();
 
-      // 3. UserService로 API 호출
       const { user, folders, sharedFolders }: LoginResponse = await UserService.postLogIn(token);
 
-      // 4. 상태 저장
       const store = useAuthStore.getState();
       store.setUser(user);
       store.setFolders(folders);
       store.setSharedFolders(sharedFolders);
 
-      // 5. 첫 폴더로 이동
       const firstFolderId = folders?.[0]?.id;
       router.push(firstFolderId ? `/folders/${encodeURIComponent(firstFolderId)}` : '/no-folders');
     } catch (err) {
