@@ -31,6 +31,7 @@ export default function FolderPage() {
 
     if (!folder) return;
 
+
     return (
         <div className="relative">
             <div className="flex gap-2 mb-4">
@@ -44,7 +45,7 @@ export default function FolderPage() {
                     {/* 다이얼로그는 해당 버튼 아래에 위치하도록 absolute로 설정 */}
                     {isShareOpen && (
                         <div className="absolute left-0 mt-2 z-50">
-                            <ShareDialog />
+                            <ShareDialog folderId={folder.id} initialShared={folder.isShared} initiaShareKey={folder.shareKey || ""} />
                         </div>
                     )}
                 </div>
@@ -59,12 +60,7 @@ export default function FolderPage() {
                 📨 초대 코드 만들기
             </div>
 
-            <div
-                className="inline-block cursor-pointer text-sm bg-blue-500 text-white px-4 py-2 rounded mb-4"
-                onClick={toggleShareDialog}
-            >
-                🔗 공유하기
-            </div>
+
 
             {folder.links?.length ? (
                 <LinkList links={folder.links} />

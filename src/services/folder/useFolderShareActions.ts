@@ -4,7 +4,7 @@ export const useFolderShareActions = () => {
   /**
    * 폴더 공유 활성화 및 공유 키 반환
    */
-  const shareFolder = async (folderId: string): Promise<string | null> => {
+  const shareFolder = async (folderId: string, isShared: boolean): Promise<string | null> => {
     try {
       const res = await fetch(`/api/folders/${folderId}/share`, {
         method: 'PATCH',
@@ -12,7 +12,7 @@ export const useFolderShareActions = () => {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ isShared: true }),
+        body: JSON.stringify({ isShared: isShared }),
       });
 
       const data = await res.json();

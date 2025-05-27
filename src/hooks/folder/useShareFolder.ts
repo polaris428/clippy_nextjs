@@ -1,25 +1,44 @@
-export const useShareFolder = () => {
-  const shareFolder = async (folderId: string): Promise<string | null> => {
+// hooks/useFolderShareToggle.ts
+import { useState } from 'react';
+import { FolderService } from '@/services/FolderService';
+import { useAuthStore } from '@/stores/useAuthStore';
+interface UseFolderShareToggleProps {
+  folderId: string;
+  initialShared: boolean;
+  initiaShareKey: string;
+}
+
+export function useFolderShareToggle({ folderId, initialShared, initiaShareKey }: UseFolderShareToggleProps) {
+  const [isShared, setIsShared] = useState(initialShared);
+  const [loading, setLoading] = useState(false);
+  const [shareKey, setShareKey] = useState(initiaShareKey);
+  const updateFolder = useAuthStore(s => s.updateFolder);
+  const toggleShare = async (isShared: boolean) => {
+    setLoading(true);
     try {
-      const res = await fetch(`/api/folders/${folderId}/share`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ isShared: true }),
+      const shareKey = await FolderService.shareFolder(folderId, isShared);
+      setIsShared(isShared);
+      updateFolder(folderId, {
+        isShared: isShared,
+        shareKey: isShared && shareKey ? `${window.location.origin}/shared/${shareKey}` : '',
       });
-
-      const data = await res.json();
-      if (!res.ok) {
-        console.error('❌ 공유 실패:', data);
-        throw new Error('공유 실패');
+      if (isShared && shareKey) {
+        setShareKey(`${window.location.origin}/shared/${shareKey}`);
+      } else if (!isShared) {
+        setShareKey(``);
       }
-
-      return data.shareKey; // ✅ 공유 링크 반환
     } catch (err) {
-      console.error('🔥 공유 중 예외 발생:', err);
-      return null;
+      console.error('공유 상태 변경 실패:', err);
+      setShareKey(``);
+    } finally {
+      setLoading(false);
     }
   };
 
-  return { shareFolder };
-};
+  return {
+    isShared,
+    loading,
+    shareKey,
+    toggleShare,
+  };
+}

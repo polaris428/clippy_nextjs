@@ -9,6 +9,7 @@ interface AuthStore {
   setUser: (user: User) => void;
   setFolders: (folders: Folder[]) => void;
   setSharedFolders: (folders: Folder[]) => void;
+  updateFolder: (id: string, updates: Partial<Folder>) => void;
 }
 
 export const useAuthStore = create<AuthStore>(set => ({
@@ -18,4 +19,8 @@ export const useAuthStore = create<AuthStore>(set => ({
   setUser: user => set({ user }),
   setFolders: folders => set({ folders }),
   setSharedFolders: folders => set({ folders }),
+  updateFolder: (id, updates) =>
+    set(state => ({
+      folders: state.folders.map(f => (f.id === id ? { ...f, ...updates } : f)),
+    })),
 }));

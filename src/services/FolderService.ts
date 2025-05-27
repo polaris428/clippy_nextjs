@@ -15,12 +15,18 @@ export const FolderService = {
     return data.inviteCode;
   },
 
-  async shareFolder(id: string): Promise<string | null> {
+  async shareFolder(id: string, isShared: boolean): Promise<string | null> {
     const res = await fetch(`/api/folders/${id}/share`, {
       method: 'PATCH',
       credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ isShared }),
     });
+
     if (!res.ok) return null;
+
     const data = await res.json();
     return data.shareKey;
   },

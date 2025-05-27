@@ -5,7 +5,14 @@ import DialogFrame from '@/components/design-system/dialogs/DialogFrame';
 import { ShareTabContent } from './ShareTabContent';
 import { PublishTabContent } from './PublishTabContent';
 import { DefaultButton } from '@/components/design-system';
-export default function ShareDialog() {
+
+interface ShareDialogProps {
+    folderId: string;
+    initialShared: boolean;
+    initiaShareKey: string
+}
+
+export default function ShareDialog({ folderId, initialShared, initiaShareKey }: ShareDialogProps) {
     const [tab, setTab] = useState<'share' | 'publish'>('share');
 
     return (
@@ -17,7 +24,7 @@ export default function ShareDialog() {
                             <DefaultButton
 
                                 onClick={() => setTab('share')}
-                                label="공유">
+                                label="초대">
 
                             </DefaultButton>
                         </div>
@@ -32,14 +39,13 @@ export default function ShareDialog() {
                     </div>
 
                 </div>}
-            footer={<h1>푸터입니다</h1>}
-        >
+            footer={<h1>푸터입니다</h1>}>
 
 
 
 
             {tab === 'share' && <ShareTabContent />}
-            {tab === 'publish' && <PublishTabContent />}
+            {tab === 'publish' && <PublishTabContent folderId={folderId} initialShared={initialShared} initiaShareKey={initiaShareKey} />}
         </DialogFrame>
     );
 }

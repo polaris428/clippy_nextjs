@@ -13,12 +13,16 @@ export function useFolderPageActions(folderId: string) {
     alert(`초대 코드가 복사되었습니다:\n${code}`);
   };
 
-  const shareFolder = async () => {
-    const shareKey = await FolderService.shareFolder(folderId);
-    if (shareKey) {
-      alert(`공유 링크: ${window.location.origin}/shared/${shareKey}`);
+  const shareFolder = async (isShared: boolean) => {
+    const shareKey = await FolderService.shareFolder(folderId, isShared);
+    if (isShared) {
+      if (shareKey) {
+        alert(`공유 링크: ${window.location.origin}/shared/${shareKey}`);
+      } else {
+        alert('공유 실패');
+      }
     } else {
-      alert('공유 실패');
+      alert('공유가 해제되었습니다.');
     }
   };
 
