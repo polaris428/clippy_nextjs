@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Link } from '@/types/links/link';
+import { Link } from '@/types/links/Link';
 import { format } from 'date-fns';
-import { useDeleteLink } from '@/hooks/useDeleteLink';
+import { useDeleteLink } from '@/hooks/user/useDeleteLink';
 
 export default function LinkList({ links, readOnly = false }: { links: Link[]; readOnly?: boolean }) {
     const [localLinks, setLocalLinks] = useState(links);
