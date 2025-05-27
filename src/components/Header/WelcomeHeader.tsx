@@ -5,9 +5,8 @@ const Header = () => {
     <header className={styles.header}>
       <div className={styles.logo}>Clippy</div>
       <nav className={styles.nav}>
-        <a href="/folders">내 폴더</a>
-        <a href="/about">소개</a>
-        <a href="/login" className={styles.login}>로그인</a>
+        <a href="https://low-smell-b25.notion.site/Clipy-1cad32a959ab80ce9508d97548f9292f?pvs=73" className="font-bold">소개</a>
+        <a href="/login" className="font-bold">로그인</a>
       </nav>
     </header>
   );
