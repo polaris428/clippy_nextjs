@@ -1,4 +1,3 @@
-// hooks/auth/useLogin.ts
 import { useRouter } from 'next/navigation';
 import { signInWithGoogle } from '@/lib/firebase/signInWithGoogle';
 import { useAuthStore } from '@/stores/useAuthStore';

@@ -20,10 +20,10 @@ export function useFolderShareToggle({ folderId, initialShared, initiaShareKey }
       setIsShared(isShared);
       updateFolder(folderId, {
         isShared: isShared,
-        shareKey: isShared && shareKey ? `${window.location.origin}/shared/${shareKey}` : '',
+        shareKey: isShared && shareKey ? `${shareKey}` : '',
       });
       if (isShared && shareKey) {
-        setShareKey(`${window.location.origin}/shared/${shareKey}`);
+        setShareKey(`${shareKey}`);
       } else if (!isShared) {
         setShareKey(``);
       }

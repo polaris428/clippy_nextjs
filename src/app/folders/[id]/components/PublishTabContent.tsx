@@ -4,6 +4,7 @@ import { DefaultButton } from '@/components/design-system';
 
 export function PublishTabContent({ folderId, initialShared, initiaShareKey }: { folderId: string; initialShared: boolean, initiaShareKey: string }) {
     const { isShared, toggleShare, shareKey } = useFolderShareToggle({ folderId, initialShared, initiaShareKey });
+    const shareKeyText = `${window.location.origin}/shared/${shareKey}`
 
     return (
         <div className="text-sm space-y-2">
@@ -14,8 +15,8 @@ export function PublishTabContent({ folderId, initialShared, initiaShareKey }: {
             <div>
                 {isShared && (
                     <div className="border rounded p-1 flex justify-between items-center">
-                        <p className="truncate max-w-full">{shareKey}</p>
-                        <DefaultButton onClick={() => { navigator.clipboard.writeText(shareKey) }} label="복사" />
+                        <p className="truncate max-w-full">{shareKeyText}</p>
+                        <DefaultButton onClick={() => { navigator.clipboard.writeText(shareKeyText) }} label="복사" />
                     </div>
                 )}
             </div>

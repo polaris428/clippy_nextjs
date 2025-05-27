@@ -10,7 +10,12 @@ import type { IFolderRepository } from '@/domain/folder/IFolderRepository';
 
 @injectable()
 export class LoginUseCase {
-  constructor(@inject('IUserRepository') private userRepository: IUserRepository, @inject('IFolderRepository') private folderRepository: IFolderRepository) {}
+  constructor(
+    @inject('IUserRepository')
+    private userRepository: IUserRepository,
+    @inject('IFolderRepository')
+    private folderRepository: IFolderRepository
+  ) {}
 
   async execute(token: string): Promise<User> {
     const decoded = await verifyIdToken(token);

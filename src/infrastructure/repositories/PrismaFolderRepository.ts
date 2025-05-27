@@ -1,6 +1,6 @@
 import { injectable } from 'tsyringe';
 import { prisma } from '@/lib/prisma';
-import { Folder } from '@/domain/folder/Folder';
+import { Folder } from '@/types/folder/folder';
 import { IFolderRepository } from '@/domain/folder/IFolderRepository';
 @injectable()
 export class PrismaFolderRepository implements IFolderRepository {
@@ -46,6 +46,7 @@ export class PrismaFolderRepository implements IFolderRepository {
       name: folder.name,
       ownerId: folder.ownerId,
       isShared: folder.isShared,
+      shareKey: folder.shareKey,
       createdAt: folder.createdAt,
       links: folder.links,
     }));
@@ -75,6 +76,7 @@ export class PrismaFolderRepository implements IFolderRepository {
       name: folder.folder.name,
       ownerId: folder.folder.ownerId,
       isShared: folder.folder.isShared,
+      shareKey: folder.folder.shareKey,
       createdAt: folder.createdAt,
       links: folder.folder.links,
     }));

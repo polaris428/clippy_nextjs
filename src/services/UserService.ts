@@ -1,5 +1,15 @@
 import { LoginResponse } from '@/types/auth/loginResponse';
 export const UserService = {
+  async getMe(): Promise<LoginResponse> {
+    const res = await fetch('/api/auth/me', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    });
+
+    return (await res.json()) as LoginResponse;
+  },
+
   async postLogIn(token: string): Promise<LoginResponse> {
     const res = await fetch('/api/auth/login', {
       method: 'POST',
