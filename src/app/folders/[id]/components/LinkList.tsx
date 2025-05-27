@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Link } from '@/domain/link/Link';
+import { Link } from '@/types/links/link';
 import { format } from 'date-fns';
 import { useDeleteLink } from '@/hooks/useDeleteLink';
 

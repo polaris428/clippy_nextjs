@@ -1,4 +1,4 @@
-import { User } from './User';
+import { User } from '../../types/auth/user';
 
 export interface IUserRepository {
   /*

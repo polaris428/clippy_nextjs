@@ -1,6 +1,6 @@
 import { injectable, inject } from 'tsyringe';
 import { verifyIdToken } from '@/lib/firebase';
-import { User } from '@/domain/user/User';
+import { User } from '@/types/auth/user';
 import 'reflect-metadata';
 import '@/infrastructure/di/container';
 import { extractNameFromEmail } from '@/lib/utils/extractNameFromEmail';

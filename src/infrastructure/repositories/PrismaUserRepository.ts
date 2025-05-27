@@ -1,6 +1,6 @@
 import { injectable } from 'tsyringe';
 import { prisma } from '@/lib/prisma';
-import { User } from '@/domain/user/User';
+import { User } from '@/types/auth/user';
 import { IUserRepository } from '@/domain/user/IUserRepository';
 
 @injectable()

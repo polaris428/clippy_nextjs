@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { signInWithGoogle } from '@/lib/firebase/signInWithGoogle';
 import { PrimaryButton } from "@/components/design-system";
 import { useAuthStore } from '@/stores/useAuthStore';
+import { UserService } from '@/services/UserService'
 
 export default function LoginButton() {
   const router = useRouter();
@@ -13,16 +14,15 @@ export default function LoginButton() {
       const googleUser = await signInWithGoogle();
       if (!googleUser) return;
 
-      const token = await googleUser.getIdToken(); // Firebase에서 JWT 발급
-      const name = googleUser.displayName || '익명';
+      const token = await googleUser.getIdToken();
+      UserService.postLogIn(token)
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ name }),
-        credentials: 'include', // ✅ 쿠키로 저장하려면 꼭 필요
+        credentials: 'include',
       });
 
       if (!res.ok) {

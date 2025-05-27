@@ -1,4 +1,4 @@
-import { Folder } from './Folder';
+import { Folder } from '../../types/folder/folder';
 
 export interface IFolderRepository {
   /**

@@ -1,4 +1,4 @@
-// components/StartGuideSection.tsx
+'use client';
 import StartGuideCard from './StartGuideCard';
 
 import { useEffect, useRef, useState } from 'react';
@@ -41,7 +41,7 @@ export default function StartGuideSection() {
             ([entry]) => {
                 if (entry.isIntersecting) {
                     setVisible(true);
-                    observer.disconnect(); // 한 번만 작동
+                    observer.disconnect();
                 }
             },
             { threshold: 0.2 }
