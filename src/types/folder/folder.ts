@@ -8,4 +8,5 @@ export interface Folder {
   shareKey?: string | null;
   links: Link[];
   inviteCode?: string | null;
+  isInvite: boolean;
 }

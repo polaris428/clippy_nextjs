@@ -27,5 +27,5 @@ export interface IFolderRepository {
 
   findByInviteCode(inviteCode: string): Promise<Folder | null>;
   addCollaborator(data: { folderId: string; userId: string }): Promise<void>;
-  updateInviteCode(folderId: string, code: string): Promise<void>;
+  updateInviteCode(data: { folderId: string; isInvite: boolean; inviteCode: string }): Promise<void>;
 }

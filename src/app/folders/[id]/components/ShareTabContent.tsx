@@ -1,15 +1,23 @@
+import { Switch } from '@/components/design-system';
+import { useFolderIsInviteToggle } from '@/hooks/folder/useFolderIsInviteToggle';
+import { DefaultButton } from '@/components/design-system';
+export function ShareTabContent({ folderId, initialInvite, initiaInviteKey }: { folderId: string; initialInvite: boolean, initiaInviteKey: string }) {
+    const { isShared, toggleShare, shareKey } = useFolderIsInviteToggle({ folderId, initialInvite, initiaInviteKey });
+    const shareKeyText = `${window.location.origin}/shared/${shareKey}`
 
-
-export function ShareTabContent() {
     return (
         <div className="text-sm space-y-2">
             <div className="flex justify-between items-center py-2">
-                <span>편집 허용</span>
-
+                <p>웹 게시</p>
+                <Switch checked={isShared} onChange={toggleShare} />
             </div>
-            <div className="border rounded p-2 flex justify-between items-center">
-                <span>초대 링크</span>
-                <button className="text-blue-600 text-sm">복사</button>
+            <div>
+                {isShared && (
+                    <div className="border rounded p-1 flex justify-between items-center">
+                        <p className="truncate max-w-full">{shareKeyText}</p>
+                        <DefaultButton onClick={() => { navigator.clipboard.writeText(shareKeyText) }} label="복사" />
+                    </div>
+                )}
             </div>
 
 

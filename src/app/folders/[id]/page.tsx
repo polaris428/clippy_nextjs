@@ -6,7 +6,7 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import { useFolderPageActions } from '@/hooks/folder/useFolderPageActions';
 import LinkList from './components/LinkList';
 import { DefaultButton } from '@/components/design-system';
-import ShareDialog from './components/ShareDialog'; // folders/[id]/ 내에 위치
+import ShareDialog from './components/ShareDialog';
 
 export default function FolderPage() {
     const params = useParams<{ id: string }>();
@@ -45,7 +45,7 @@ export default function FolderPage() {
                     {/* 다이얼로그는 해당 버튼 아래에 위치하도록 absolute로 설정 */}
                     {isShareOpen && (
                         <div className="absolute left-0 mt-2 z-50">
-                            <ShareDialog folderId={folder.id} initialShared={folder.isShared} initiaShareKey={folder.shareKey || ""} />
+                            <ShareDialog folder={folder} />
                         </div>
                     )}
                 </div>

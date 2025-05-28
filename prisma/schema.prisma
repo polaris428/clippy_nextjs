@@ -30,6 +30,7 @@ model Folder {
   shareKey   String?  @unique
   shares     UserFolderShare[]
   isShared  Boolean  @default(false)
+  isInvite  Boolean  @default(false)
   createdAt  DateTime  @default(now())
 }
 

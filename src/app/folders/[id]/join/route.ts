@@ -13,9 +13,10 @@ export async function POST(req: NextRequest, { params }: Params) {
   try {
     const userId = await getCurrentUserId();
     const folderId = params.id;
-
+    const isInvite = await req.json();
     const usecase = container.resolve(GenerateInviteCode);
-    const inviteCode = await usecase.execute(folderId, userId);
+
+    const inviteCode = await usecase.execute(folderId, isInvite, userId);
 
     return NextResponse.json({ inviteCode });
   } catch (err) {

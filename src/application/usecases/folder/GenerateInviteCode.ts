@@ -6,7 +6,7 @@ import type { IFolderRepository } from '@/domain/folder/IFolderRepository';
 export class GenerateInviteCode {
   constructor(@inject('IFolderRepository') private folderRepository: IFolderRepository) {}
 
-  async execute(folderId: string, userId: string): Promise<string> {
+  async execute(folderId: string, isInvite: boolean, userId: string): Promise<string> {
     const folder = await this.folderRepository.findById(folderId);
 
     if (!folder || folder.ownerId !== userId) {
@@ -15,7 +15,7 @@ export class GenerateInviteCode {
 
     const inviteCode = folder.inviteCode ?? randomUUID();
 
-    await this.folderRepository.updateInviteCode(folderId, inviteCode);
+    await this.folderRepository.updateInviteCode({ folderId, isInvite, inviteCode });
 
     return inviteCode;
   }

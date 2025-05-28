@@ -26,6 +26,7 @@ export class PrismaFolderRepository implements IFolderRepository {
       isShared: folder.isShared,
       createdAt: folder.createdAt,
       links: folder.links,
+      isInvite: folder.isInvite,
     };
   }
 
@@ -49,6 +50,7 @@ export class PrismaFolderRepository implements IFolderRepository {
       shareKey: folder.shareKey,
       createdAt: folder.createdAt,
       links: folder.links,
+      isInvite: folder.isInvite,
     }));
   }
 
@@ -71,14 +73,15 @@ export class PrismaFolderRepository implements IFolderRepository {
       },
     });
 
-    return sharedFolders.map(folder => ({
-      id: folder.id,
-      name: folder.folder.name,
-      ownerId: folder.folder.ownerId,
-      isShared: folder.folder.isShared,
-      shareKey: folder.folder.shareKey,
-      createdAt: folder.createdAt,
-      links: folder.folder.links,
+    return sharedFolders.map(shearFolder => ({
+      id: shearFolder.id,
+      name: shearFolder.folder.name,
+      ownerId: shearFolder.folder.ownerId,
+      isShared: shearFolder.folder.isShared,
+      shareKey: shearFolder.folder.shareKey,
+      createdAt: shearFolder.createdAt,
+      links: shearFolder.folder.links,
+      isInvite: shearFolder.folder.isInvite,
     }));
   }
 
@@ -102,6 +105,7 @@ export class PrismaFolderRepository implements IFolderRepository {
       isShared: folder.isShared,
       createdAt: folder.createdAt,
       links: folder.links,
+      isInvite: folder.isInvite,
     };
   }
 
@@ -132,12 +136,16 @@ export class PrismaFolderRepository implements IFolderRepository {
       isShared: folder.isShared,
       createdAt: folder.createdAt,
       links: folder.links,
+      isInvite: folder.isInvite,
     };
   }
-  async updateInviteCode(folderId: string, code: string): Promise<void> {
+  async updateInviteCode(data: { folderId: string; isInvite: boolean; inviteCode: string }): Promise<void> {
     await prisma.folder.update({
-      where: { id: folderId },
-      data: { inviteCode: code },
+      where: { id: data.folderId },
+      data: {
+        isInvite: data.isInvite,
+        inviteCode: data.inviteCode,
+      },
     });
   }
 

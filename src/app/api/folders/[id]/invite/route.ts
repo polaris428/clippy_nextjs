@@ -5,15 +5,19 @@ import { container } from 'tsyringe';
 import { GenerateInviteCode } from '@/application/usecases/folder/GenerateInviteCode';
 import { getCurrentUserId } from '@/lib/utils/getCurrentUserId';
 import { getVerifiedUser } from '@/lib/utils/getVerifiedUser';
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    console.log('✅ getVerifiedUser 호출 시작');
     await getVerifiedUser();
     const userId = await getCurrentUserId();
+    console.log('✅ getVerifiedUser 호출 성공');
 
-    const folderId = params.id;
+    const folderId = (await params).id;
+
+    const body = await req.json();
 
     const usecase = container.resolve(GenerateInviteCode);
-    const inviteCode = await usecase.execute(folderId, userId);
+    const inviteCode = await usecase.execute(folderId, body.isInvite, userId);
 
     return NextResponse.json({ inviteCode });
   } catch (err) {

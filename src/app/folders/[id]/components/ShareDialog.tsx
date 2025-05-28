@@ -5,14 +5,12 @@ import DialogFrame from '@/components/design-system/dialogs/DialogFrame';
 import { ShareTabContent } from './ShareTabContent';
 import { PublishTabContent } from './PublishTabContent';
 import { DefaultButton } from '@/components/design-system';
+import { Folder } from './../../../../types/folder/folder';
 
 interface ShareDialogProps {
-    folderId: string;
-    initialShared: boolean;
-    initiaShareKey: string
+    folder: Folder;
 }
-
-export default function ShareDialog({ folderId, initialShared, initiaShareKey }: ShareDialogProps) {
+export default function ShareDialog({ folder }: ShareDialogProps) {
     const [tab, setTab] = useState<'share' | 'publish'>('share');
 
     return (
@@ -44,8 +42,8 @@ export default function ShareDialog({ folderId, initialShared, initiaShareKey }:
 
 
 
-            {tab === 'share' && <ShareTabContent />}
-            {tab === 'publish' && <PublishTabContent folderId={folderId} initialShared={initialShared} initiaShareKey={initiaShareKey} />}
+            {tab === 'share' && <ShareTabContent folderId={folder.id} initialInvite={folder.isInvite} initiaInviteKey={folder.inviteCode || ""} />}
+            {tab === 'publish' && <PublishTabContent folderId={folder.id} initialShared={folder.isShared} initiaShareKey={folder.shareKey || ""} />}
         </DialogFrame>
     );
 }
