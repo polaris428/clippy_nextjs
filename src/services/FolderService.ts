@@ -11,15 +11,14 @@ export const FolderService = {
     return await res.json();
   },
 
-  async generateInviteCode(id: string): Promise<string> {
-    console.log('sdfsadfdfd');
+  async generateInviteCode(id: string, isInvite: boolean): Promise<string> {
     const res = await fetch(`/api/folders/${id}/invite`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
       credentials: 'include',
-      body: JSON.stringify({ isInvite: true }),
+      body: JSON.stringify({ isInvite: isInvite }),
     });
     if (!res.ok) throw new Error('초대 코드 생성 실패');
     const data = await res.json();

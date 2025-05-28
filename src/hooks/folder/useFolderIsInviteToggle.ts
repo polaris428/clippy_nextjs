@@ -8,36 +8,37 @@ interface UseFolderInviteTogglerops {
 }
 
 export function useFolderIsInviteToggle({ folderId, initialInvite, initiaInviteKey }: UseFolderInviteTogglerops) {
-  const [isShared, setIsShared] = useState(initialInvite);
+  const [isIsInvite, setIsInvite] = useState(initialInvite);
   const [loading, setLoading] = useState(false);
-  const [shareKey, setShareKey] = useState(initiaInviteKey);
+  const [inviteCode, setInviteCode] = useState(initiaInviteKey);
   const updateFolder = useAuthStore(s => s.updateFolder);
-  const toggleShare = async (isShared: boolean) => {
+  const toggleShare = async (isIsInvite: boolean) => {
     setLoading(true);
     try {
-      const shareKey = await FolderService.shareFolder(folderId, isShared);
-      setIsShared(isShared);
+      const shareKey = await FolderService.generateInviteCode(folderId, isIsInvite);
+
+      setIsInvite(isIsInvite);
       updateFolder(folderId, {
-        isShared: isShared,
-        shareKey: isShared && shareKey ? `${shareKey}` : '',
+        isShared: isIsInvite,
+        shareKey: inviteCode && shareKey ? `${shareKey}` : '',
       });
-      if (isShared && shareKey) {
-        setShareKey(`${shareKey}`);
-      } else if (!isShared) {
-        setShareKey(``);
+      if (isIsInvite && shareKey) {
+        setInviteCode(`${shareKey}`);
+      } else if (!isIsInvite) {
+        setInviteCode(``);
       }
     } catch (err) {
       console.error('공유 상태 변경 실패:', err);
-      setShareKey(``);
+      setInviteCode(``);
     } finally {
       setLoading(false);
     }
   };
 
   return {
-    isShared,
+    isIsInvite,
     loading,
-    shareKey,
+    inviteCode,
     toggleShare,
   };
 }

@@ -14,7 +14,7 @@ export default function FolderPage() {
     const router = useRouter();
     const folders = useAuthStore((s) => s.folders);
     const folder = folders.find((f) => f.id === folderId);
-    const { fetchFolder, generateInviteCode } = useFolderPageActions(folderId);
+    const { fetchFolder } = useFolderPageActions();
 
     const [isShareOpen, setIsShareOpen] = useState(false);
     const shareButtonRef = useRef<HTMLDivElement>(null);
@@ -52,13 +52,6 @@ export default function FolderPage() {
             </div>
 
             <h1 className="text-2xl font-bold mb-6">📁 {folder.name}</h1>
-
-            <div
-                className="inline-block cursor-pointer text-sm bg-green-600 text-white px-4 py-2 rounded mb-4 ml-2"
-                onClick={generateInviteCode}
-            >
-                📨 초대 코드 만들기
-            </div>
 
 
 
