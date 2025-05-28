@@ -24,6 +24,23 @@ export default function FolderPage() {
     };
 
     useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                isShareOpen &&
+                shareButtonRef.current &&
+                !shareButtonRef.current.contains(event.target as Node)
+            ) {
+                setIsShareOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isShareOpen]);
+
+    useEffect(() => {
         if (!folder) {
             fetchFolder().catch(() => router.replace('/'));
         }
