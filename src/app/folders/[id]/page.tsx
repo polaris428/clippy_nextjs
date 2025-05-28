@@ -7,7 +7,8 @@ import { useFolderPageActions } from '@/hooks/folder/useFolderPageActions';
 import LinkList from './components/LinkList';
 import { DefaultButton } from '@/components/design-system';
 import ShareDialog from './components/ShareDialog';
-
+import EmptyFolder from '@/components/EmptyFolder'
+    ;
 export default function FolderPage() {
     const params = useParams<{ id: string }>();
     const folderId = params.id;
@@ -75,7 +76,7 @@ export default function FolderPage() {
             {folder.links?.length ? (
                 <LinkList links={folder.links} />
             ) : (
-                <p className="text-gray-500">이 폴더에는 아직 링크가 없습니다.</p>
+                EmptyFolder()
             )}
         </div>
     );
