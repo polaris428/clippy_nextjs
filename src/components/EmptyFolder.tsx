@@ -8,8 +8,8 @@ export default function EmptyFolder() {
       <Image
         src="/img/empty-folder.svg"
         alt="Empty folder illustration"
-        width={240}
-        height={240}
+        width={300}
+        height={300}
         className="mb-6"
       />
       <p className="text-lg font-medium">이 폴더에는 아직 링크가 없습니다.</p>

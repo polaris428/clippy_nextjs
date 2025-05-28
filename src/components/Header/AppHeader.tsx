@@ -17,9 +17,6 @@ const Header = ({ userImageUrl }: HeaderProps) => {
         Clippy
       </div>
       <div className="flex items-center gap-3">
-        <button className="bg-blue-100 text-sm text-blue-900 font-medium px-4 py-1.5 rounded-full hover:bg-blue-200 transition">
-          Save Link
-        </button>
         <Image
           src={imgSrc}
           alt="User Avatar"

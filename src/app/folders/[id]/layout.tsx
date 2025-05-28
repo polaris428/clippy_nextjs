@@ -16,7 +16,6 @@ export default async function FolderLayout({ children }: FolderLayoutProps) {
 
   let uid = '';
   try {
-    console.log(token)
     const decoded = await verifyIdToken(token);
     uid = decoded.uid;
   } catch (err) {

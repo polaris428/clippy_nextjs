@@ -7,13 +7,9 @@ import { getCurrentUserId } from '@/lib/utils/getCurrentUserId';
 import { getVerifiedUser } from '@/lib/utils/getVerifiedUser';
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    console.log('✅ getVerifiedUser 호출 시작');
     await getVerifiedUser();
     const userId = await getCurrentUserId();
-    console.log('✅ getVerifiedUser 호출 성공');
-
     const folderId = (await params).id;
-
     const body = await req.json();
 
     const usecase = container.resolve(GenerateInviteCode);
