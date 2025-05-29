@@ -3,6 +3,9 @@
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import SidebarButton from '../design-system/Button/SidebarNavButton';
+import CreateFolderModal from '../modal/CreateFolderModal';
+import SaveLinkModal from '../modal/SaveLinkModal';
+import { Folder } from '@/types/folder/folder'
 import {
     BookmarkSimple,
     FolderSimple,
@@ -12,10 +15,7 @@ import {
     LinkSimple,
 } from 'phosphor-react';
 
-interface Folder {
-    id: string;
-    name: string;
-}
+
 
 interface SidebarProps {
     initialFolders: Folder[];
@@ -28,11 +28,6 @@ export default function Sidebar({ initialFolders }: SidebarProps) {
     const [folders, setFolders] = useState<Folder[]>(initialFolders);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
-    const [newFolderName, setNewFolderName] = useState('');
-    const [isShared, setIsShared] = useState(false);
-    const [linkTitle, setLinkTitle] = useState('');
-    const [linkUrl, setLinkUrl] = useState('');
-    const [selectedFolderId, setSelectedFolderId] = useState('');
 
     useEffect(() => {
         fetch('/api/folders', { credentials: 'include' })
@@ -41,47 +36,36 @@ export default function Sidebar({ initialFolders }: SidebarProps) {
             .catch((err) => console.error('폴더 로딩 실패:', err));
     }, []);
 
-    const handleCreateFolder = async () => {
-        if (!newFolderName.trim()) return alert('폴더 이름을 입력하세요.');
+    const handleCreateFolder = async (name: string, isShared: boolean) => {
         try {
             const res = await fetch('/api/folders', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify({ name: newFolderName.trim(), isShared }),
+                body: JSON.stringify({ name, isShared }),
             });
             if (!res.ok) return alert('폴더 생성 실패');
             const newFolder = await res.json();
             setFolders((prev) => [...prev, newFolder]);
-            setIsModalOpen(false);
-            setNewFolderName('');
-            setIsShared(false);
         } catch (err) {
             console.error('🔥 폴더 생성 오류:', err);
             alert('오류 발생');
         }
     };
 
-    const handleSaveLink = async () => {
-        if (!linkTitle.trim() || !linkUrl.trim() || !selectedFolderId) {
-            return alert('모든 값을 입력하세요.');
-        }
+    const handleSaveLink = async (
+        title: string,
+        url: string,
+        folderId: string
+    ) => {
         try {
             const res = await fetch('/api/links', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify({
-                    title: linkTitle,
-                    url: linkUrl,
-                    folderId: selectedFolderId,
-                }),
+                body: JSON.stringify({ title, url, folderId }),
             });
             if (!res.ok) return alert('링크 저장 실패');
-            setIsLinkModalOpen(false);
-            setLinkTitle('');
-            setLinkUrl('');
-            setSelectedFolderId('');
         } catch (err) {
             console.error('🔥 링크 저장 오류:', err);
             alert('링크 저장 실패');
@@ -90,9 +74,7 @@ export default function Sidebar({ initialFolders }: SidebarProps) {
 
     return (
         <div className="h-full flex flex-col justify-between p-6 bg-white">
-            {/* 상단 고정 + 스크롤 감싼 영역 */}
             <div className="flex flex-col flex-1 min-h-0">
-                {/* 상단 네비게이션 */}
                 <div className="mb-4 space-y-1">
                     <SidebarButton
                         icon={<BookmarkSimple size={18} />}
@@ -116,7 +98,6 @@ export default function Sidebar({ initialFolders }: SidebarProps) {
 
                 <hr className="my-2" />
 
-                {/* 폴더 리스트 - 스크롤 */}
                 <div className="flex-1 overflow-y-auto min-h-0">
                     <ul className="space-y-1">
                         {folders.map((folder) => (
@@ -135,7 +116,6 @@ export default function Sidebar({ initialFolders }: SidebarProps) {
 
             <hr className="my-2" />
 
-            {/* 하단 고정 버튼 */}
             <div className="space-y-2 pt-3">
                 <SidebarButton
                     icon={<PlusCircle size={18} />}
@@ -149,73 +129,18 @@ export default function Sidebar({ initialFolders }: SidebarProps) {
                 />
             </div>
 
-            {/* 폴더 추가 모달 */}
-            {isModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded shadow-lg w-[320px]">
-                        <h3 className="text-lg font-semibold mb-4">📁 폴더 만들기</h3>
-                        <input
-                            type="text"
-                            className="border p-2 w-full mb-2 rounded"
-                            placeholder="폴더 이름"
-                            value={newFolderName}
-                            onChange={(e) => setNewFolderName(e.target.value)}
-                        />
-                        <label className="flex items-center mb-4">
-                            <input
-                                type="checkbox"
-                                checked={isShared}
-                                onChange={(e) => setIsShared(e.target.checked)}
-                                className="mr-2"
-                            />
-                            공유 폴더
-                        </label>
-                        <div className="flex justify-end space-x-2">
-                            <SidebarButton label="취소" onClick={() => setIsModalOpen(false)} />
-                            <SidebarButton label="생성" onClick={handleCreateFolder} />
-                        </div>
-                    </div>
-                </div>
-            )}
+            <CreateFolderModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSubmit={handleCreateFolder}
+            />
 
-            {/* 링크 저장 모달 */}
-            {isLinkModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded shadow-lg w-[320px]">
-                        <h3 className="text-lg font-semibold mb-4">🔗 링크 저장</h3>
-                        <input
-                            type="text"
-                            className="border p-2 w-full mb-2 rounded"
-                            placeholder="링크 제목"
-                            value={linkTitle}
-                            onChange={(e) => setLinkTitle(e.target.value)}
-                        />
-                        <input
-                            type="text"
-                            className="border p-2 w-full mb-2 rounded"
-                            placeholder="https://example.com"
-                            value={linkUrl}
-                            onChange={(e) => setLinkUrl(e.target.value)}
-                        />
-                        <select
-                            className="border p-2 w-full mb-4 rounded"
-                            value={selectedFolderId}
-                            onChange={(e) => setSelectedFolderId(e.target.value)}
-                        >
-                            <option value="">폴더 선택</option>
-                            {folders.map((folder) => (
-                                <option key={folder.id} value={folder.id}>
-                                    {folder.name}
-                                </option>
-                            ))}
-                        </select>
-                        <div className="flex justify-end space-x-2">
-                            <SidebarButton label="취소" onClick={() => setIsLinkModalOpen(false)} />
-                            <SidebarButton label="저장" onClick={handleSaveLink} />
-                        </div>
-                    </div>
-                </div>
-            )}
+            <SaveLinkModal
+                isOpen={isLinkModalOpen}
+                onClose={() => setIsLinkModalOpen(false)}
+                onSubmit={handleSaveLink}
+                folders={folders}
+            />
         </div>
     );
 }
