@@ -1,60 +1,33 @@
+'use client';
 
 import Sidebar from '@/components/sidebar/Sidebar';
 import AppHeader from '@/components/Header/AppHeader';
-import prisma from '@/lib/prisma';
-import { getAuthCookie } from '@/lib/utils/cookies';
-import { verifyIdToken } from '@/lib/firebase';
-import { redirect } from 'next/navigation';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { Folder } from '@/types/folder/folder';
+import { User } from '@/types/auth/user';
+import { useFetchCurrentUserData } from '@/hooks/user/useFetchCurrentUserData';
 
-interface FolderLayoutProps {
+interface FolderLayoutClientProps {
+  user: User;
+  folders: Folder[];
   children: React.ReactNode;
 }
 
-export default async function FolderLayout({ children }: FolderLayoutProps) {
-  const token = await getAuthCookie();
-  if (!token) return redirect('/');
-
-  let uid = '';
-  try {
-    const decoded = await verifyIdToken(token);
-    uid = decoded.uid;
-  } catch (err) {
-    console.error('❌ 토큰 검증 실패:', err);
-    return redirect('/');
+export default function FolderLayoutClient({ children }: FolderLayoutClientProps) {
+  const currentUser = useAuthStore((s) => s.user);
+  useFetchCurrentUserData(currentUser);
+  if (!currentUser) {
+    return
   }
-
-
-  const user = await prisma.user.findUnique({
-    where: { firebaseUid: uid },
-  });
-
-  if (!user) {
-    return redirect('/');
-  }
-
-
-  const folders = await prisma.folder.findMany({
-    where: { ownerId: user.id },
-    orderBy: { createdAt: 'asc' },
-    select: {
-      id: true,
-      name: true,
-    },
-  });
-
   return (
     <div className="h-screen flex flex-col overflow-hidden">
-      <AppHeader userImageUrl={user.profileImage ?? ""} />
+      <AppHeader userImageUrl={currentUser!.profileImage ?? ''} />
       <div className="flex flex-1 overflow-y-auto">
-        <aside className="w-80 flex-shrink-0 h-full overflow-y-auto ">
-
-          <Sidebar initialFolders={folders} />
+        <aside className="w-80 flex-shrink-0 h-full overflow-y-auto">
+          <Sidebar />
         </aside>
         <main className="flex-1 overflow-y-auto bg-white p-6">{children}</main>
       </div>
-
-
     </div>
-
   );
 }

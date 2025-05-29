@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import SidebarButton from '../design-system/Button/SidebarNavButton';
 import CreateFolderModal from '../modal/CreateFolderModal';
 import SaveLinkModal from '../modal/SaveLinkModal';
-import { Folder } from '@/types/folder/folder'
+import { useAuthStore } from '@/stores/useAuthStore';
 import {
     BookmarkSimple,
     FolderSimple,
@@ -15,26 +15,14 @@ import {
     LinkSimple,
 } from 'phosphor-react';
 
-
-
-interface SidebarProps {
-    initialFolders: Folder[];
-}
-
-export default function Sidebar({ initialFolders }: SidebarProps) {
+export default function Sidebar() {
     const pathname = usePathname();
     const currentFolderId = pathname.split('/folders/')[1]?.split('/')[0];
 
-    const [folders, setFolders] = useState<Folder[]>(initialFolders);
+    const folders = useAuthStore((s) => s.folders);
+    const addFolder = useAuthStore((s) => s.addFolder);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
-
-    useEffect(() => {
-        fetch('/api/folders', { credentials: 'include' })
-            .then((res) => res.json())
-            .then((data) => setFolders(data.folders || []))
-            .catch((err) => console.error('폴더 로딩 실패:', err));
-    }, []);
 
     const handleCreateFolder = async (name: string, isShared: boolean) => {
         try {
@@ -46,7 +34,7 @@ export default function Sidebar({ initialFolders }: SidebarProps) {
             });
             if (!res.ok) return alert('폴더 생성 실패');
             const newFolder = await res.json();
-            setFolders((prev) => [...prev, newFolder]);
+            addFolder(newFolder);
         } catch (err) {
             console.error('🔥 폴더 생성 오류:', err);
             alert('오류 발생');

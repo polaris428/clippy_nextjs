@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useAuthStore } from '@/stores/useAuthStore';
-import { useFolderPageActions } from '@/hooks/folder/useFolderPageActions';
+
 import LinkList from './components/LinkList';
 import { DefaultButton } from '@/components/design-system';
 import ShareDialog from './components/ShareDialog';
@@ -12,10 +12,8 @@ import EmptyFolder from '@/components/EmptyFolder'
 export default function FolderPage() {
     const params = useParams<{ id: string }>();
     const folderId = params.id;
-    const router = useRouter();
     const folders = useAuthStore((s) => s.folders);
     const folder = folders.find((f) => f.id === folderId);
-    const { fetchFolder } = useFolderPageActions();
 
     const [isShareOpen, setIsShareOpen] = useState(false);
     const shareButtonRef = useRef<HTMLDivElement>(null);
@@ -41,11 +39,6 @@ export default function FolderPage() {
         };
     }, [isShareOpen]);
 
-    useEffect(() => {
-        if (!folder) {
-            fetchFolder().catch(() => router.replace('/'));
-        }
-    }, [folder, fetchFolder, router]);
 
     if (!folder) return;
 
@@ -76,7 +69,7 @@ export default function FolderPage() {
             {folder.links?.length ? (
                 <LinkList links={folder.links} />
             ) : (
-                EmptyFolder()
+                <EmptyFolder />
             )}
         </div>
     );

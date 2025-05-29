@@ -7,7 +7,7 @@ export const useGenerateInviteCode = () => {
     });
 
     if (!res.ok) {
-      throw new Error('초대 코111드 생성 실패');
+      throw new Error('초대 코드 생성 실패');
     }
 
     const data = await res.json();
