@@ -1,11 +1,10 @@
-// src/hooks/folder/useCreateFolder.ts
 import { useAuthStore } from '@/stores/useAuthStore';
 import { FolderService } from '@/services/FolderService';
 import { useRouter } from 'next/navigation';
 export function useCreateFolder() {
   const addFolder = useAuthStore(s => s.addFolder);
   const updateFolder = useAuthStore(s => s.updateFolder);
-  //const removeFolder = useAuthStore(s => s.removeFolder);
+  const removeFolder = useAuthStore(s => s.removeFolder);
 
   const router = useRouter();
   const createFolder = async (name: string, isShared: boolean) => {
@@ -27,8 +26,8 @@ export function useCreateFolder() {
     addFolder(optimisticFolder);
 
     try {
-      const newFolder = await FolderService.createfolder(name, isShared);
-      //TODO : ID 업데이트가 반영이 안됨
+      const { newFolder } = await FolderService.createfolder(name, isShared);
+
       updateFolder(tempId, newFolder);
       const currentPath = window.location.pathname;
       if (currentPath.includes(`/folders/${tempId}`)) {
@@ -36,7 +35,7 @@ export function useCreateFolder() {
       }
     } catch (err) {
       console.error('🔥 폴더 생성 실패:', err);
-      //removeFolder(tempId);
+      removeFolder(tempId);
       throw err;
     }
   };
