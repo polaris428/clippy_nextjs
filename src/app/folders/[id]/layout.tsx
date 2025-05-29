@@ -17,7 +17,7 @@ export default function FolderLayoutClient({ children }: FolderLayoutClientProps
   const currentUser = useAuthStore((s) => s.user);
   useFetchCurrentUserData(currentUser);
   if (!currentUser) {
-    return
+    return null
   }
   return (
     <div className="h-screen flex flex-col overflow-hidden">

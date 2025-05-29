@@ -20,27 +20,9 @@ export default function Sidebar() {
     const currentFolderId = pathname.split('/folders/')[1]?.split('/')[0];
 
     const folders = useAuthStore((s) => s.folders);
-    const addFolder = useAuthStore((s) => s.addFolder);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
-
-    const handleCreateFolder = async (name: string, isShared: boolean) => {
-        try {
-            const res = await fetch('/api/folders', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({ name, isShared }),
-            });
-            if (!res.ok) return alert('폴더 생성 실패');
-            const newFolder = await res.json();
-            addFolder(newFolder);
-        } catch (err) {
-            console.error('🔥 폴더 생성 오류:', err);
-            alert('오류 발생');
-        }
-    };
-
+    console.log('[Sidebar] folders state:', folders);
     const handleSaveLink = async (
         title: string,
         url: string,
@@ -88,16 +70,18 @@ export default function Sidebar() {
 
                 <div className="flex-1 overflow-y-auto min-h-0">
                     <ul className="space-y-1">
-                        {folders.map((folder) => (
-                            <li key={folder.id}>
-                                <SidebarButton
-                                    icon={<Folders size={18} />}
-                                    label={folder.name}
-                                    href={`/folders/${folder.id}`}
-                                    selected={folder.id === currentFolderId}
-                                />
-                            </li>
-                        ))}
+                        {folders.map((folder) => {
+                            return (
+                                <li key={folder.id}>
+                                    <SidebarButton
+                                        icon={<Folders size={18} />}
+                                        label={folder.name}
+                                        href={`/folders/${folder.id}`}
+                                        selected={folder.id === currentFolderId}
+                                    />
+                                </li>
+                            );
+                        })}
                     </ul>
                 </div>
             </div>
@@ -120,7 +104,6 @@ export default function Sidebar() {
             <CreateFolderModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                onSubmit={handleCreateFolder}
             />
 
             <SaveLinkModal

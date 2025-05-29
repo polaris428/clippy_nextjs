@@ -1,4 +1,15 @@
 export const FolderService = {
+  async createfolder(name: string, isShared: boolean) {
+    const res = await fetch('/api/folders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ name, isShared }),
+    });
+    if (!res.ok) throw new Error('폴더 생성 실패');
+    return await res.json();
+  },
+
   async getFolderAll() {
     const res = await fetch(`/api/folders/all`, { credentials: 'include' });
     if (!res.ok) throw new Error('폴더 조회 실패');
