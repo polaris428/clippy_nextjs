@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import SidebarButton from '../design-system/Button/SidebarNavButton';
+import DefaultButton from '../design-system/Button/DefaultButton/DefaultButton';
 import { Folder } from '@/types/folder/folder'
 
 interface Props {
@@ -63,8 +63,8 @@ export default function SaveLinkModal({ isOpen, onClose, onSubmit, folders }: Pr
                     ))}
                 </select>
                 <div className="flex justify-end space-x-2">
-                    <SidebarButton label="취소" onClick={onClose} />
-                    <SidebarButton label="저장" onClick={handleSubmit} />
+                    <DefaultButton label="취소" onClick={onClose} />
+                    <DefaultButton label="저장" onClick={handleSubmit} />
                 </div>
             </div>
         </div>

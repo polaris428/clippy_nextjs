@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import SidebarButton from '../design-system/Button/SidebarNavButton';
+import DefaultButton from '../design-system/Button/DefaultButton/DefaultButton';
 import { useCreateFolder } from '@/hooks/folder/useCreateFolder';
 
 interface Props {
@@ -62,8 +62,8 @@ export default function CreateFolderModal({ isOpen, onClose }: Props) {
                     공유 폴더
                 </label>
                 <div className="flex justify-end space-x-2">
-                    <SidebarButton label="취소" onClick={onClose} />
-                    <SidebarButton label="생성" onClick={handleCreateFolder} />
+                    <DefaultButton label="취소" onClick={onClose} />
+                    <DefaultButton label="생성" onClick={handleCreateFolder} />
                 </div>
             </div>
         </div>
