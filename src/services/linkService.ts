@@ -1,7 +1,8 @@
 import { CreateLinkInput } from '@/types/CreateLinkInput';
+import { Link } from '@/types/links/link';
 
 export const LinkService = {
-  async createLink({ title, url, folderId }: CreateLinkInput): Promise<boolean> {
+  async createLink({ title, url, folderId }: CreateLinkInput): Promise<Link> {
     try {
       const res = await fetch('/api/links', {
         method: 'POST',
@@ -9,16 +10,19 @@ export const LinkService = {
         credentials: 'include',
         body: JSON.stringify({ title, url, folderId }),
       });
-
-      if (!res.ok) {
-        console.error('❌ 링크 생성 실패', await res.text());
-        return false;
+      const json = await res.json();
+      console.log('티키카타타ㅏ타타타', json);
+      console.log('티키카타타ㅏ타타타', json.success);
+      if (!res.ok || !json.success) {
+        const errorText = await res.text();
+        console.error('❌ 링크 생성 실패:', errorText);
+        throw new Error(errorText || '링크 생성 실패');
       }
 
-      return true;
+      return json.link as Link;
     } catch (err) {
       console.error('🔥 링크 생성 중 예외 발생:', err);
-      return false;
+      throw err;
     }
   },
   async deleteLink(linkId: string): Promise<void> {

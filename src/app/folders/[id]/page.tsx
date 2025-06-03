@@ -21,7 +21,8 @@ export default function FolderPage() {
     const toggleShareDialog = () => {
         setIsShareOpen((prev) => !prev);
     };
-
+    console.log('🔥 FolderPage 렌더링됨');
+    console.log('📦 folder.links:', folder?.links);
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (

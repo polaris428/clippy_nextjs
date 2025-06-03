@@ -12,7 +12,6 @@ import { Input } from '@/components/ui/input';
 import { useState, useEffect } from 'react';
 
 interface Props {
-    folderId: string;
     initialName: string;
     open: boolean;
     onClose: () => void;
@@ -20,7 +19,6 @@ interface Props {
 }
 
 export default function RenameFolderDialog({
-    folderId,
     initialName,
     open,
     onClose,
@@ -32,7 +30,7 @@ export default function RenameFolderDialog({
     useEffect(() => {
         if (open) setName(initialName);
     }, [initialName, open]);
-    console.log(folderId)
+
     return (
         <Dialog open={open} onOpenChange={onClose}>
             <DialogContent>

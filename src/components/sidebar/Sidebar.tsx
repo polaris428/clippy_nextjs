@@ -14,7 +14,7 @@ import {
     PlusCircle,
     LinkSimple,
 } from 'phosphor-react';
-
+import { useCreateLink } from '@/hooks/user/useCreateLink';
 export default function Sidebar() {
     const pathname = usePathname();
     const currentFolderId = pathname.split('/folders/')[1]?.split('/')[0];
@@ -26,25 +26,7 @@ export default function Sidebar() {
     const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
     const [mode, setMode] = useState<'delete' | 'rename' | null>(null);
     const targetFolder = folders.find((f) => f.id === targetFolderId) ?? null;
-
-    const handleSaveLink = async (
-        title: string,
-        url: string,
-        folderId: string
-    ) => {
-        try {
-            const res = await fetch('/api/links', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({ title, url, folderId }),
-            });
-            if (!res.ok) return alert('링크 저장 실패');
-        } catch (err) {
-            console.error('🔥 링크 저장 오류:', err);
-            alert('링크 저장 실패');
-        }
-    };
+    const { createLink } = useCreateLink()
 
     return (
         <div className="h-full flex flex-col justify-between p-6 bg-white">
@@ -97,11 +79,12 @@ export default function Sidebar() {
             <SaveLinkModal
                 isOpen={isLinkModalOpen}
                 onClose={() => setIsLinkModalOpen(false)}
-                onSubmit={handleSaveLink}
-                folders={folders}
+                onSubmit={(title, url, folderId) =>
+                    createLink({ title, url, folderId })
+                }
+                folders={folders} // ✅ 이거 추가!
             />
             <DeleteFolderDialog
-                folderId={targetFolderId ?? ''}
                 open={mode === 'delete'}
                 onClose={() => {
                     setTargetFolderId(null);
@@ -119,7 +102,6 @@ export default function Sidebar() {
                 }}
             />
             <RenameFolderDialog
-                folderId={targetFolder?.id ?? ''}
                 initialName={targetFolder?.name ?? ''}
                 open={mode === 'rename'}
                 onClose={() => {

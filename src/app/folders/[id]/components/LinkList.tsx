@@ -1,12 +1,13 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useState } from 'react';
+
 import { Link } from '@/types/links/link';
 import { format } from 'date-fns';
 import { useDeleteLink } from '@/hooks/user/useDeleteLink';
 
 export default function LinkList({ links, readOnly = false }: { links: Link[]; readOnly?: boolean }) {
-    const [localLinks, setLocalLinks] = useState(links);
+
     const { deleteLink } = useDeleteLink();
 
     const togglePin = async (id: string, current: boolean) => {
@@ -24,12 +25,8 @@ export default function LinkList({ links, readOnly = false }: { links: Link[]; r
                 throw new Error('핀 상태 변경 실패');
             }
 
-            const updated = await res.json();
-            setLocalLinks(prev =>
-                prev.map(link =>
-                    link.id === id ? { ...link, isPin: updated.isPin } : link
-                )
-            );
+            //const updated = await res.json();
+
         } catch (err) {
             alert('핀 토글에 실패했습니다.');
             console.error(err);
@@ -38,7 +35,7 @@ export default function LinkList({ links, readOnly = false }: { links: Link[]; r
 
     return (
         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full">
-            {localLinks.map((link) => {
+            {links.map((link) => {
                 const href = link.url.startsWith('http') ? link.url : `https://${link.url}`;
                 const domain = (() => {
                     try {
@@ -90,7 +87,7 @@ export default function LinkList({ links, readOnly = false }: { links: Link[]; r
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             deleteLink(link.id);
-                                            setLocalLinks(prev => prev.filter(l => l.id !== link.id));
+                                            // setLocalLinks(prev => prev.filter(l => l.id !== link.id));
                                         }}
                                         className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-gray-700 text-sm hover:bg-gray-100"
                                     >

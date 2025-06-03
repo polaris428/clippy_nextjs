@@ -10,14 +10,12 @@ import {
 import { Button } from '@/components/ui/button';
 
 interface Props {
-    folderId: string;
     open: boolean;
     onClose: () => void;
     onConfirm: () => void;
 }
 
-export default function DeleteFolderDialog({ folderId, open, onClose, onConfirm }: Props) {
-    console.log(folderId)
+export default function DeleteFolderDialog({ open, onClose, onConfirm }: Props) {
     return (
         <Dialog open={open} onOpenChange={onClose}>
             <DialogContent>
