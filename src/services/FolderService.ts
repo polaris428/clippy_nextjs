@@ -1,5 +1,5 @@
 export const FolderService = {
-  async createfolder(name: string, isShared: boolean) {
+  async createFolder(name: string, isShared: boolean) {
     const res = await fetch('/api/folders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

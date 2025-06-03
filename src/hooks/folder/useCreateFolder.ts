@@ -26,7 +26,7 @@ export function useCreateFolder() {
     addFolder(optimisticFolder);
 
     try {
-      const { newFolder } = await FolderService.createfolder(name, isShared);
+      const { newFolder } = await FolderService.createFolder(name, isShared);
 
       updateFolder(tempId, newFolder);
       const currentPath = window.location.pathname;
