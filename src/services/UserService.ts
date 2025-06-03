@@ -6,7 +6,7 @@ export const UserService = {
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
     });
-
+    if (!res.ok) throw new Error('로그인 실패');
     return (await res.json()) as LoginResponse;
   },
 
