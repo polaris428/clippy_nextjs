@@ -10,7 +10,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     await getVerifiedUser();
     const userId = await getCurrentUserId();
 
-    const folderId = params.id;
+    const folderId = (await params).id;
 
     const usecase = container.resolve(GenerateInviteCode);
     const inviteCode = await usecase.execute(folderId, true, userId);

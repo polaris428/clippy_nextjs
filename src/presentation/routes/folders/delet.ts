@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { verifyIdToken } from '@/lib/firebase';
 import { cookies } from 'next/headers';
-import 'reflect-metadata';
+
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   const cookieStore = await cookies();
   const token = cookieStore.get('token')?.value;
@@ -24,7 +24,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     return NextResponse.json({ error: '유저 없음' }, { status: 404 });
   }
 
-  const folderId = params.id;
+  const folderId = (await params).id;
 
   const folder = await prisma.folder.findUnique({
     where: { id: folderId },
