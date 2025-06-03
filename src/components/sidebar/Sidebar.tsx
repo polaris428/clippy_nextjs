@@ -2,14 +2,15 @@
 
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
-import SidebarButton from '../design-system/Button/SidebarNavButton';
+import { SidebarNavButton } from '@/components/design-system';
+import { SidebarButton } from '@/components/design-system';
 import CreateFolderModal from '../modal/CreateFolderModal';
 import SaveLinkModal from '../modal/SaveLinkModal';
 import { useAuthStore } from '@/stores/useAuthStore';
 import {
-    BookmarkSimple,
-    FolderSimple,
-    Users,
+    // BookmarkSimple,
+    // FolderSimple,
+    // Users,
     Folders,
     PlusCircle,
     LinkSimple,
@@ -46,34 +47,36 @@ export default function Sidebar() {
         <div className="h-full flex flex-col justify-between p-6 bg-white">
             <div className="flex flex-col flex-1 min-h-0">
                 <div className="mb-4 space-y-1">
-                    <SidebarButton
+                    {/* <SidebarNavButton
                         icon={<BookmarkSimple size={18} />}
                         label="모든 클립"
                         href="/home"
                         selected={pathname === '/home'}
                     />
-                    <SidebarButton
+                    <SidebarNavButton
                         icon={<FolderSimple size={18} />}
                         label="미분류 클립"
                         href="/uncategorized"
                         selected={pathname === '/uncategorized'}
                     />
-                    <SidebarButton
+                    <SidebarNavButton
                         icon={<Users size={18} />}
                         label="공유받은 폴더"
                         href="/shared"
                         selected={pathname === '/shared'}
-                    />
+                    /> 
+                      <hr className="my-2" />
+                    */}
                 </div>
 
-                <hr className="my-2" />
+
 
                 <div className="flex-1 overflow-y-auto min-h-0">
                     <ul className="space-y-1">
                         {folders.map((folder) => {
                             return (
                                 <li key={folder.id}>
-                                    <SidebarButton
+                                    <SidebarNavButton
                                         icon={<Folders size={18} />}
                                         label={folder.name}
                                         href={`/folders/${folder.id}`}

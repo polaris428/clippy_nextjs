@@ -1,0 +1,66 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+
+interface FolderContextMenuProps {
+    onClose: () => void;
+    anchorRef: React.RefObject<HTMLButtonElement | null>;
+}
+
+export default function FolderContextMenu({
+    onClose,
+    anchorRef,
+}: FolderContextMenuProps) {
+    const menuRef = useRef<HTMLDivElement>(null);
+    const [coords, setCoords] = useState({ top: 0, left: 0 });
+    const [isReady, setIsReady] = useState(false);
+
+    // 위치 계산
+    useEffect(() => {
+        const rect = anchorRef.current?.getBoundingClientRect();
+        if (rect) {
+            setCoords({
+                top: rect.bottom + window.scrollY + 4,
+                left: rect.left + window.scrollX,
+            });
+            setIsReady(true);
+        }
+    }, [anchorRef]);
+
+    // 외부 클릭 시 닫기
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (
+                menuRef.current &&
+                !menuRef.current.contains(e.target as Node) &&
+                !anchorRef.current?.contains(e.target as Node)
+            ) {
+                onClose();
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [onClose, anchorRef]);
+
+    if (!isReady) return null;
+
+    return createPortal(
+        <div
+            ref={menuRef}
+            className="absolute z-50 bg-white border rounded-md shadow-lg py-1 w-48"
+            style={{
+                top: coords.top,
+                left: coords.left,
+                position: 'absolute',
+            }}
+        >
+            <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm">공유하기</button>
+            <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm">이름 바꾸기</button>
+            <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm">프로젝트에 추가</button>
+            <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm">아카이브에 보관</button>
+            <button className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-100 text-sm">삭제</button>
+        </div>,
+        document.body
+    );
+}
