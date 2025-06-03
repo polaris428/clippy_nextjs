@@ -18,19 +18,6 @@ export default function FolderContextMenu({
     const [coords, setCoords] = useState({ top: 0, left: 0 });
     const [isReady, setIsReady] = useState(false);
 
-    useEffect(() => {
-        setTimeout(() => {
-            const el = document.querySelector('[data-testid="delete-button"]')
-            if (el) {
-                console.log('삭제 버튼 찾음!');
-            } else {
-                console.warn('삭제 버튼 없음');
-            }
-        }, 1000);
-    }, []);
-    useEffect(() => {
-        console.log('[FolderContextMenu] 렌더됨');
-    }, []);
     // 위치 계산
     useEffect(() => {
         const rect = anchorRef.current?.getBoundingClientRect();
@@ -59,31 +46,37 @@ export default function FolderContextMenu({
     }, [onClose, anchorRef]);
 
     if (!isReady) return null;
-
     return createPortal(
         <div
             ref={menuRef}
-            className="absolute z-[9999] bg-white border rounded-md shadow-lg py-1 w-48 pointer-events-auto"
+            className="bg-white border rounded-md shadow-lg py-1 w-48 pointer-events-auto"
             style={{
                 top: coords.top,
                 left: coords.left,
                 position: 'absolute',
             }}
         >
-            <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm" onClick={() => { console.log("dfsdf") }}>공유하기</button>
-            <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm">이름 바꾸기</button>
-
-            <button
+            <div
+                className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm cursor-pointer"
+                onClick={() => console.log('공유하기')}
+            >
+                공유하기
+            </div>
+            <div
+                className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm cursor-pointer"
+            >
+                이름 바꾸기
+            </div>
+            <div
                 data-testid="delete-button"
-                className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-100 text-sm"
+                className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-100 text-sm cursor-pointer"
                 onClick={() => {
-
                     onClose();
                     onRequestDelete?.();
                 }}
             >
                 삭제
-            </button>
+            </div>
         </div>,
         document.body
     );
