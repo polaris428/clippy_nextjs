@@ -1,24 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { cookies } from 'next/headers';
-import { verifyIdToken } from '@/lib/firebase';
 import { FolderUpdateInput } from '@/types/folder/FolderUpdateInput';
+import { getCurrentUser } from '@/lib/utils/getCurrentUser';
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   const folderId = params.id;
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
-
-  if (!token) {
-    return NextResponse.json({ error: '인증 필요' }, { status: 401 });
-  }
-
-  const decoded = await verifyIdToken(token);
-  const uid = decoded.uid;
-
-  const user = await prisma.user.findUnique({
-    where: { firebaseUid: uid },
-  });
+  const user = await getCurrentUser();
 
   if (!user) {
     return NextResponse.json({ error: '유저 없음' }, { status: 404 });
@@ -35,7 +22,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const body = await req.json();
 
   // 🔐 허용된 필드만 업데이트: 화이트리스트 방식
-  const allowedFields = ['name', 'color', 'description', 'isShared'];
+  const allowedFields = ['name', 'isShared'];
   const updateData: Partial<FolderUpdateInput> = {};
 
   for (const key of allowedFields) {
@@ -52,6 +39,12 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     where: { id: folderId },
     data: updateData,
   });
-
-  return NextResponse.json({ success: true, folder: updatedFolder });
+  console.log(updatedFolder);
+  return NextResponse.json({
+    success: true,
+    folders: await prisma.folder.findMany({
+      where: { ownerId: user.id },
+      orderBy: { createdAt: 'asc' },
+    }),
+  });
 }

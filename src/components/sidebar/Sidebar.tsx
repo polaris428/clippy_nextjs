@@ -4,16 +4,12 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { SidebarNavButton } from '@/components/design-system';
 import { SidebarButton } from '@/components/design-system';
-import { DeleteFolderDialog } from '@/components/design-system'
+import { DeleteFolderDialog, RenameFolderDialog } from '@/components/design-system';
 import CreateFolderModal from '../modal/CreateFolderModal';
 import SaveLinkModal from '../modal/SaveLinkModal';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { FolderService } from '@/services/FolderService';
-
 import {
-    // BookmarkSimple,
-    // FolderSimple,
-    // Users,
     Folders,
     PlusCircle,
     LinkSimple,
@@ -28,6 +24,8 @@ export default function Sidebar() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
     const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
+    const [mode, setMode] = useState<'delete' | 'rename' | null>(null);
+    const targetFolder = folders.find((f) => f.id === targetFolderId) ?? null;
 
     const handleSaveLink = async (
         title: string,
@@ -62,7 +60,14 @@ export default function Sidebar() {
                                     href={`/folders/${folder.id}`}
                                     selected={folder.id === currentFolderId}
                                     folderId={folder.id}
-                                    onRequestDelete={() => setTargetFolderId(folder.id)}
+                                    onRequestDelete={() => {
+                                        setTargetFolderId(folder.id);
+                                        setMode('delete');
+                                    }}
+                                    onRequestRename={() => {
+                                        setTargetFolderId(folder.id);
+                                        setMode('rename');
+                                    }}
                                 />
                             </li>
                         ))}
@@ -97,16 +102,39 @@ export default function Sidebar() {
             />
             <DeleteFolderDialog
                 folderId={targetFolderId ?? ''}
-                open={!!targetFolderId}
-                onClose={() => setTargetFolderId(null)}
+                open={mode === 'delete'}
+                onClose={() => {
+                    setTargetFolderId(null);
+                    setMode(null);
+                }}
                 onConfirm={async () => {
                     if (targetFolderId != null) {
                         const res = await FolderService.deleteFolder(targetFolderId);
                         if (res?.folders) {
-                            setFolders(res.folders); // ✅ 삭제 후 상태 갱신
+                            setFolders(res.folders);
                         }
                     }
                     setTargetFolderId(null);
+                    setMode(null);
+                }}
+            />
+            <RenameFolderDialog
+                folderId={targetFolder?.id ?? ''}
+                initialName={targetFolder?.name ?? ''}
+                open={mode === 'rename'}
+                onClose={() => {
+                    setTargetFolderId(null);
+                    setMode(null);
+                }}
+                onConfirm={async (newName) => {
+                    if (targetFolder) {
+                        const res = await FolderService.updateFolder(targetFolder.id, { name: newName });
+                        if (res?.folders) {
+                            setFolders(res.folders);
+                        }
+                        setTargetFolderId(null);
+                        setMode(null);
+                    }
                 }}
             />
         </div>

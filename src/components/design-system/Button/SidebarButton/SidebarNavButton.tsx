@@ -14,6 +14,7 @@ interface SidebarNavButtonProps {
     selected?: boolean;
     folderId: string;
     onRequestDelete?: () => void;
+    onRequestRename?: () => void;
 }
 
 export default function SidebarNavButton({
@@ -23,13 +24,14 @@ export default function SidebarNavButton({
     selected,
     folderId,
     onRequestDelete,
+    onRequestRename,
 }: SidebarNavButtonProps) {
-    const [isHovered, setIsHovered] = useState(false);
     const menuButtonRef = useRef<HTMLButtonElement | null>(null);
     const menuOpenFolderId = useMenuStore((s) => s.menuOpenFolderId);
     const setMenuOpenFolderId = useMenuStore((s) => s.setMenuOpenFolderId);
 
     const isMenuOpen = menuOpenFolderId === folderId;
+    const [isHovered, setIsHovered] = useState(false);
 
     const baseClass = clsx(
         'w-full flex items-center justify-between px-3 py-1 rounded-md text-sm font-medium transition group relative',
@@ -52,7 +54,8 @@ export default function SidebarNavButton({
 
             <button
                 ref={menuButtonRef}
-                onClick={() => {
+                onClick={(e) => {
+                    e.stopPropagation();
                     setMenuOpenFolderId(isMenuOpen ? null : folderId);
                 }}
                 className={clsx(
@@ -68,10 +71,8 @@ export default function SidebarNavButton({
                 <FolderContextMenu
                     onClose={() => setMenuOpenFolderId(null)}
                     anchorRef={menuButtonRef}
-                    onRequestDelete={() => {
-                        setIsHovered(false);
-                        onRequestDelete?.();
-                    }}
+                    onRequestDelete={onRequestDelete}
+                    onRequestRename={onRequestRename}
                 />
             )}
         </div>

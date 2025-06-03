@@ -19,6 +19,29 @@ export const FolderService = {
     if (!res.ok) throw new Error('폴더 삭제 실패');
     return await res.json();
   },
+
+  async updateFolder(folderId: string, update: { name?: string; color?: string; description?: string; isShared?: boolean }) {
+    try {
+      const res = await fetch(`/api/folders/${folderId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(update),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error('🔥 폴더 업데이트 실패:', data.error);
+        throw new Error(data.error || '폴더 수정 실패');
+      }
+
+      return data;
+    } catch (err) {
+      console.error('🔥 폴더 수정 요청 중 오류 발생:', err);
+      throw err;
+    }
+  },
   async getFolderAll() {
     const res = await fetch(`/api/folders/all`, { credentials: 'include' });
     if (!res.ok) throw new Error('폴더 조회 실패');

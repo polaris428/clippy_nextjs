@@ -42,6 +42,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     success: true,
     folders: await prisma.folder.findMany({
       where: { ownerId: user.id },
+      orderBy: { createdAt: 'asc' },
     }),
   });
 }
