@@ -1,16 +1,19 @@
 'use client';
 
 import Link from 'next/link';
-import { ReactNode, useRef, useState, useEffect } from 'react';
+import { ReactNode, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { DotsThree } from 'phosphor-react';
-import FolderContextMenu from '../../Dialogs/FolderContextMenu'; // 경로 확인 필요
+import FolderContextMenu from '@/components/design-system/Dialog/FolderContextMenu';
+import { useMenuStore } from '@/stores/useMenuStore';
 
 interface SidebarNavButtonProps {
     href: string;
     icon: ReactNode;
     label: string;
     selected?: boolean;
+    folderId: string;
+    onRequestDelete?: () => void;
 }
 
 export default function SidebarNavButton({
@@ -18,50 +21,42 @@ export default function SidebarNavButton({
     icon,
     label,
     selected,
+    folderId,
+    onRequestDelete,
 }: SidebarNavButtonProps) {
     const [isHovered, setIsHovered] = useState(false);
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuButtonRef = useRef<HTMLButtonElement | null>(null);
+    const menuOpenFolderId = useMenuStore((s) => s.menuOpenFolderId);
+    const setMenuOpenFolderId = useMenuStore((s) => s.setMenuOpenFolderId);
+
+    const isMenuOpen = menuOpenFolderId === folderId;
 
     const baseClass = clsx(
-        'w-full flex items-center justify-between  px-3 py-1 rounded-md text-sm font-medium transition group relative',
-        (selected)
-            ? 'bg-gray-200 text-black'
-            : 'text-gray-700 hover:bg-gray-100'
+        'w-full flex items-center justify-between px-3 py-1 rounded-md text-sm font-medium transition group relative',
+        selected ? 'bg-gray-200 text-black' : 'text-gray-700 hover:bg-gray-100'
     );
 
-    useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-            if (!menuButtonRef.current?.contains(e.target as Node)) {
-                setIsMenuOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
-    const wrapperProps = {
-        onMouseEnter: () => setIsHovered(true),
-        onMouseLeave: () => setIsHovered(false),
-    };
-
     return (
-        <div className={baseClass} {...wrapperProps}>
-
-            <Link href={href} className="flex-1 truncate flex items-center gap-1 my-1">
+        <div
+            className={baseClass}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            <Link
+                href={href}
+                className="flex-1 truncate flex items-center gap-1 my-1"
+            >
                 {icon && <span className="text-base">{icon}</span>}
                 <span className="truncate">{label}</span>
             </Link>
 
             <button
                 ref={menuButtonRef}
-                onClick={(e) => {
-                    e.stopPropagation();
-                    setIsMenuOpen((prev) => !prev);
+                onClick={() => {
+                    setMenuOpenFolderId(isMenuOpen ? null : folderId);
                 }}
-                onMouseDown={(e) => e.preventDefault()}
                 className={clsx(
-                    'p-1 rounded  transition',
+                    'p-1 rounded transition',
                     isHovered ? 'block' : 'hidden',
                     'group-hover:block'
                 )}
@@ -71,8 +66,9 @@ export default function SidebarNavButton({
 
             {isMenuOpen && (
                 <FolderContextMenu
-                    onClose={() => setIsMenuOpen(false)}
+                    onClose={() => setMenuOpenFolderId(null)}
                     anchorRef={menuButtonRef}
+                    onRequestDelete={onRequestDelete}
                 />
             )}
         </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import DialogFrame from '@/components/design-system/Dialogs/DialogFrame';
+import DialogFrame from '@/components/design-system/Dialog/DialogFrame';
 import { ShareTabContent } from './ShareTabContent';
 import { PublishTabContent } from './PublishTabContent';
 import { DefaultButton } from '@/components/design-system';

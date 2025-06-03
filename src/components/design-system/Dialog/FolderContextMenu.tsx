@@ -6,16 +6,31 @@ import { createPortal } from 'react-dom';
 interface FolderContextMenuProps {
     onClose: () => void;
     anchorRef: React.RefObject<HTMLButtonElement | null>;
+    onRequestDelete?: () => void;
 }
 
 export default function FolderContextMenu({
     onClose,
     anchorRef,
+    onRequestDelete, // ✅ 받기
 }: FolderContextMenuProps) {
     const menuRef = useRef<HTMLDivElement>(null);
     const [coords, setCoords] = useState({ top: 0, left: 0 });
     const [isReady, setIsReady] = useState(false);
 
+    useEffect(() => {
+        setTimeout(() => {
+            const el = document.querySelector('[data-testid="delete-button"]')
+            if (el) {
+                console.log('삭제 버튼 찾음!');
+            } else {
+                console.warn('삭제 버튼 없음');
+            }
+        }, 1000);
+    }, []);
+    useEffect(() => {
+        console.log('[FolderContextMenu] 렌더됨');
+    }, []);
     // 위치 계산
     useEffect(() => {
         const rect = anchorRef.current?.getBoundingClientRect();
@@ -39,8 +54,8 @@ export default function FolderContextMenu({
                 onClose();
             }
         };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
     }, [onClose, anchorRef]);
 
     if (!isReady) return null;
@@ -48,18 +63,27 @@ export default function FolderContextMenu({
     return createPortal(
         <div
             ref={menuRef}
-            className="absolute z-50 bg-white border rounded-md shadow-lg py-1 w-48"
+            className="absolute z-[9999] bg-white border rounded-md shadow-lg py-1 w-48 pointer-events-auto"
             style={{
                 top: coords.top,
                 left: coords.left,
                 position: 'absolute',
             }}
         >
-            <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm">공유하기</button>
+            <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm" onClick={() => { console.log("dfsdf") }}>공유하기</button>
             <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm">이름 바꾸기</button>
-            <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm">프로젝트에 추가</button>
-            <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm">아카이브에 보관</button>
-            <button className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-100 text-sm">삭제</button>
+
+            <button
+                data-testid="delete-button"
+                className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-100 text-sm"
+                onClick={() => {
+
+                    onClose();
+                    onRequestDelete?.();
+                }}
+            >
+                삭제
+            </button>
         </div>,
         document.body
     );
