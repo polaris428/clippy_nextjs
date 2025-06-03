@@ -8,6 +8,8 @@ import { DeleteFolderDialog } from '@/components/design-system'
 import CreateFolderModal from '../modal/CreateFolderModal';
 import SaveLinkModal from '../modal/SaveLinkModal';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { FolderService } from '@/services/FolderService';
+
 import {
     // BookmarkSimple,
     // FolderSimple,
@@ -22,6 +24,7 @@ export default function Sidebar() {
     const currentFolderId = pathname.split('/folders/')[1]?.split('/')[0];
 
     const folders = useAuthStore((s) => s.folders);
+    const setFolders = useAuthStore((s) => s.setFolders);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
     const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
@@ -97,7 +100,12 @@ export default function Sidebar() {
                 open={!!targetFolderId}
                 onClose={() => setTargetFolderId(null)}
                 onConfirm={async () => {
-                    // await deleteFolder(targetFolderId);
+                    if (targetFolderId != null) {
+                        const res = await FolderService.deleteFolder(targetFolderId);
+                        if (res?.folders) {
+                            setFolders(res.folders); // ✅ 삭제 후 상태 갱신
+                        }
+                    }
                     setTargetFolderId(null);
                 }}
             />

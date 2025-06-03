@@ -68,7 +68,10 @@ export default function SidebarNavButton({
                 <FolderContextMenu
                     onClose={() => setMenuOpenFolderId(null)}
                     anchorRef={menuButtonRef}
-                    onRequestDelete={onRequestDelete}
+                    onRequestDelete={() => {
+                        setIsHovered(false);
+                        onRequestDelete?.();
+                    }}
                 />
             )}
         </div>

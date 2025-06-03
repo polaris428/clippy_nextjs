@@ -9,7 +9,16 @@ export const FolderService = {
     if (!res.ok) throw new Error('폴더 생성 실패');
     return await res.json();
   },
-
+  async deleteFolder(folderId: string) {
+    const res = await fetch(`/api/folders/${folderId}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ folderId }),
+    });
+    if (!res.ok) throw new Error('폴더 삭제 실패');
+    return await res.json();
+  },
   async getFolderAll() {
     const res = await fetch(`/api/folders/all`, { credentials: 'include' });
     if (!res.ok) throw new Error('폴더 조회 실패');
