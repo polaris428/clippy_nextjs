@@ -13,8 +13,10 @@ import {
     Folders,
     PlusCircle,
     LinkSimple,
+    PushPinSimple
 } from 'phosphor-react';
 import { useCreateLink } from '@/hooks/user/useCreateLink';
+import SidebarTopNavButton from '../design-system/Button/SidebarButton/SidebarTopNavButton';
 export default function Sidebar() {
     const pathname = usePathname();
     const currentFolderId = pathname.split('/folders/')[1]?.split('/')[0];
@@ -34,6 +36,25 @@ export default function Sidebar() {
                 <div className="mb-4 space-y-1"></div>
                 <div className="flex-1 overflow-y-auto min-h-0">
                     <ul className="space-y-1">
+                        <div className="mb-4 space-y-1">
+                            <SidebarTopNavButton
+                                href="/folders/all"
+                                icon={<LinkSimple size={18} />}
+                                label="모든 클립"
+                                selected={pathname === '/folders/all'}
+                            />
+
+                            <SidebarTopNavButton
+                                href="/folders/pin"
+                                icon={<PushPinSimple size={18} />}
+                                label="고정됨"
+                                selected={pathname === '/folders/pin'}
+                            />
+                            <hr className="my-2" />
+
+                        </div>
+
+
                         {folders.map((folder) => (
                             <li key={folder.id}>
                                 <SidebarNavButton
@@ -82,7 +103,7 @@ export default function Sidebar() {
                 onSubmit={(title, url, folderId) =>
                     createLink({ title, url, folderId })
                 }
-                folders={folders} // ✅ 이거 추가!
+                folders={folders}
             />
             <DeleteFolderDialog
                 open={mode === 'delete'}

@@ -48,7 +48,7 @@ export default function FolderPage() {
         <div className="relative">
             <div className="flex gap-2 mb-4">
                 <DefaultButton label={folder.name} />
-                <DefaultButton label="개인 페이지지" />
+                <DefaultButton label="개인 페이지" />
 
                 {/* 공유 버튼을 감싼 wrapper를 relative로 설정 */}
                 <div className="relative" ref={shareButtonRef}>
