@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import '@/infrastructure/di/container';
 import { NextRequest, NextResponse } from 'next/server';
 import { container } from 'tsyringe';
-import { JoinFolder } from '@/application/usecases/folder/JoinFolder';
+import { JoinFolderUsecase } from '@/application/usecases/folder/join/JoinFolderUsecase';
 import { getVerifiedUser } from '@/lib/utils/getVerifiedUser';
 import { getCurrentUserId } from '@/lib/utils/getCurrentUserId';
 
@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     await getVerifiedUser();
     const userId = await getCurrentUserId();
 
-    const usecase = container.resolve(JoinFolder);
+    const usecase = container.resolve(JoinFolderUsecase);
     const { folderId } = await usecase.execute({ inviteCode, userId });
 
     return NextResponse.json({ success: true, folderId });

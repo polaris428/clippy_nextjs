@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import type { IFolderRepository } from '@/domain/folder/IFolderRepository';
 
 @injectable()
-export class JoinFolderByInviteCode {
+export class JoinFolderByInviteCodeUsecase {
   constructor(
     @inject('IFolderRepository')
     private folderRepository: IFolderRepository

@@ -1,7 +1,7 @@
 'use server';
 
 import { container } from 'tsyringe';
-import { UpdateFolderShare } from '@/application/usecases/folder/UpdateFolderShare';
+import { UpdateFolderShareUsecase } from '@/application/usecases/folder/share/UpdateFolderShareUsecase';
 import { NextRequest, NextResponse } from 'next/server';
 import { getVerifiedUser } from '@/lib/utils/getVerifiedUser';
 import { getCurrentUserId } from '@/lib/utils/getCurrentUserId';
@@ -16,7 +16,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   try {
     const { isShared } = await req.json();
 
-    const usecase = container.resolve(UpdateFolderShare);
+    const usecase = container.resolve(UpdateFolderShareUsecase);
     const { shareKey } = await usecase.execute({ folderId, userId, isShared });
 
     return NextResponse.json({ shareKey });

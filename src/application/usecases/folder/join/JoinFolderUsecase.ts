@@ -7,7 +7,7 @@ interface Input {
 }
 
 @injectable()
-export class JoinFolder {
+export class JoinFolderUsecase {
   constructor(@inject('IFolderRepository') private folderRepository: IFolderRepository) {}
 
   async execute({ inviteCode, userId }: Input): Promise<{ folderId: string }> {

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { LoginUseCase } from '@/application/usecases/auth/LoginUseCase';
-import { GetAllFolderUsecase } from '@/application/usecases/folder/GetAllFolderCusecase';
+import { GetAllFolderUsecase } from '@/application/usecases/folder/GetAllFolderUsecase';
 import '@/infrastructure/di/container';
 import { setAuthCookie } from '@/lib/utils/cookies';
 import { container } from 'tsyringe';

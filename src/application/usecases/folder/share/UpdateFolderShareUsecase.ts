@@ -9,7 +9,7 @@ interface Input {
 }
 
 @injectable()
-export class UpdateFolderShare {
+export class UpdateFolderShareUsecase {
   constructor(
     @inject('IFolderRepository')
     private folderRepository: IFolderRepository

@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import '@/infrastructure/di/container';
 import { NextRequest, NextResponse } from 'next/server';
 import { container } from 'tsyringe';
-import { GenerateInviteCode } from '@/application/usecases/folder/GenerateInviteCode';
+import { GenerateInviteCode } from '@/application/usecases/folder/join/GenerateInviteCodeUsecase';
 import { getCurrentUserId } from '@/lib/utils/getCurrentUserId';
 import { getVerifiedUser } from '@/lib/utils/getVerifiedUser';
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

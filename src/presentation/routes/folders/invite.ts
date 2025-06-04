@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import '@/infrastructure/di/container';
 import { NextRequest, NextResponse } from 'next/server';
 import { container } from 'tsyringe';
-import { GenerateInviteCode } from '@/application/usecases/folder/GenerateInviteCode';
+import { GenerateInviteCodeUsecase } from '@/application/usecases/folder/join/GenerateInviteCodeUsecase';
 import { getCurrentUserId } from '@/lib/utils/getCurrentUserId';
 import { getVerifiedUser } from '@/lib/utils/getVerifiedUser';
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
@@ -12,7 +12,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
     const folderId = (await params).id;
 
-    const usecase = container.resolve(GenerateInviteCode);
+    const usecase = container.resolve(GenerateInviteCodeUsecase);
     const inviteCode = await usecase.execute(folderId, true, userId);
 
     return NextResponse.json({ inviteCode });

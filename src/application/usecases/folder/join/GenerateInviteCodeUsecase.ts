@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto';
 import type { IFolderRepository } from '@/domain/folder/IFolderRepository';
 
 @injectable()
-export class GenerateInviteCode {
+export class GenerateInviteCodeUsecase {
   constructor(@inject('IFolderRepository') private folderRepository: IFolderRepository) {}
 
   async execute(folderId: string, isInvite: boolean, userId: string): Promise<string> {
