@@ -19,6 +19,7 @@ interface AuthStore {
 
   addLinkToFolder: (folderId: string, newLink: Link) => void;
   updateLinkInFolder: (folderId: string, linkId: string, updatedLink: Link) => void;
+  removeLink: (id: string) => void;
 }
 
 export const useAuthStore = create<AuthStore>(set => ({
@@ -49,7 +50,13 @@ export const useAuthStore = create<AuthStore>(set => ({
     set(state => ({
       folders: state.folders.map(f => (f.id === folderId ? { ...f, links: [...(f.links || []), newLink] } : f)),
     })),
-
+  removeLink: linkId =>
+    set(state => ({
+      folders: state.folders.map(folder => ({
+        ...folder,
+        links: folder.links?.filter(link => link.id !== linkId) || [],
+      })),
+    })),
   updateLinkInFolder: (folderId, linkId, updatedLink) =>
     set(state => {
       console.log('🛠 updateLinkInFolder 호출됨');

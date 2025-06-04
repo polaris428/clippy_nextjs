@@ -86,8 +86,8 @@ export default function LinkList({ links, readOnly = false }: { links: Link[]; r
                                         title="삭제"
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            deleteLink(link.id);
-                                            // setLocalLinks(prev => prev.filter(l => l.id !== link.id));
+                                            deleteLink(link);
+
                                         }}
                                         className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-gray-700 text-sm hover:bg-gray-100"
                                     >

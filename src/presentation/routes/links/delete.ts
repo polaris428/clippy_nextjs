@@ -1,21 +1,22 @@
 import { container } from 'tsyringe';
-import { DeleteLink } from '@/application/usecases/link/DeleteLink';
-import { getAuthCookie } from '@/lib/utils/cookies';
+import { DeleteLinkUsecase } from '@/application/usecases/link/DeleteLinkUsecase';
 import { NextResponse } from 'next/server';
-import { getCurrentUserId } from '@/lib/utils/getCurrentUserId';
+import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
 
 export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
-  const token = getAuthCookie();
-  const id = (await params).id;
-  if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  try {
-    const userId = await getCurrentUserId();
+  const linkId = (await params).id;
 
-    const deleteLink = container.resolve(DeleteLink);
-    await deleteLink.execute(id, userId);
+  try {
+    const user = await getCurrentUserOrThrow();
+
+    const deleteLink = container.resolve(DeleteLinkUsecase);
+    await deleteLink.execute(linkId, user.id);
     return NextResponse.json({ success: true });
   } catch (err) {
+    if (err instanceof Response) {
+      return err;
+    }
     console.error('❌ 링크 삭제 실패:', err instanceof Error ? err.message : err);
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ error: '서버 오류' }, { status: 500 });
   }
 }
