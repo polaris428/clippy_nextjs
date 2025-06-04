@@ -6,7 +6,7 @@ import { Link } from '@/types/links/link';
 import { format } from 'date-fns';
 import { useDeleteLink } from '@/hooks/link/useDeleteLink';
 import { useUpdateLink } from '@/hooks/link/useUpdateLink';
-import { PushPinSimple, PushPinSimpleSlash } from 'phosphor-react';
+import { PushPinSimple, PushPinSimpleSlash, Pencil, Trash } from 'phosphor-react';
 export default function LinkList({ links, readOnly = false }: { links: Link[]; readOnly?: boolean }) {
 
     const { deleteLink } = useDeleteLink();
@@ -63,20 +63,19 @@ export default function LinkList({ links, readOnly = false }: { links: Link[]; r
 
                                     <div
                                         title="편집"
-                                        className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-gray-700 text-sm hover:bg-gray-100"
+                                        className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-gray-700 hover:bg-gray-100"
                                     >
-                                        ✏️
+                                        <Pencil size={16} weight="regular" />
                                     </div>
                                     <div
                                         title="삭제"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             deleteLink(link);
-
                                         }}
-                                        className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-gray-700 text-sm hover:bg-gray-100"
+                                        className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-gray-700 hover:bg-gray-100"
                                     >
-                                        🗑️
+                                        <Trash size={16} weight="regular" />
                                     </div>
                                 </div>
                             )}
