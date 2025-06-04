@@ -13,7 +13,15 @@ export default function FolderPage() {
     const params = useParams<{ id: string }>();
     const folderId = params.id;
     const folders = useAuthStore((s) => s.folders);
-    const folder = folders.find((f) => f.id === folderId);
+    const sharedFolders = useAuthStore((s) => s.sharedFolders);
+
+    const allFolders = [
+        ...folders,
+        ...sharedFolders.map((sf) => sf)
+    ];
+
+
+    const folder = allFolders.find((f) => f.id === folderId);
 
     const [isShareOpen, setIsShareOpen] = useState(false);
     const shareButtonRef = useRef<HTMLDivElement>(null);
@@ -21,8 +29,7 @@ export default function FolderPage() {
     const toggleShareDialog = () => {
         setIsShareOpen((prev) => !prev);
     };
-    console.log('🔥 FolderPage 렌더링됨');
-    console.log('📦 folder.links:', folder?.links);
+
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (

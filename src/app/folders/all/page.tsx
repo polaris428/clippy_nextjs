@@ -13,7 +13,7 @@ export default function AllLinksPage() {
 
     const allLinks = useMemo(() => {
         const ownedLinks = folders.flatMap(folder => folder.links ?? []);
-        const sharedLinks = sharedFolders.flatMap(folder => folder.folder.links ?? []);
+        const sharedLinks = sharedFolders.flatMap(folder => folder.links ?? []);
         return [...ownedLinks, ...sharedLinks];
     }, [folders, sharedFolders]);
 

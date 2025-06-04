@@ -11,8 +11,7 @@ export const LinkService = {
         body: JSON.stringify({ title, url, folderId }),
       });
       const json = await res.json();
-      console.log('티키카타타ㅏ타타타', json);
-      console.log('티키카타타ㅏ타타타', json.success);
+
       if (!res.ok || !json.success) {
         const errorText = await res.text();
         console.error('❌ 링크 생성 실패:', errorText);

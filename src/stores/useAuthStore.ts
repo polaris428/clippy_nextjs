@@ -1,17 +1,16 @@
 import { create } from 'zustand';
 import { Folder } from '@/types/folder/folder';
 import { User } from '@/types/auth/user';
-import { SharedFolder } from '@/types/folder/sharedFolder';
 import { Link } from '@/types/links/link';
 
 interface AuthStore {
   user: User | null;
   folders: Folder[];
-  sharedFolders: SharedFolder[];
+  sharedFolders: Folder[];
 
   setUser: (user: User) => void;
   setFolders: (folders: Folder[]) => void;
-  setSharedFolders: (folders: SharedFolder[]) => void;
+  setSharedFolders: (folders: Folder[]) => void;
 
   addFolder: (folder: Folder) => void;
   removeFolder: (folderId: string) => void;

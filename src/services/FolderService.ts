@@ -83,4 +83,27 @@ export const FolderService = {
     const data = await res.json();
     return data.shareKey;
   },
+
+  async joinFolder(inviteCode: string): Promise<{ success: boolean; folderId?: string; error?: string }> {
+    try {
+      const res = await fetch('/api/folders/join', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ inviteCode }),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok || !json.success) {
+        console.error('❌ 초대 실패:', json.error || '알 수 없는 오류');
+        return { success: false, error: json.error || '폴더 참가 실패' };
+      }
+
+      return { success: true, folderId: json.folderId };
+    } catch (err) {
+      console.error('❌ 초대 요청 중 예외 발생:', err);
+      return { success: false, error: '네트워크 오류 또는 서버 예외' };
+    }
+  },
 };

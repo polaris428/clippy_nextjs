@@ -23,6 +23,9 @@ export default function Sidebar() {
 
     const folders = useAuthStore((s) => s.folders);
     const setFolders = useAuthStore((s) => s.setFolders);
+    const sharedFolders = useAuthStore((s) => s.sharedFolders);
+
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
     const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
@@ -74,6 +77,32 @@ export default function Sidebar() {
                                 />
                             </li>
                         ))}
+
+                        {sharedFolders.map((folder) => (
+
+                            <li key={folder.id}>
+
+                                <SidebarNavButton
+                                    icon={<Folders size={18} />}
+                                    label={folder.isShared ? `${folder.name} 🔗` : folder.name}
+                                    href={`/folders/${folder.id}`}
+                                    selected={folder.id === currentFolderId}
+                                    folderId={folder.id}
+                                    onRequestDelete={
+                                        folder.isShared ? undefined : () => {
+                                            setTargetFolderId(folder.id);
+                                            setMode('delete');
+                                        }
+                                    }
+                                    onRequestRename={
+                                        folder.isShared ? undefined : () => {
+                                            setTargetFolderId(folder.id);
+                                            setMode('rename');
+                                        }
+                                    }
+                                />
+                            </li>))}
+
                     </ul>
                 </div>
             </div>
@@ -140,6 +169,6 @@ export default function Sidebar() {
                     }
                 }}
             />
-        </div>
+        </div >
     );
 }

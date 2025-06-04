@@ -13,7 +13,7 @@ export default function PinnedLinksPage() {
 
     const pinnedLinks = useMemo(() => {
         const ownedLinks = folders.flatMap(folder => folder.links ?? []);
-        const sharedLinks = sharedFolders.flatMap(shared => shared.folder.links ?? []);
+        const sharedLinks = sharedFolders.flatMap(shared => shared.links ?? []);
         return [...ownedLinks, ...sharedLinks].filter(link => link.isPin);
     }, [folders, sharedFolders]);
 

@@ -24,6 +24,7 @@ export function useLogin() {
       const store = useAuthStore.getState();
       store.setUser(user);
       store.setFolders(folders);
+      console.log(sharedFolders);
       store.setSharedFolders(sharedFolders);
 
       const firstFolderId = folders?.[0]?.id;

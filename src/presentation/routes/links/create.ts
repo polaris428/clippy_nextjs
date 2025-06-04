@@ -5,6 +5,7 @@ import 'reflect-metadata';
 import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
 
 export async function POST(req: NextRequest) {
+  console.log('sadfafsd');
   try {
     const user = await getCurrentUserOrThrow();
 
