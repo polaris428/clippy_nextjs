@@ -35,4 +35,27 @@ export const LinkService = {
       throw new Error((await res.text()) || '링크 삭제 실패');
     }
   },
+
+  async updateLink(linkId: string, data: Partial<Pick<Link, 'title' | 'description' | 'isPin'>>): Promise<Link> {
+    try {
+      const res = await fetch(`/api/links/${linkId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(data),
+      });
+
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        const errorText = await res.text();
+        console.error('❌ 링크 수정 실패:', errorText);
+        throw new Error(errorText || '링크 수정 실패');
+      }
+
+      return json.link as Link;
+    } catch (err) {
+      console.error('🔥 링크 수정 중 예외 발생:', err);
+      throw err;
+    }
+  },
 };

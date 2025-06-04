@@ -4,34 +4,13 @@
 
 import { Link } from '@/types/links/link';
 import { format } from 'date-fns';
-import { useDeleteLink } from '@/hooks/user/useDeleteLink';
-
+import { useDeleteLink } from '@/hooks/link/useDeleteLink';
+import { useUpdateLink } from '@/hooks/link/useUpdateLink';
+import { PushPinSimple, PushPinSimpleSlash } from 'phosphor-react';
 export default function LinkList({ links, readOnly = false }: { links: Link[]; readOnly?: boolean }) {
 
     const { deleteLink } = useDeleteLink();
-
-    const togglePin = async (id: string, current: boolean) => {
-        try {
-            const res = await fetch(`/api/links/${id}/pin`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                body: JSON.stringify({ isPin: !current }),
-            });
-
-            if (!res.ok) {
-                throw new Error('핀 상태 변경 실패');
-            }
-
-            //const updated = await res.json();
-
-        } catch (err) {
-            alert('핀 토글에 실패했습니다.');
-            console.error(err);
-        }
-    };
+    const { updateLink } = useUpdateLink();
 
     return (
         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full">
@@ -66,16 +45,22 @@ export default function LinkList({ links, readOnly = false }: { links: Link[]; r
                             {/* 오른쪽 상단 버튼들 */}
                             {!readOnly && (
                                 <div className="absolute right-3 top-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+
                                     <div
-                                        title="북마크"
+                                        title={link.isPin ? '북마크 해제' : '북마크 고정'}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            togglePin(link.id, !!link.isPin);
+                                            updateLink(link.id, { isPin: !link.isPin });
                                         }}
-                                        className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-red-500 text-sm hover:bg-gray-100"
+                                        className={`w-8 h-8 rounded-full flex items-center justify-center shadow bg-white hover:bg-gray-200 ${link.isPin ? ' text-red-400' : ' text-gray-400 '}`}
                                     >
-                                        {link.isPin ? '📌' : '📍'}
+                                        {link.isPin ? (
+                                            <PushPinSimple weight="fill" size={16} />
+                                        ) : (
+                                            <PushPinSimpleSlash weight="duotone" size={16} />
+                                        )}
                                     </div>
+
                                     <div
                                         title="편집"
                                         className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-gray-700 text-sm hover:bg-gray-100"
