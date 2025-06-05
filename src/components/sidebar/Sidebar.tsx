@@ -144,7 +144,7 @@ export default function Sidebar() {
                     if (targetFolderId != null) {
                         const res = await FolderService.deleteFolder(targetFolderId);
                         if (res?.folders) {
-                            setFolders(res.folders);
+                            setFolders(res.folders.folders);
                         }
                     }
                     setTargetFolderId(null);

@@ -4,16 +4,6 @@ import * as path from 'path';
 
 const serviceAccountPath = path.resolve(process.cwd(), 'firebase-admin.json');
 
-export function createAccessToken(userId: string): string {
-  return jwt.sign(
-    { userId }, // payload
-    process.env.ACCESS_TOKEN_SECRET!, // 비밀키 (환경변수에 저장)
-    {
-      expiresIn: '15m', // access_token 유효기간
-    }
-  );
-}
-
 try {
   const raw = fs.readFileSync(serviceAccountPath, 'utf8');
   const serviceAccount = JSON.parse(raw);

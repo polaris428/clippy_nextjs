@@ -33,7 +33,7 @@ export class PrismaFolderRepository implements IFolderRepository {
   /**
    * 유저 ID 기준 폴더 전체 조회
    */
-  async findFoldersByUserId(userId: string): Promise<Folder[]> {
+  async getFoldersByUserId(userId: string): Promise<Folder[]> {
     const folders = await prisma.folder.findMany({
       where: { ownerId: userId },
       orderBy: { createdAt: 'asc' },
@@ -166,5 +166,9 @@ export class PrismaFolderRepository implements IFolderRepository {
         permission: 'write', // default to write, 또는 필요에 따라 확장 가능
       },
     });
+  }
+
+  async deleteFolder(folderId: string): Promise<void> {
+    await prisma.folder.delete({ where: { id: folderId } });
   }
 }

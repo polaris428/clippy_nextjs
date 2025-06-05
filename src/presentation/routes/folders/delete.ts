@@ -1,48 +1,41 @@
 import 'reflect-metadata';
 import '@/infrastructure/di/container';
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
-import { verifyIdToken } from '@/lib/firebase';
-import { cookies } from 'next/headers';
+import { container } from 'tsyringe';
+import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
+import { tryParseAuthHeaderAndSetCookie } from '@/lib/utils/authFromHeader';
+import { mergeCookies } from '@/lib/utils/mergeCookies';
+import { GetFolderIdUsecase } from '@/application/usecases/folder/GetFolderIdUsecase';
+import { DeleteFolderUsecase } from '@/application/usecases/folder/DeleteFolderUsecase';
+import { GetAllFolderUsecase } from '@/application/usecases/folder/GetAllFolderUsecase';
 
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
+  try {
+    const tempRes = await tryParseAuthHeaderAndSetCookie(req);
+    const user = await getCurrentUserOrThrow(req);
 
-  if (!token) {
-    return NextResponse.json({ error: '인증 필요' }, { status: 401 });
+    const folderId = (await params).id;
+    const getFolderIdUsecase = container.resolve(GetFolderIdUsecase);
+    await getFolderIdUsecase.execute({ userId: user.id, folderId: folderId });
+
+    const deleteFolderUsecase = container.resolve(DeleteFolderUsecase);
+    await deleteFolderUsecase.execute(user.id, folderId);
+
+    const getAllFolderUsecase = container.resolve(GetAllFolderUsecase);
+    const allFolder = await getAllFolderUsecase.execute(user.id);
+
+    const res = NextResponse.json({
+      success: true,
+      folders: allFolder,
+    });
+    if (tempRes) mergeCookies(tempRes, res);
+
+    return res;
+  } catch (err) {
+    if (err instanceof Response) {
+      return err;
+    }
+    console.error('❌ 예기치 못한 에러:', err);
+    return NextResponse.json({ error: '서버 오류' }, { status: 500 });
   }
-
-  const decoded = await verifyIdToken(token);
-  const uid = decoded.uid;
-
-  const user = await prisma.user.findUnique({
-    where: { firebaseUid: uid },
-  });
-
-  if (!user) {
-    return NextResponse.json({ error: '유저 없음' }, { status: 404 });
-  }
-
-  const folderId = (await params).id;
-
-  const folder = await prisma.folder.findUnique({
-    where: { id: folderId },
-  });
-
-  if (!folder || folder.ownerId !== user.id) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
-
-  await prisma.folder.delete({
-    where: { id: folderId },
-  });
-
-  return NextResponse.json({
-    success: true,
-    folders: await prisma.folder.findMany({
-      where: { ownerId: user.id },
-      orderBy: { createdAt: 'asc' },
-    }),
-  });
 }

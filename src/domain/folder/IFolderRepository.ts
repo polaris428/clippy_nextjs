@@ -9,7 +9,7 @@ export interface IFolderRepository {
   /**
    * 유저의 전체 폴더 조회
    */
-  findFoldersByUserId(userId: string): Promise<Folder[]>;
+  getFoldersByUserId(userId: string): Promise<Folder[]>;
 
   /**
    * 유저의 공유받은 전체체 폴더 조회
@@ -28,4 +28,9 @@ export interface IFolderRepository {
   findByInviteCode(inviteCode: string): Promise<Folder | null>;
   addCollaborator(data: { folderId: string; userId: string }): Promise<void>;
   updateInviteCode(data: { folderId: string; isInvite: boolean; inviteCode: string }): Promise<void>;
+
+  /**
+   * 폴더 삭제
+   */
+  deleteFolder(folderId: string): Promise<void>;
 }

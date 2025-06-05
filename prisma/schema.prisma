@@ -25,7 +25,7 @@ model Folder {
   name       String
   ownerId    String
   owner      User      @relation("OwnerFolders", fields: [ownerId], references: [id])
-  links      Link[]
+  links      Link[]    
   inviteCode String?   @unique  
   shareKey   String?  @unique
   shares     UserFolderShare[]
@@ -39,7 +39,7 @@ model UserFolderShare {
   folderId  String
   userId    String
   permission String
-  folder    Folder   @relation(fields: [folderId], references: [id])
+   folder    Folder  @relation(fields: [folderId], references: [id], onDelete: Cascade) 
   user      User     @relation(fields: [userId], references: [id])
   createdAt  DateTime  @default(now())
   @@unique([folderId, userId])

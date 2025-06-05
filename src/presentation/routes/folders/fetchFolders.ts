@@ -1,33 +1,35 @@
 import 'reflect-metadata';
 import '@/infrastructure/di/container';
-import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
-import { verifyIdToken } from '@/lib/firebase';
-import { cookies } from 'next/headers';
+import { container } from 'tsyringe';
 import 'reflect-metadata';
+import { NextRequest, NextResponse } from 'next/server';
+import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
+import { tryParseAuthHeaderAndSetCookie } from '@/lib/utils/authFromHeader';
+import { mergeCookies } from '@/lib/utils/mergeCookies';
+import { GetFolderIdUsecase } from '@/application/usecases/folder/GetFolderIdUsecase';
+import { HttpError } from '@/lib/errors/HttpError';
 
-export async function GET() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
-
-  if (!token) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const decoded = await verifyIdToken(token);
-    const folders = await prisma.folder.findMany({
-      where: { owner: { firebaseUid: decoded.uid } },
-      select: {
-        id: true,
-        name: true,
-        links: {},
-      },
+    const folderId = (await params).id;
+    const tempRes = await tryParseAuthHeaderAndSetCookie(req);
+    const user = await getCurrentUserOrThrow(req);
+    const getFolderIdUsecase = container.resolve(GetFolderIdUsecase);
+    const folder = await getFolderIdUsecase.execute({ userId: user.id, folderId: folderId });
+
+    const res = NextResponse.json({
+      success: true,
+      folders: folder,
     });
-    console.log('유저 폴더 리스트', JSON.stringify(folders, null, 2));
-    return NextResponse.json({ folders });
+
+    if (tempRes) mergeCookies(tempRes, res);
+
+    return res;
   } catch (err) {
-    console.error('❌ 폴더 목록 로드 실패:', err);
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    if (err instanceof HttpError) {
+      return NextResponse.json({ error: err.message }, { status: err.statusCode });
+    }
+    console.error('❌ 예기치 못한 에러:', err);
+    return NextResponse.json({ error: '서버 오류' }, { status: 500 });
   }
 }

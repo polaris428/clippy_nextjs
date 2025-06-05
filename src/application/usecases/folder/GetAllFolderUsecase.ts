@@ -13,7 +13,7 @@ export class GetAllFolderUsecase {
     folders: Folder[];
     sharedFolders: Folder[];
   }> {
-    const folders = await this.folderRepository.findFoldersByUserId(userId);
+    const folders = await this.folderRepository.getFoldersByUserId(userId);
     const sharedFolders = await this.folderRepository.findShareFoldersByUserId(userId);
     return { folders, sharedFolders };
   }

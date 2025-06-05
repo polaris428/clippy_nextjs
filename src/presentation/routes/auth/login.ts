@@ -22,7 +22,7 @@ export async function POST() {
     const login = container.resolve(LoginUseCase);
     const user = await login.execute(token);
     const folderRepository = container.resolve<IFolderRepository>('IFolderRepository');
-    const folders = await folderRepository.findFoldersByUserId(user.id);
+    const folders = await folderRepository.getFoldersByUserId(user.id);
     const sharedFolders = await folderRepository.findShareFoldersByUserId(user.id);
     const response = NextResponse.json({ user, folders, sharedFolders });
     setAuthCookie(response, token);
