@@ -33,89 +33,84 @@ export default function LinkList({ links, readOnly = false }: { links: Link[]; r
                 return (
 
                     <li key={link.id} className="w-full group" >
-                        <a
-                            href={href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="block"
-                        >
-                            <section className="relative rounded-lg overflow-hidden shadow-sm cursor-pointer w-full h-[12rem]"  >
+
+                        <section className="relative rounded-lg overflow-hidden shadow-sm cursor-pointer w-full h-[12rem]" onClick={() => window.open(href, '_blank')} >
+                            <img
+                                src={thumbnail}
+                                alt="썸네일"
+                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                onError={(e) => {
+                                    e.currentTarget.src = '/img/ic_logo.png';
+                                }}
+                            />
+
+                            {/* 오른쪽 상단 버튼들 */}
+                            {!readOnly && (
+                                <div className="absolute right-3 top-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+
+                                    <div
+                                        title={link.isPin ? '북마크 해제' : '북마크 고정'}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            updateLink(link.id, { isPin: !link.isPin });
+                                        }}
+                                        className={`w-8 h-8 rounded-full flex items-center justify-center shadow bg-white hover:bg-gray-200 ${link.isPin ? ' text-red-400' : ' text-gray-400 '}`}
+                                    >
+                                        {link.isPin ? (
+                                            <PushPinSimple weight="fill" size={16} />
+                                        ) : (
+                                            <PushPinSimpleSlash weight="duotone" size={16} />
+                                        )}
+                                    </div>
+
+                                    <div
+                                        title="편집"
+                                        className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-gray-700 hover:bg-gray-100"
+                                    >
+                                        <Pencil size={16} weight="regular" />
+                                    </div>
+                                    <div
+                                        title="삭제"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            deleteLink(link);
+                                        }}
+                                        className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-gray-700 hover:bg-gray-100"
+                                    >
+                                        <Trash size={16} weight="regular" />
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* 우측 하단 파비콘 */}
+                            <div className="absolute right-3 bottom-3 w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md">
                                 <img
-                                    src={thumbnail}
-                                    alt="썸네일"
-                                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                    src={favicon}
+                                    alt="favicon"
+                                    className="w-6 h-6"
                                     onError={(e) => {
                                         e.currentTarget.src = '/img/ic_logo.png';
                                     }}
                                 />
+                            </div>
+                        </section>
 
-                                {/* 오른쪽 상단 버튼들 */}
-                                {!readOnly && (
-                                    <div className="absolute right-3 top-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                        <header className="pt-4">
+                            <div className="text-base font-semibold text-gray-900 truncate">
+                                {link.title || domain}
+                            </div>
+                            <p className="text-sm text-gray-500 leading-[1.25rem] line-clamp-2 min-h-[2.5rem]">
+                                {description}
+                            </p>
+                        </header>
 
-                                        <div
-                                            title={link.isPin ? '북마크 해제' : '북마크 고정'}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                updateLink(link.id, { isPin: !link.isPin });
-                                            }}
-                                            className={`w-8 h-8 rounded-full flex items-center justify-center shadow bg-white hover:bg-gray-200 ${link.isPin ? ' text-red-400' : ' text-gray-400 '}`}
-                                        >
-                                            {link.isPin ? (
-                                                <PushPinSimple weight="fill" size={16} />
-                                            ) : (
-                                                <PushPinSimpleSlash weight="duotone" size={16} />
-                                            )}
-                                        </div>
+                        <footer>
+                            <div className="flex justify-between mt-3 text-xs text-gray-400">
+                                <span>{domain}</span>
+                                <span>{createdAt}</span>
+                            </div>
+                        </footer>
 
-                                        <div
-                                            title="편집"
-                                            className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-gray-700 hover:bg-gray-100"
-                                        >
-                                            <Pencil size={16} weight="regular" />
-                                        </div>
-                                        <div
-                                            title="삭제"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                deleteLink(link);
-                                            }}
-                                            className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-gray-700 hover:bg-gray-100"
-                                        >
-                                            <Trash size={16} weight="regular" />
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* 우측 하단 파비콘 */}
-                                <div className="absolute right-3 bottom-3 w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md">
-                                    <img
-                                        src={favicon}
-                                        alt="favicon"
-                                        className="w-6 h-6"
-                                        onError={(e) => {
-                                            e.currentTarget.src = '/img/ic_logo.png';
-                                        }}
-                                    />
-                                </div>
-                            </section>
-
-                            <header className="pt-4">
-                                <div className="text-base font-semibold text-gray-900 truncate">
-                                    {link.title || domain}
-                                </div>
-                                <p className="text-sm text-gray-500 leading-[1.25rem] line-clamp-2 min-h-[2.5rem]">
-                                    {description}
-                                </p>
-                            </header>
-
-                            <footer>
-                                <div className="flex justify-between mt-3 text-xs text-gray-400">
-                                    <span>{domain}</span>
-                                    <span>{createdAt}</span>
-                                </div>
-                            </footer>
-                        </a>
                     </li>
 
                 );
