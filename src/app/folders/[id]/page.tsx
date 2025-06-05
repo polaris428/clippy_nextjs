@@ -64,7 +64,7 @@ export default function FolderPage() {
                     {/* 다이얼로그는 해당 버튼 아래에 위치하도록 absolute로 설정 */}
                     {isShareOpen && (
                         <div className="absolute left-0 mt-2 z-50">
-                            <ShareDialog folder={folder} />
+                            <ShareDialog />
                         </div>
                     )}
                 </div>
