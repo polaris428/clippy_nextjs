@@ -42,11 +42,6 @@ export const FolderService = {
       throw err;
     }
   },
-  async getFolderAll() {
-    const res = await fetch(`/api/folders/all`, { credentials: 'include' });
-    if (!res.ok) throw new Error('폴더 조회 실패');
-    return await res.json();
-  },
 
   async getFolderById(id: string) {
     const res = await fetch(`/api/folders/${id}`, { credentials: 'include' });
