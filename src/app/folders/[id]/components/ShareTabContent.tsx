@@ -16,8 +16,7 @@ export function ShareTabContent() {
 
     const { isIsInvite, toggleShare, inviteCode } = useFolderIsInviteToggle({
         folderId: folder?.id || '',
-        initialInvite: folder?.isInvite ?? false,
-        initiaInviteKey: folder?.inviteCode ?? '',
+
     });
 
     const shareKeyText = `${typeof window !== 'undefined' ? window.location.origin : ''}/invite/${inviteCode}`;
@@ -27,7 +26,7 @@ export function ShareTabContent() {
     return (
         <div className="text-sm space-y-2">
             <div className="flex justify-between items-center py-2">
-                <p>웹 게시</p>
+                <p>초대 링크</p>
                 <Switch checked={isIsInvite} onChange={toggleShare} />
             </div>
             {isIsInvite && (

@@ -1,43 +1,34 @@
-import { useState } from 'react';
 import { FolderService } from '@/services/FolderService';
 import { useAuthStore } from '@/stores/useAuthStore';
 interface UseFolderInviteTogglerops {
   folderId: string;
-  initialInvite: boolean;
-  initiaInviteKey: string;
 }
 
-export function useFolderIsInviteToggle({ folderId, initialInvite, initiaInviteKey }: UseFolderInviteTogglerops) {
-  const [isIsInvite, setIsInvite] = useState(initialInvite);
-  const [loading, setLoading] = useState(false);
-  const [inviteCode, setInviteCode] = useState(initiaInviteKey);
+export function useFolderIsInviteToggle({ folderId }: UseFolderInviteTogglerops) {
+  const folder = useAuthStore(s => s.folders.find(f => f.id === folderId));
   const updateFolder = useAuthStore(s => s.updateFolder);
-  const toggleShare = async (isIsInvite: boolean) => {
-    setLoading(true);
-    try {
-      const shareKey = await FolderService.generateInviteCode(folderId, isIsInvite);
 
-      setIsInvite(isIsInvite);
+  if (!folder) throw new Error('폴더를 찾을 수 없습니다.');
+
+  const isIsInvite = folder.isInvite ?? false;
+  const inviteCode = folder.inviteCode ?? 'djqtek';
+  console.log('dsfasfsdf', inviteCode);
+  const toggleShare = async (nextValue: boolean) => {
+    try {
+      const newInviteCode = await FolderService.generateInviteCode(folderId, nextValue);
+
       updateFolder(folderId, {
-        isShared: isIsInvite,
-        shareKey: inviteCode && shareKey ? `${shareKey}` : '',
+        isInvite: nextValue,
+        inviteCode: nextValue ? newInviteCode : '',
       });
-      if (isIsInvite && shareKey) {
-        setInviteCode(`${shareKey}`);
-      } else if (!isIsInvite) {
-        setInviteCode(``);
-      }
     } catch (err) {
-      console.error('공유 상태 변경 실패:', err);
-      setInviteCode(``);
-    } finally {
-      setLoading(false);
+      console.error('📛 초대 상태 변경 실패:', err);
+      updateFolder(folderId, { isInvite: false, inviteCode: '' });
     }
   };
 
   return {
     isIsInvite,
-    loading,
     inviteCode,
     toggleShare,
   };

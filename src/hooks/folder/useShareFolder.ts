@@ -1,43 +1,34 @@
-// hooks/useFolderShareToggle.ts
-import { useState } from 'react';
 import { FolderService } from '@/services/FolderService';
 import { useAuthStore } from '@/stores/useAuthStore';
 interface UseFolderShareToggleProps {
   folderId: string;
-  initialShared: boolean;
-  initiaShareKey: string;
 }
 
-export function useFolderShareToggle({ folderId, initialShared, initiaShareKey }: UseFolderShareToggleProps) {
-  const [isShared, setIsShared] = useState(initialShared);
-  const [loading, setLoading] = useState(false);
-  const [shareKey, setShareKey] = useState(initiaShareKey);
+export function useFolderShareToggle({ folderId }: UseFolderShareToggleProps) {
+  const folder = useAuthStore(s => s.folders.find(f => f.id === folderId));
   const updateFolder = useAuthStore(s => s.updateFolder);
-  const toggleShare = async (isShared: boolean) => {
-    setLoading(true);
+
+  if (!folder) throw new Error('📂 폴더를 찾을 수 없습니다.');
+
+  const isShared = folder.isShared ?? false;
+  const shareKey = folder.shareKey ?? '';
+
+  const toggleShare = async (nextValue: boolean) => {
     try {
-      const shareKey = await FolderService.shareFolder(folderId, isShared);
-      setIsShared(isShared);
+      const newShareKey = await FolderService.shareFolder(folderId, nextValue);
+
       updateFolder(folderId, {
-        isShared: isShared,
-        shareKey: isShared && shareKey ? `${shareKey}` : '',
+        isShared: nextValue,
+        shareKey: nextValue ? newShareKey : '',
       });
-      if (isShared && shareKey) {
-        setShareKey(`${shareKey}`);
-      } else if (!isShared) {
-        setShareKey(``);
-      }
     } catch (err) {
-      console.error('공유 상태 변경 실패:', err);
-      setShareKey(``);
-    } finally {
-      setLoading(false);
+      console.error('📛 공유 상태 변경 실패:', err);
+      updateFolder(folderId, { isShared: false, shareKey: '' });
     }
   };
 
   return {
     isShared,
-    loading,
     shareKey,
     toggleShare,
   };

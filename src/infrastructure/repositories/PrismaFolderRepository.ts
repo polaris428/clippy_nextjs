@@ -41,7 +41,7 @@ export class PrismaFolderRepository implements IFolderRepository {
         links: true, // ✅ 링크 포함
       },
     });
-
+    console.log('폴더 조회', folders);
     return folders.map(folder => ({
       id: folder.id,
       name: folder.name,
@@ -51,6 +51,7 @@ export class PrismaFolderRepository implements IFolderRepository {
       createdAt: folder.createdAt,
       links: folder.links,
       isInvite: folder.isInvite,
+      inviteCode: folder.inviteCode,
     }));
   }
 

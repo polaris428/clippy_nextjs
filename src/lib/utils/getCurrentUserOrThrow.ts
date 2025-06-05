@@ -25,7 +25,6 @@ export async function getCurrentUserOrThrow() {
   const user = await prisma.user.findUnique({
     where: { firebaseUid: uid },
   });
-  console.log('체크크킄', user);
 
   if (!user) {
     throw new Response('유저가 존재하지 않습니다.', { status: 403 });

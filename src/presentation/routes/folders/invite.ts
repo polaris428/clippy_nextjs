@@ -13,6 +13,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
     const usecase = container.resolve(GenerateInviteCodeUsecase);
     const inviteCode = await usecase.execute(folderId, body.isInvite, user.id);
+    console.log('dd', inviteCode);
     return NextResponse.json({
       success: true,
       inviteCode,

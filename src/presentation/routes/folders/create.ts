@@ -5,7 +5,7 @@ import prisma from '@/lib/prisma';
 import { verifyIdToken } from '@/lib/firebase';
 import { cookies } from 'next/headers';
 import 'reflect-metadata';
-
+import { randomUUID } from 'crypto';
 export async function POST(req: NextRequest) {
   try {
     const cookieStore = await cookies();
@@ -33,6 +33,8 @@ export async function POST(req: NextRequest) {
         name,
         isShared: !!isShared,
         ownerId: user.id,
+        inviteCode: randomUUID(),
+        shareKey: randomUUID(),
       },
     });
 

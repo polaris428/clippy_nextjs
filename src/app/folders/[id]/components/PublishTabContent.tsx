@@ -16,8 +16,6 @@ export function PublishTabContent() {
 
     const { isShared, toggleShare, shareKey } = useFolderShareToggle({
         folderId: folder?.id || '',
-        initialShared: folder?.isShared ?? false,
-        initiaShareKey: folder?.shareKey ?? '',
     });
     console.log("폴더 공유 ", folder)
     console.log("폴더 공유 ", folder?.shareKey)
