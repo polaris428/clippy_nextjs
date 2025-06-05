@@ -6,7 +6,7 @@ import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
 import { tryParseAuthHeaderAndSetCookie } from '@/lib/utils/authFromHeader';
 import { mergeCookies } from '@/lib/utils/mergeCookies';
 import { GetFolderIdUsecase } from '@/application/usecases/folder/GetFolderIdUsecase';
-import { DeleteFolderUsecase } from '@/application/usecases/folder/DeleteFolderUsecase';
+import { DeleteFolderUsecase } from '@/application/usecases/folder/PostDeleteFolderUsecase';
 import { GetAllFolderUsecase } from '@/application/usecases/folder/GetAllFolderUsecase';
 
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
