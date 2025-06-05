@@ -1,12 +1,17 @@
+import { fetchWithFirebaseRetry } from '@/lib/utils/fetchWithAuthRetry';
 export const FolderService = {
   async createFolder(name: string, isShared: boolean) {
-    const res = await fetch('/api/folders', {
+    console.log('폴더 1생성 시갖');
+    const res = await fetchWithFirebaseRetry('/api/folders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
       body: JSON.stringify({ name, isShared }),
     });
-    if (!res.ok) throw new Error('폴더 생성 실패');
+    if (!res.ok) {
+      console.log('폴더 1생성 실패', res);
+      throw new Error('폴더 생성 실패');
+    }
     return await res.json();
   },
   async deleteFolder(folderId: string) {

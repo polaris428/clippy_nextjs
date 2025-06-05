@@ -2,32 +2,17 @@ import 'reflect-metadata';
 import '@/infrastructure/di/container';
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { verifyIdToken } from '@/lib/firebase';
-import { cookies } from 'next/headers';
 import 'reflect-metadata';
 import { randomUUID } from 'crypto';
+import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
+import { tryParseAuthHeaderAndSetCookie } from '@/lib/utils/authFromHeader';
+import { mergeCookies } from '@/lib/utils/mergeCookies';
+
 export async function POST(req: NextRequest) {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
-
-    if (!token) {
-      return NextResponse.json({ error: '인증 필요' }, { status: 401 });
-    }
-
-    const decoded = await verifyIdToken(token);
-    const uid = decoded.uid;
-
+    const tempRes = await tryParseAuthHeaderAndSetCookie(req);
+    const user = await getCurrentUserOrThrow(req);
     const { name, isShared } = await req.json();
-
-    const user = await prisma.user.findUnique({
-      where: { firebaseUid: uid },
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: '유저 없음' }, { status: 404 });
-    }
-
     const newFolder = await prisma.folder.create({
       data: {
         name,
@@ -37,10 +22,15 @@ export async function POST(req: NextRequest) {
         shareKey: randomUUID(),
       },
     });
+    const res = NextResponse.json({ newFolder });
+    if (tempRes) mergeCookies(tempRes, res);
 
-    return NextResponse.json({ newFolder });
+    return res;
   } catch (err) {
-    console.error('🔥 폴더 생성 실패:', err);
+    if (err instanceof Response) {
+      return err;
+    }
+    console.error('❌ 예기치 못한 에러:', err);
     return NextResponse.json({ error: '서버 오류' }, { status: 500 });
   }
 }
