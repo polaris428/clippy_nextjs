@@ -6,7 +6,7 @@ import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
 import { tryParseAuthHeaderAndSetCookie } from '@/lib/utils/authFromHeader';
 import { mergeCookies } from '@/lib/utils/mergeCookies';
 import { GetFolderIdUsecase } from '@/application/usecases/folder/GetFolderIdUsecase';
-import { DeleteFolderUsecase } from '@/application/usecases/folder/PostDeleteFolderUsecase';
+import { PostDeleteFolderUsecase } from '@/application/usecases/folder/PostDeleteFolderUsecase';
 import { GetAllFolderUsecase } from '@/application/usecases/folder/GetAllFolderUsecase';
 
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
@@ -15,10 +15,11 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     const user = await getCurrentUserOrThrow(req);
 
     const folderId = (await params).id;
+
     const getFolderIdUsecase = container.resolve(GetFolderIdUsecase);
     await getFolderIdUsecase.execute({ userId: user.id, folderId: folderId });
 
-    const deleteFolderUsecase = container.resolve(DeleteFolderUsecase);
+    const deleteFolderUsecase = container.resolve(PostDeleteFolderUsecase);
     await deleteFolderUsecase.execute(user.id, folderId);
 
     const getAllFolderUsecase = container.resolve(GetAllFolderUsecase);

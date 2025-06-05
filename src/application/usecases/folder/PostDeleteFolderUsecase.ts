@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import type { IFolderRepository } from '@/domain/folder/IFolderRepository';
 
 @injectable()
-export class DeleteFolderUsecase {
+export class PostDeleteFolderUsecase {
   constructor(@inject('IFolderRepository') private folderRepository: IFolderRepository) {}
 
   async execute(userId: string, folderId: string) {
