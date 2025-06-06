@@ -1,16 +1,11 @@
 import { inject, injectable } from 'tsyringe';
 import type { IFolderRepository } from '@/domain/folder/IFolderRepository';
 
-interface Input {
-  inviteCode: string;
-  userId: string;
-}
-
 @injectable()
 export class JoinFolderUsecase {
   constructor(@inject('IFolderRepository') private folderRepository: IFolderRepository) {}
 
-  async execute({ inviteCode, userId }: Input): Promise<{ folderId: string }> {
+  async execute({ inviteCode, userId }: { inviteCode: string; userId: string }): Promise<{ folderId: string }> {
     const folder = await this.folderRepository.findByInviteCode(inviteCode);
 
     if (!folder) {
