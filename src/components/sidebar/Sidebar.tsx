@@ -160,9 +160,9 @@ export default function Sidebar() {
                 }}
                 onConfirm={async (newName) => {
                     if (targetFolder) {
-                        const res = await FolderService.updateFolder(targetFolder.id, { name: newName });
-                        if (res?.folders) {
-                            setFolders(res.folders);
+                        const folder = await FolderService.updateFolder(targetFolder.id, { name: newName });
+                        if (folder) {
+                            setFolders(folders);
                         }
                         setTargetFolderId(null);
                         setMode(null);

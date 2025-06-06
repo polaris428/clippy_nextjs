@@ -1,5 +1,6 @@
 import { fetchWithFirebaseRetry } from '@/lib/utils/fetchWithAuthRetry';
 import { Folder } from './../types/folder/folder';
+import { FolderUpdateDto } from '@/types/dto/folder/FolderUpdateDto';
 
 export const FolderService = {
   async createFolder(name: string, isShared: boolean) {
@@ -26,7 +27,7 @@ export const FolderService = {
     return await res.json();
   },
 
-  async updateFolder(folderId: string, update: { name?: string; color?: string; description?: string; isShared?: boolean }): Promise<Folder> {
+  async updateFolder(folderId: string, update: FolderUpdateDto): Promise<Folder> {
     try {
       const res = await fetch(`/api/folders/${folderId}`, {
         method: 'PATCH',
@@ -56,7 +57,7 @@ export const FolderService = {
   },
 
   async generateInviteCode(id: string, isInvite: boolean): Promise<string> {
-    const res = await fetch(`/api/folders/${id}/invite`, {
+    const res = await fetch(`/api/folders/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

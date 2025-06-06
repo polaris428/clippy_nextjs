@@ -3,11 +3,11 @@ import '@/infrastructure/di/container';
 import { NextRequest, NextResponse } from 'next/server';
 import { container } from 'tsyringe';
 import { tryParseAuthHeaderAndSetCookie } from '@/lib/utils/authFromHeader';
-import { FolderUpdateInput } from '@/types/folder/FolderUpdateInput';
 import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
 import { GetFolderIdUsecase } from '@/application/usecases/folder/GetFolderIdUsecase';
 import { mergeCookies } from '@/lib/utils/mergeCookies';
 import { PatchUpdateFolderUsecase } from '@/application/usecases/folder/PatchUpdateFolderUsecase';
+import { FolderUpdateDto, FolderUpdateDtoKeys } from '@/types/dto/folder/FolderUpdateDto';
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const tempRes = await tryParseAuthHeaderAndSetCookie(req);
@@ -20,13 +20,12 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
     const body = await req.json();
 
-    // 🔐 허용된 필드만 업데이트: 화이트리스트 방식
-    const allowedFields = ['name', 'isShared'];
-    const updateData: Partial<FolderUpdateInput> = {};
+    const allowedFields = FolderUpdateDtoKeys;
+    const updateData: Partial<FolderUpdateDto> = {};
 
     for (const key of allowedFields) {
       if (key in body) {
-        updateData[key as keyof FolderUpdateInput] = body[key];
+        updateData[key] = body[key];
       }
     }
 

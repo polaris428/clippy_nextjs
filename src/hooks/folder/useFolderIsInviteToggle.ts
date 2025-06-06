@@ -11,18 +11,18 @@ export function useFolderIsInviteToggle({ folderId }: UseFolderInviteTogglerops)
   if (!folder) throw new Error('폴더를 찾을 수 없습니다.');
 
   const isIsInvite = folder.isInvite ?? false;
-  const inviteCode = folder.inviteCode ?? 'djqtek';
-  console.log('dsfasfsdf', inviteCode);
+  const inviteCode = folder.inviteCode ?? '';
+
   const toggleShare = async (nextValue: boolean) => {
     try {
-      const newInviteCode = await FolderService.generateInviteCode(folderId, nextValue);
+      const folder = await FolderService.updateFolder(folderId, { isInvite: nextValue });
 
       updateFolder(folderId, {
         isInvite: nextValue,
-        inviteCode: nextValue ? newInviteCode : '',
+        inviteCode: nextValue ? folder.inviteCode : '',
       });
     } catch (err) {
-      console.error('📛 초대 상태 변경 실패:', err);
+      console.error('초대 상태 변경 실패:', err);
       updateFolder(folderId, { isInvite: false, inviteCode: '' });
     }
   };

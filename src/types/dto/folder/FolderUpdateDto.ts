@@ -3,3 +3,4 @@ export type FolderUpdateDto = {
   isShared?: boolean;
   isInvite?: boolean;
 };
+export const FolderUpdateDtoKeys: (keyof FolderUpdateDto)[] = ['name', 'isShared', 'isInvite'];
