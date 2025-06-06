@@ -12,11 +12,6 @@ export interface IFolderRepository {
   getFoldersByUserId(userId: string): Promise<Folder[]>;
 
   /**
-   * 유저의 공유받은 전체체 폴더 조회
-   */
-  findShareFoldersByUserId(userId: string): Promise<Folder[]>;
-
-  /**
    * 단일 폴더 조회
    */
   findById(folderId: string): Promise<Folder | null>;

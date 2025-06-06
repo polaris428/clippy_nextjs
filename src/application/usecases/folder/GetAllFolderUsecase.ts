@@ -1,12 +1,15 @@
 import { injectable, inject } from 'tsyringe';
 import type { IFolderRepository } from '@/domain/folder/IFolderRepository';
 import type { Folder } from '@/types/folder/folder';
+import type { IShareFolderRepository } from '@/domain/shere-folder/IShareFolderRepository';
 
 @injectable()
 export class GetAllFolderUsecase {
   constructor(
     @inject('IFolderRepository')
-    private folderRepository: IFolderRepository
+    private folderRepository: IFolderRepository,
+    @inject('IShareFolderRepository')
+    private shareFolderRepository: IShareFolderRepository
   ) {}
 
   async execute(userId: string): Promise<{
@@ -14,7 +17,7 @@ export class GetAllFolderUsecase {
     sharedFolders: Folder[];
   }> {
     const folders = await this.folderRepository.getFoldersByUserId(userId);
-    const sharedFolders = await this.folderRepository.findShareFoldersByUserId(userId);
+    const sharedFolders = await this.shareFolderRepository.findShareFoldersByUserId(userId);
     return { folders, sharedFolders };
   }
 }

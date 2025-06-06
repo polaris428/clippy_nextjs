@@ -56,37 +56,6 @@ export class PrismaFolderRepository implements IFolderRepository {
     }));
   }
 
-  // 유저의 공유받은 전체체 폴더 조회
-  async findShareFoldersByUserId(userId: string): Promise<Folder[]> {
-    const sharedFolders = await prisma.userFolderShare.findMany({
-      where: {
-        userId: userId, // 공유받은 유저 ID
-      },
-      include: {
-        folder: {
-          include: {
-            links: {
-              orderBy: {
-                createdAt: 'desc',
-              },
-            },
-          },
-        },
-      },
-    });
-
-    return sharedFolders.map(shearFolder => ({
-      id: shearFolder.id,
-      name: shearFolder.folder.name,
-      ownerId: shearFolder.folder.ownerId,
-      isShared: shearFolder.folder.isShared,
-      shareKey: shearFolder.folder.shareKey,
-      createdAt: shearFolder.createdAt,
-      links: shearFolder.folder.links,
-      isInvite: shearFolder.folder.isInvite,
-    }));
-  }
-
   /**
    * 폴더 ID로 단일 폴더 조회
    */

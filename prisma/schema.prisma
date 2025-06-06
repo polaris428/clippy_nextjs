@@ -39,7 +39,7 @@ model UserFolderShare {
   folderId  String
   userId    String
   permission String
-   folder    Folder  @relation(fields: [folderId], references: [id], onDelete: Cascade) 
+  folder    Folder  @relation(fields: [folderId], references: [id], onDelete: Cascade) 
   user      User     @relation(fields: [userId], references: [id])
   createdAt  DateTime  @default(now())
   @@unique([folderId, userId])
@@ -53,7 +53,7 @@ model Link {
   description String?  // 미리보기 텍스트 (description 메타태그)
   folderId   String
   isPin      Boolean   @default(false)
-  folder     Folder    @relation(fields: [folderId], references: [id])
+  folder    Folder   @relation(fields: [folderId], references: [id], onDelete: Cascade)
   linkTags   LinkTag[]
   createdAt  DateTime  @default(now())
 }

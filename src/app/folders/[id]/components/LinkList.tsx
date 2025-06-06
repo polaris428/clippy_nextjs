@@ -27,7 +27,7 @@ export default function LinkList({ links, readOnly = false }: { links: Link[]; r
 
                 const favicon = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
                 const thumbnail = link.thumbnail || '/img/ic_logo.png';
-                const description = link.description || '설명 없음';
+                const description = link.description || '';
                 const createdAt = format(new Date(link.createdAt), 'yyyy.MM.dd');
 
                 return (

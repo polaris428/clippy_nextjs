@@ -17,11 +17,14 @@ import {
 } from 'phosphor-react';
 import { useCreateLink } from '@/hooks/user/useCreateLink';
 import SidebarTopNavButton from '../design-system/Button/SidebarButton/SidebarTopNavButton';
+
+import { useNavigate } from '@/lib/utils/navigation';
 export default function Sidebar() {
     const pathname = usePathname();
     const currentFolderId = pathname.split('/folders/')[1]?.split('/')[0];
 
-    const folders = useAuthStore((s) => s.folders);
+    const folders = useAuthStore((s) => s.folders) ?? [];
+
     const setFolders = useAuthStore((s) => s.setFolders);
     const sharedFolders = useAuthStore((s) => s.sharedFolders);
 
@@ -32,6 +35,51 @@ export default function Sidebar() {
     const [mode, setMode] = useState<'delete' | 'rename' | null>(null);
     const targetFolder = folders.find((f) => f.id === targetFolderId) ?? null;
     const { createLink } = useCreateLink()
+    const navigate = useNavigate();
+    const handleDeleteConfirm = async () => {
+        console.log("성공", targetFolderId)
+        if (!targetFolderId) return;
+
+        try {
+            const res = await FolderService.deleteFolder(targetFolderId);
+            const { deletedFolder, isShared } = res;
+            console.log("성공", deletedFolder)
+            if (deletedFolder) {
+
+
+                const store = useAuthStore.getState();
+                console.log("성공", deletedFolder)
+                console.log("성공", isShared)
+                if (isShared) {
+                    store.removeSharedFolder(deletedFolder.id);
+                } else {
+                    store.removeFolder(deletedFolder.id);
+                }
+
+                if (targetFolderId === currentFolderId) {
+                    const fallbackFolder = store.folders[0] || store.sharedFolders[0];
+                    navigate(fallbackFolder ? `/folders/${encodeURIComponent(fallbackFolder.id)}` : '/no-folders');
+                }
+            }
+        } catch (err) {
+            console.error('폴더 삭제 중 오류 발생:', err);
+        }
+
+        setTargetFolderId(null);
+        setMode(null);
+    };
+
+    const handleRenameConfirm = async (newName: string) => {
+        if (!targetFolder) return;
+
+        const folder = await FolderService.updateFolder(targetFolder.id, { name: newName });
+        if (folder) {
+            setFolders(folders);
+        }
+
+        setTargetFolderId(null);
+        setMode(null);
+    };
 
     return (
         <div className="h-full flex flex-col justify-between p-6 bg-white">
@@ -140,16 +188,7 @@ export default function Sidebar() {
                     setTargetFolderId(null);
                     setMode(null);
                 }}
-                onConfirm={async () => {
-                    if (targetFolderId != null) {
-                        const res = await FolderService.deleteFolder(targetFolderId);
-                        if (res?.folders) {
-                            setFolders(res.folders.folders);
-                        }
-                    }
-                    setTargetFolderId(null);
-                    setMode(null);
-                }}
+                onConfirm={handleDeleteConfirm}
             />
             <RenameFolderDialog
                 initialName={targetFolder?.name ?? ''}
@@ -158,16 +197,7 @@ export default function Sidebar() {
                     setTargetFolderId(null);
                     setMode(null);
                 }}
-                onConfirm={async (newName) => {
-                    if (targetFolder) {
-                        const folder = await FolderService.updateFolder(targetFolder.id, { name: newName });
-                        if (folder) {
-                            setFolders(folders);
-                        }
-                        setTargetFolderId(null);
-                        setMode(null);
-                    }
-                }}
+                onConfirm={handleRenameConfirm}
             />
         </div >
     );

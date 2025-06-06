@@ -7,6 +7,8 @@ import { PrismaFolderRepository } from '@/infrastructure/repositories/PrismaFold
 
 import { ILinkRepository } from '@/domain/link/ILinkRepository';
 import { PrismaLinkRepository } from '@/infrastructure/repositories/PrismaLinkRepository';
+import { IShareFolderRepository } from '@/domain/shere-folder/IShareFolderRepository';
+import { PrismaShareFolderRepository } from '@/infrastructure/repositories/PrismaShareFolderRepository';
 
 container.register<IUserRepository>('IUserRepository', {
   useClass: PrismaUserRepository,
@@ -14,6 +16,10 @@ container.register<IUserRepository>('IUserRepository', {
 
 container.register<IFolderRepository>('IFolderRepository', {
   useClass: PrismaFolderRepository,
+});
+
+container.register<IShareFolderRepository>('IShareFolderRepository', {
+  useClass: PrismaShareFolderRepository,
 });
 
 container.register<ILinkRepository>('ILinkRepository', {

@@ -5,33 +5,24 @@ import { container } from 'tsyringe';
 import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
 import { tryParseAuthHeaderAndSetCookie } from '@/lib/utils/authFromHeader';
 import { mergeCookies } from '@/lib/utils/mergeCookies';
-import { GetFolderIdUsecase } from '@/application/usecases/folder/GetFolderIdUsecase';
 import { PostDeleteFolderUsecase } from '@/application/usecases/folder/PostDeleteFolderUsecase';
-import { GetAllFolderUsecase } from '@/application/usecases/folder/GetAllFolderUsecase';
 
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const tempRes = await tryParseAuthHeaderAndSetCookie(req);
     const user = await getCurrentUserOrThrow(req);
-
-    const folderId = (await params).id;
-
-    const getFolderIdUsecase = container.resolve(GetFolderIdUsecase);
-    await getFolderIdUsecase.execute({ userId: user.id, folderId: folderId });
+    const folderId = params.id;
 
     const deleteFolderUsecase = container.resolve(PostDeleteFolderUsecase);
-    await deleteFolderUsecase.execute(user.id, folderId);
-
-    const getAllFolderUsecase = container.resolve(GetAllFolderUsecase);
-    const { folders, sharedFolders } = await getAllFolderUsecase.execute(user.id);
+    const { deletedFolder, isShared } = await deleteFolderUsecase.execute(user.id, folderId);
 
     const res = NextResponse.json({
       success: true,
-      folders: folders,
-      sharedFolders: sharedFolders,
+      deletedFolder,
+      isShared,
     });
-    if (tempRes) mergeCookies(tempRes, res);
 
+    if (tempRes) mergeCookies(tempRes, res);
     return res;
   } catch (err) {
     if (err instanceof Response) {
