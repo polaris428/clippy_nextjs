@@ -1,5 +1,4 @@
 import { injectable, inject } from 'tsyringe';
-import { verifyIdToken } from '@/lib/firebase';
 import { User } from '@/types/auth/user';
 import 'reflect-metadata';
 import '@/infrastructure/di/container';
@@ -7,7 +6,7 @@ import { extractNameFromEmail } from '@/lib/utils/extractNameFromEmail';
 
 import type { IUserRepository } from '@/domain/user/IUserRepository';
 import type { IFolderRepository } from '@/domain/folder/IFolderRepository';
-
+import { DecodedIdToken } from 'firebase-admin/auth';
 @injectable()
 export class LoginUseCase {
   constructor(
@@ -17,8 +16,7 @@ export class LoginUseCase {
     private folderRepository: IFolderRepository
   ) {}
 
-  async execute(token: string): Promise<User> {
-    const decoded = await verifyIdToken(token);
+  async execute(decoded: DecodedIdToken): Promise<User> {
     const firebaseUid = decoded.uid;
 
     const existingUser = await this.userRepository.findByFirebaseUid(firebaseUid);

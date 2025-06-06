@@ -5,7 +5,7 @@ import '@/infrastructure/di/container';
 import { setAuthCookie } from '@/lib/utils/cookies';
 import { container } from 'tsyringe';
 import { getAuthCookie } from '@/lib/utils/cookies';
-
+import { verifyIdToken } from '@/lib/firebase';
 export async function GET() {
   const token = await getAuthCookie();
 
@@ -15,8 +15,9 @@ export async function GET() {
 
   try {
     const login = container.resolve(LoginUseCase);
+    const decoded = await verifyIdToken(token);
     const allFolder = container.resolve(GetAllFolderUsecase);
-    const user = await login.execute(token);
+    const user = await login.execute(decoded);
     const { folders, sharedFolders } = await allFolder.execute(user.id);
 
     const response = NextResponse.json({ user, folders, sharedFolders });

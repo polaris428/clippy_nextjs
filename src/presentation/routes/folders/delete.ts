@@ -23,11 +23,12 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     await deleteFolderUsecase.execute(user.id, folderId);
 
     const getAllFolderUsecase = container.resolve(GetAllFolderUsecase);
-    const allFolder = await getAllFolderUsecase.execute(user.id);
+    const { folders, sharedFolders } = await getAllFolderUsecase.execute(user.id);
 
     const res = NextResponse.json({
       success: true,
-      folders: allFolder,
+      folders: folders,
+      sharedFolders: sharedFolders,
     });
     if (tempRes) mergeCookies(tempRes, res);
 
