@@ -2,6 +2,7 @@ import { injectable } from 'tsyringe';
 import { prisma } from '@/lib/prisma';
 import { Folder } from '@/types/folder/folder';
 import { IFolderRepository } from '@/domain/folder/IFolderRepository';
+import { FolderUpdateDto } from '@/types/dto/folder/FolderUpdateDto';
 @injectable()
 export class PrismaFolderRepository implements IFolderRepository {
   /**
@@ -111,16 +112,15 @@ export class PrismaFolderRepository implements IFolderRepository {
     };
   }
 
-  async updateShare(folderId: string, data: { isShared: boolean; shareKey: string | null }): Promise<void> {
-    await prisma.folder.update({
-      where: { id: folderId },
-      data: {
-        isShared: data.isShared,
-        shareKey: data.shareKey,
+  async updateFolder({ id, data }: { id: string; data: FolderUpdateDto }): Promise<Folder> {
+    return prisma.folder.update({
+      where: { id },
+      data,
+      include: {
+        links: true,
       },
     });
   }
-
   async findByInviteCode(inviteCode: string): Promise<Folder | null> {
     const folder = await prisma.folder.findUnique({
       where: { inviteCode },

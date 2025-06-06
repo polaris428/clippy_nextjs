@@ -1,5 +1,7 @@
 import { FolderService } from '@/services/FolderService';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { Folder } from '@/types/folder/folder';
+
 interface UseFolderShareToggleProps {
   folderId: string;
 }
@@ -15,11 +17,11 @@ export function useFolderShareToggle({ folderId }: UseFolderShareToggleProps) {
 
   const toggleShare = async (nextValue: boolean) => {
     try {
-      const newShareKey = await FolderService.shareFolder(folderId, nextValue);
+      const folder: Folder = await FolderService.updateFolder(folderId, { isShared: nextValue });
 
       updateFolder(folderId, {
         isShared: nextValue,
-        shareKey: nextValue ? newShareKey : '',
+        shareKey: nextValue ? folder.shareKey : '',
       });
     } catch (err) {
       console.error('📛 공유 상태 변경 실패:', err);

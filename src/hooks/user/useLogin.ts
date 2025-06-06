@@ -23,6 +23,7 @@ export function useLogin() {
 
       const store = useAuthStore.getState();
       store.setUser(user);
+      console.log('로그인', folders);
       store.setFolders(folders);
       store.setSharedFolders(sharedFolders);
 

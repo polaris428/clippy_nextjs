@@ -1,4 +1,6 @@
 import { fetchWithFirebaseRetry } from '@/lib/utils/fetchWithAuthRetry';
+import { Folder } from './../types/folder/folder';
+
 export const FolderService = {
   async createFolder(name: string, isShared: boolean) {
     const res = await fetchWithFirebaseRetry('/api/folders', {
@@ -24,7 +26,7 @@ export const FolderService = {
     return await res.json();
   },
 
-  async updateFolder(folderId: string, update: { name?: string; color?: string; description?: string; isShared?: boolean }) {
+  async updateFolder(folderId: string, update: { name?: string; color?: string; description?: string; isShared?: boolean }): Promise<Folder> {
     try {
       const res = await fetch(`/api/folders/${folderId}`, {
         method: 'PATCH',
@@ -40,7 +42,7 @@ export const FolderService = {
         throw new Error(data.error || '폴더 수정 실패');
       }
 
-      return data;
+      return data.folder;
     } catch (err) {
       console.error('🔥 폴더 수정 요청 중 오류 발생:', err);
       throw err;
@@ -65,22 +67,6 @@ export const FolderService = {
     if (!res.ok) throw new Error('초대 코드 생성 실패');
     const data = await res.json();
     return data.inviteCode;
-  },
-
-  async shareFolder(id: string, isShared: boolean): Promise<string | null> {
-    const res = await fetch(`/api/folders/${id}/share`, {
-      method: 'PATCH',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ isShared }),
-    });
-
-    if (!res.ok) return null;
-
-    const data = await res.json();
-    return data.shareKey;
   },
 
   async joinFolder(inviteCode: string): Promise<{ success: boolean; folderId?: string; error?: string }> {

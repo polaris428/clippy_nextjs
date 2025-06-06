@@ -1,5 +1,5 @@
 import { Folder } from '../../types/folder/folder';
-
+import type { FolderUpdateDto } from '@/types/dto/folder/FolderUpdateDto';
 export interface IFolderRepository {
   /**
    * 폴더 생성
@@ -23,8 +23,7 @@ export interface IFolderRepository {
   /**
    * 단일 공유
    */
-  updateShare(folderId: string, data: { isShared: boolean; shareKey: string | null }): Promise<void>;
-
+  updateFolder({ id, data }: { id: string; data: FolderUpdateDto }): Promise<Folder>;
   findByInviteCode(inviteCode: string): Promise<Folder | null>;
   addCollaborator(data: { folderId: string; userId: string }): Promise<void>;
   updateInviteCode(data: { folderId: string; isInvite: boolean; inviteCode: string }): Promise<void>;
