@@ -6,7 +6,6 @@ import { SidebarNavButton } from '@/components/design-system';
 import { SidebarButton } from '@/components/design-system';
 import { DeleteFolderDialog, RenameFolderDialog } from '@/components/design-system';
 import CreateFolderModal from '../modal/CreateFolderModal';
-import SaveLinkModal from '../modal/SaveLinkModal';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { FolderService } from '@/services/FolderService';
 import {
@@ -15,7 +14,7 @@ import {
     LinkSimple,
     PushPinSimple
 } from 'phosphor-react';
-import { useCreateLink } from '@/hooks/user/useCreateLink';
+
 import SidebarTopNavButton from '../design-system/Button/SidebarButton/SidebarTopNavButton';
 
 import { useNavigate } from '@/lib/utils/navigation';
@@ -30,11 +29,11 @@ export default function Sidebar() {
 
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
+
     const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
     const [mode, setMode] = useState<'delete' | 'rename' | null>(null);
     const targetFolder = folders.find((f) => f.id === targetFolderId) ?? null;
-    const { createLink } = useCreateLink()
+
     const navigate = useNavigate();
     const handleDeleteConfirm = async () => {
         console.log("성공", targetFolderId)
@@ -166,7 +165,7 @@ export default function Sidebar() {
                 <SidebarButton
                     icon={<LinkSimple size={18} />}
                     label="링크 저장"
-                    onClick={() => setIsLinkModalOpen(true)}
+                    onClick={() => navigate('/addFolder')}
                 />
             </div>
 
@@ -174,14 +173,7 @@ export default function Sidebar() {
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
             />
-            <SaveLinkModal
-                isOpen={isLinkModalOpen}
-                onClose={() => setIsLinkModalOpen(false)}
-                onSubmit={(title, url, folderId) =>
-                    createLink({ title, url, folderId })
-                }
-                folders={folders}
-            />
+
             <DeleteFolderDialog
                 open={mode === 'delete'}
                 onClose={() => {

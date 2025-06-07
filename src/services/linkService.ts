@@ -2,14 +2,22 @@ import { CreateLinkInput } from '@/types/CreateLinkInput';
 import { Link } from '@/types/links/link';
 import { fetchWithFirebaseRetry } from '@/lib/utils/fetchWithAuthRetry';
 export const LinkService = {
-  async createLink({ title, url, folderId }: CreateLinkInput): Promise<Link> {
+  async createLink({ title, url, description, image, favicon, folderId }: CreateLinkInput): Promise<Link> {
     try {
       const res = await fetchWithFirebaseRetry('/api/links', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ title, url, folderId }),
+        body: JSON.stringify({
+          title,
+          url,
+          description,
+          image,
+          favicon,
+          folderId,
+        }),
       });
+
       const json = await res.json();
 
       if (!res.ok || !json.success) {
