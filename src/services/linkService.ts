@@ -32,6 +32,7 @@ export const LinkService = {
       throw err;
     }
   },
+
   async deleteLink(linkId: string): Promise<void> {
     const res = await fetch(`/api/links/${linkId}`, {
       method: 'DELETE',
@@ -42,7 +43,29 @@ export const LinkService = {
       throw new Error((await res.text()) || '링크 삭제 실패');
     }
   },
+  async getLinkById(linkId: string): Promise<Link> {
+    console.log('서비스', linkId);
+    try {
+      const res = await fetchWithFirebaseRetry(`/api/links/${linkId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+      });
 
+      const json = await res.json();
+      console.log('성공', json);
+      if (!res.ok || !json.success) {
+        const errorText = json?.message || '링크 조회 실패';
+        console.error('❌ 링크 조회 실패:', errorText);
+        throw new Error(errorText);
+      }
+
+      return json.link as Link;
+    } catch (err) {
+      console.error('🔥 링크 조회 중 예외 발생:', err);
+      throw err;
+    }
+  },
   async updateLink(linkId: string, data: Partial<Pick<Link, 'title' | 'description' | 'isPin'>>): Promise<Link> {
     try {
       const res = await fetch(`/api/links/${linkId}`, {

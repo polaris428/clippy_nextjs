@@ -7,11 +7,16 @@ import { format } from 'date-fns';
 import { useDeleteLink } from '@/hooks/link/useDeleteLink';
 import { useUpdateLink } from '@/hooks/link/useUpdateLink';
 import { PushPinSimple, PushPinSimpleSlash, Pencil, Trash } from 'phosphor-react';
+import { useRouter } from 'next/navigation';
 export default function LinkList({ links, readOnly = false }: { links: Link[]; readOnly?: boolean }) {
 
     const { deleteLink } = useDeleteLink();
     const { updateLink } = useUpdateLink();
+    const router = useRouter();
+    const handleEdit = (linkId: string) => {
 
+        router.push(`/link/edit/${linkId}`);
+    };
     return (
         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full">
             {links.map((link) => {
@@ -65,9 +70,13 @@ export default function LinkList({ links, readOnly = false }: { links: Link[]; r
 
                                     <div
                                         title="편집"
-                                        className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-gray-700 hover:bg-gray-100"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleEdit(link.id);
+                                        }}
+                                        className="cursor-pointer w-8 h-8 bg-white rounded-full flex items-center justify-center shadow text-gray-700 hover:bg-gray-100"
                                     >
-                                        <Pencil size={16} weight="regular" />
+                                        <Pencil size={16} />
                                     </div>
                                     <div
                                         title="삭제"

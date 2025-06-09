@@ -133,7 +133,7 @@ export default function Sidebar() {
                 <SidebarButton
                     icon={<LinkSimple size={18} />}
                     label="링크 저장"
-                    onClick={() => navigate('/addLink')}
+                    onClick={() => navigate('/link/add')}
                 />
             </div>
 

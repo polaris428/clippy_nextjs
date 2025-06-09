@@ -63,4 +63,10 @@ export class PrismaLinkRepository implements ILinkRepository {
       data,
     });
   }
+  async findById(id: string): Promise<Link | null> {
+    console.log('아이디', id);
+    return await prisma.link.findUnique({
+      where: { id },
+    });
+  }
 }

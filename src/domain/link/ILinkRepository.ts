@@ -1,6 +1,7 @@
 import { Link } from '@/types/links/link';
 
 export interface ILinkRepository {
+  findById(id: string): Promise<Link | null>;
   checkAccess(linkId: string, userId: string): Promise<void>;
   deleteLink(linkId: string, userId: string): Promise<void>;
   createLink(data: { url: string; title: string; thumbnail: string; favicon: string; folderId: string; description: string; userId: string }): Promise<void>;

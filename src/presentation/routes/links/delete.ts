@@ -5,7 +5,6 @@ import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
 
 export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
   const linkId = (await params).id;
-
   try {
     const user = await getCurrentUserOrThrow();
 
