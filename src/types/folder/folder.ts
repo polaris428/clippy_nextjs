@@ -1,5 +1,5 @@
 import { Link } from '../links/link';
-export interface Folder {
+export type Folder = {
   id: string;
   name: string;
   ownerId: string;
@@ -9,4 +9,5 @@ export interface Folder {
   links: Link[];
   inviteCode?: string | null;
   isInvite: boolean;
-}
+  isTemp: boolean;
+};

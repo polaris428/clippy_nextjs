@@ -8,7 +8,7 @@ export const FolderService = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({ name, isShared }),
+      body: JSON.stringify({ name, isShared, isTemp: true }),
     });
     if (!res.ok) {
       throw new Error('폴더 생성 실패');

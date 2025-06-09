@@ -17,11 +17,10 @@ export function PublishTabContent() {
     const { isShared, toggleShare, shareKey } = useFolderShareToggle({
         folderId: folder?.id || '',
     });
-    console.log("폴더 공유 ", folder)
-    console.log("폴더 공유 ", folder?.shareKey)
-    const shareKeyText = `${typeof window !== 'undefined' ? window.location.origin : ''}/shared/${shareKey}`;
 
     if (!folder) return null;
+
+    const shareKeyText = `${typeof window !== 'undefined' ? window.location.origin : ''}/shared/${shareKey}`;
 
     return (
         <div className="text-sm space-y-2">

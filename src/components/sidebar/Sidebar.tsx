@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { SidebarNavButton } from '@/components/design-system';
 import { SidebarButton } from '@/components/design-system';
-import { DeleteFolderDialog, RenameFolderDialog } from '@/components/design-system';
-import CreateFolderModal from '../modal/CreateFolderModal';
+import { RenameFolderDialog } from '@/components/design-system';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { FolderService } from '@/services/FolderService';
 import {
@@ -28,45 +27,14 @@ export default function Sidebar() {
     const sharedFolders = useAuthStore((s) => s.sharedFolders);
 
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+
 
     const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
     const [mode, setMode] = useState<'delete' | 'rename' | null>(null);
     const targetFolder = folders.find((f) => f.id === targetFolderId) ?? null;
 
     const navigate = useNavigate();
-    const handleDeleteConfirm = async () => {
-        console.log("성공", targetFolderId)
-        if (!targetFolderId) return;
 
-        try {
-            const res = await FolderService.deleteFolder(targetFolderId);
-            const { deletedFolder, isShared } = res;
-            console.log("성공", deletedFolder)
-            if (deletedFolder) {
-
-
-                const store = useAuthStore.getState();
-                console.log("성공", deletedFolder)
-                console.log("성공", isShared)
-                if (isShared) {
-                    store.removeSharedFolder(deletedFolder.id);
-                } else {
-                    store.removeFolder(deletedFolder.id);
-                }
-
-                if (targetFolderId === currentFolderId) {
-                    const fallbackFolder = store.folders[0] || store.sharedFolders[0];
-                    navigate(fallbackFolder ? `/folders/${encodeURIComponent(fallbackFolder.id)}` : '/no-folders');
-                }
-            }
-        } catch (err) {
-            console.error('폴더 삭제 중 오류 발생:', err);
-        }
-
-        setTargetFolderId(null);
-        setMode(null);
-    };
 
     const handleRenameConfirm = async (newName: string) => {
         if (!targetFolder) return;
@@ -160,28 +128,16 @@ export default function Sidebar() {
                 <SidebarButton
                     icon={<PlusCircle size={18} />}
                     label="폴더 추가"
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => navigate('/addFolder')}
                 />
                 <SidebarButton
                     icon={<LinkSimple size={18} />}
                     label="링크 저장"
-                    onClick={() => navigate('/addFolder')}
+                    onClick={() => navigate('/addLink')}
                 />
             </div>
 
-            <CreateFolderModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-            />
 
-            <DeleteFolderDialog
-                open={mode === 'delete'}
-                onClose={() => {
-                    setTargetFolderId(null);
-                    setMode(null);
-                }}
-                onConfirm={handleDeleteConfirm}
-            />
             <RenameFolderDialog
                 initialName={targetFolder?.name ?? ''}
                 open={mode === 'rename'}

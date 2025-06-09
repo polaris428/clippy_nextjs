@@ -14,6 +14,7 @@ export class PrismaFolderRepository implements IFolderRepository {
         name,
         ownerId: userId,
         isShared,
+        isTemp: true,
       },
       include: {
         links: true, // ✅ 링크 포함
@@ -28,6 +29,7 @@ export class PrismaFolderRepository implements IFolderRepository {
       createdAt: folder.createdAt,
       links: folder.links,
       isInvite: folder.isInvite,
+      isTemp: folder.isTemp,
     };
   }
 
@@ -53,6 +55,7 @@ export class PrismaFolderRepository implements IFolderRepository {
       links: folder.links,
       isInvite: folder.isInvite,
       inviteCode: folder.inviteCode,
+      isTemp: folder.isTemp,
     }));
   }
 
@@ -63,7 +66,7 @@ export class PrismaFolderRepository implements IFolderRepository {
     const folder = await prisma.folder.findUnique({
       where: { id: folderId },
       include: {
-        links: true, // ✅ 링크 포함
+        links: true,
       },
     });
 
@@ -77,24 +80,35 @@ export class PrismaFolderRepository implements IFolderRepository {
       createdAt: folder.createdAt,
       links: folder.links,
       isInvite: folder.isInvite,
-      inviteCode: folder.inviteCode,
+      isTemp: folder.isTemp,
     };
   }
 
   async updateFolder({ id, data }: { id: string; data: FolderUpdateDto }): Promise<Folder> {
-    return prisma.folder.update({
+    const folder = await prisma.folder.update({
       where: { id },
       data,
       include: {
         links: true,
       },
     });
+    console.log('업데이트', folder);
+    return {
+      id: folder.id,
+      name: folder.name,
+      ownerId: folder.ownerId,
+      isShared: folder.isShared,
+      createdAt: folder.createdAt,
+      links: folder.links,
+      isInvite: folder.isInvite,
+      isTemp: folder.isTemp,
+    };
   }
   async findByInviteCode(inviteCode: string): Promise<Folder | null> {
     const folder = await prisma.folder.findUnique({
       where: { inviteCode },
       include: {
-        links: true, // ✅ 링크 포함
+        links: true,
       },
     });
 
@@ -108,6 +122,7 @@ export class PrismaFolderRepository implements IFolderRepository {
       createdAt: folder.createdAt,
       links: folder.links,
       isInvite: folder.isInvite,
+      isTemp: folder.isTemp,
     };
   }
   async updateInviteCode(data: { folderId: string; isInvite: boolean; inviteCode: string }): Promise<void> {

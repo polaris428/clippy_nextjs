@@ -1,156 +1,151 @@
-// SaveLinkPage.tsx
 'use client';
 
+import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Loader2 } from 'lucide-react';
-import { useSaveLinkForm } from '@/hooks/link/useSaveLinkForm';
+import { FolderService } from '@/services/FolderService';
 import { useAuthStore } from '@/stores/useAuthStore';
+import type { Folder } from '@/types/folder/folder';
+import { ShareLinkBox } from '@/components/ShareLinkBox';
 
-export default function SaveLinkPage() {
-    const folders = useAuthStore((s) => s.folders);
-    const sharedFolders = useAuthStore((s) => s.sharedFolders);
+export default function AddFolderPage() {
+    const [name, setName] = useState('');
+    const [isShared, setIsShared] = useState(false);
+    const [isInvite, setIsInvite] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [createdFolder, setCreatedFolder] = useState<Folder | null>(null);
 
-    const {
-        url,
-        title,
-        description,
-        image,
+    const hasCreatedRef = useRef(false);
+    const isTempRef = useRef(true);
+    const createdFolderRef = useRef<Folder | null>(null);
 
-        folderId,
-        isLoading,
-        isFetchingMeta,
-        isMetadataFetched,
-        setUrl,
-        setTitle,
-        setDescription,
-        setFolderId,
-        handleSubmit,
-    } = useSaveLinkForm();
+    const addFolder = useAuthStore(s => s.addFolder);
+    const router = useRouter();
+
+    useEffect(() => {
+        if (hasCreatedRef.current) return;
+        hasCreatedRef.current = true;
+
+        const createTempFolder = async () => {
+            try {
+                const { newFolder } = await FolderService.createFolder('새 폴더', false);
+                setCreatedFolder(newFolder);
+                setName(newFolder.name);
+                setIsShared(newFolder.isShared);
+                setIsInvite(newFolder.isInvite);
+                isTempRef.current = true;
+                createdFolderRef.current = newFolder;
+            } catch {
+                alert('임시 폴더 생성에 실패했습니다.');
+                router.back();
+            }
+        };
+
+        createTempFolder();
+    }, []);
+
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            const folder = createdFolderRef.current;
+            if (folder?.id && isTempRef.current) {
+                FolderService.deleteFolder(folder.id);
+            }
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => {
+            handleBeforeUnload();
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, []);
+
+    const handleSubmit = async () => {
+        if (!createdFolder || !name.trim()) return;
+        setIsLoading(true);
+        try {
+            const updated = await FolderService.updateFolder(createdFolder.id, {
+                name: name.trim(),
+                isShared,
+                isInvite,
+                isTemp: false,
+            });
+
+            setCreatedFolder(updated);
+            createdFolderRef.current = updated;
+            isTempRef.current = false;
+            addFolder(updated);
+            router.push(`/folders/${updated.id}`);
+        } catch {
+            alert('폴더 저장에 실패했습니다.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const shareLink = createdFolder ? `${window.location.origin}/shared/${createdFolder.id}` : '';
+    const inviteLink = createdFolder ? `${window.location.origin}/invite/${createdFolder.id}` : '';
 
     return (
-        <div className="max-w-4xl mx-auto py-14 px-8 space-y-8">
-            <h1 className="text-3xl font-semibold">Add a new link</h1>
+        <div className="max-w-2xl mx-auto py-12 px-6 space-y-8">
+            <h1 className="text-2xl font-semibold flex items-center gap-2">
+                📁 <span>새 폴더 만들기</span>
+            </h1>
 
-            {/* URL 입력 */}
-            <div className="space-y-2">
-                <label className="text-sm font-medium">URL</label>
+            <div className="rounded-2xl border shadow-sm p-6 space-y-4">
+                <label className="block text-sm font-medium">폴더 이름</label>
                 <Input
-                    className="h-11 rounded-xl px-4"
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    placeholder="https://example.com"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="폴더 이름을 입력하세요"
+                    className="rounded-xl px-4 h-11"
+                    disabled={isLoading || !createdFolder}
                 />
-                {isFetchingMeta && (
-                    <div className="text-sm text-muted-foreground flex items-center gap-2">
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        Fetching metadata...
-                    </div>
-                )}
             </div>
 
-            {/* 메타데이터 미리보기 */}
-            {isMetadataFetched && (title || description || image) && (
-                <div className="flex gap-6 border p-5 rounded-xl items-start bg-white">
-                    <div className="flex-1 space-y-1">
-                        <div className="text-xs text-muted-foreground mb-1">Preview from metadata</div>
-                        <div className="font-semibold text-base break-words leading-tight">
-                            {title}
+            {createdFolder && (
+                <>
+                    <div className="rounded-2xl border shadow-sm p-6 space-y-4">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium">🔗 웹 게시</p>
+                                <p className="text-sm text-muted-foreground">링크가 있는 모든 사용자가 볼 수 있습니다</p>
+                            </div>
+                            <Switch checked={isShared} onCheckedChange={setIsShared} disabled={isLoading} />
                         </div>
-                        <div className="text-sm text-muted-foreground whitespace-pre-wrap break-words">
-                            {description}
-                        </div>
+                        {isShared && (
+                            <ShareLinkBox
+                                title="공유 링크"
+                                description="복사하려면 클릭하세요"
+                                url={shareLink}
+                            />
+                        )}
                     </div>
-                    {image && (
-                        <img
-                            src={image}
-                            alt="preview"
-                            className="w-48 h-32 object-cover rounded-xl border"
-                        />
-                    )}
-                </div>
+
+                    <div className="rounded-2xl border shadow-sm p-6 space-y-4">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium">📨 초대</p>
+                                <p className="text-sm text-muted-foreground">초대받은 사용자만 접근할 수 있습니다</p>
+                            </div>
+                            <Switch checked={isInvite} onCheckedChange={setIsInvite} disabled={isLoading} />
+                        </div>
+                        {isInvite && (
+                            <ShareLinkBox
+                                title="초대 링크"
+                                description="복사하려면 클릭하세요"
+                                url={inviteLink}
+                            />
+                        )}
+                    </div>
+                </>
             )}
 
-            {/* 제목 입력 */}
-            <div className="space-y-2">
-                <label className="text-sm font-medium">Title</label>
-                <Input
-                    className="h-11 rounded-xl px-4"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="크롤링된 제목 또는 수동 입력"
-                />
-            </div>
-
-            {/* 설명 입력 */}
-            <div className="space-y-2">
-                <label className="text-sm font-medium">Description</label>
-                <Textarea
-                    className="rounded-xl px-4 py-3 overflow-auto max-h-40"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    rows={4}
-                    placeholder="크롤링된 설명 또는 수동 입력"
-                />
-            </div>
-
-            {/* 폴더 선택 */}
-            <div className="space-y-2">
-                <label className="text-sm font-medium">Select folder</label>
-                <select
-                    className="border rounded-xl p-3 w-full text-sm bg-white"
-                    value={folderId}
-                    onChange={(e) => setFolderId(e.target.value)}
-                >
-                    <option value="">폴더를 선택하세요</option>
-                    {folders.length > 0 && (
-                        <optgroup label="내 폴더">
-                            {folders.map((folder) => (
-                                <option key={folder.id} value={folder.id}>
-                                    {folder.name}
-                                </option>
-                            ))}
-                        </optgroup>
-                    )}
-                    {sharedFolders.length > 0 && (
-                        <optgroup label="공유 폴더">
-                            {sharedFolders.map((folder) => (
-                                <option key={folder.id} value={folder.id}>
-                                    {folder.name}
-                                </option>
-                            ))}
-                        </optgroup>
-                    )}
-                </select>
-            </div>
-
-
-
-            {/* 저장/취소 버튼 */}
-            <div className="flex justify-end gap-4 pt-6">
-                <Button
-                    variant="ghost"
-                    type="button"
-                    onClick={() => history.back()}
-                    className="rounded-full px-6 py-2 text-sm"
-                >
-                    Cancel
-                </Button>
-                <Button
-                    type="button"
-                    onClick={handleSubmit}
-                    className="bg-blue-600 text-white hover:bg-blue-700 rounded-full px-6 py-2 text-sm"
-                    disabled={!isMetadataFetched || isLoading || !folderId}
-                >
-                    {isLoading ? (
-                        <span className="flex items-center gap-2">
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                            Saving...
-                        </span>
-                    ) : (
-                        'Save'
-                    )}
+            <div className="flex justify-end gap-3">
+                <Button variant="outline" onClick={() => router.back()} disabled={isLoading}>취소</Button>
+                <Button onClick={handleSubmit} disabled={isLoading || !createdFolder}>
+                    {isLoading ? '저장 중...' : '폴더 만들기'}
                 </Button>
             </div>
         </div>

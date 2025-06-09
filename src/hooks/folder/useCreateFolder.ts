@@ -1,6 +1,7 @@
 import { useAuthStore } from '@/stores/useAuthStore';
 import { FolderService } from '@/services/FolderService';
 import { useRouter } from 'next/navigation';
+import { Folder } from '@/types/folder/folder';
 
 export function useCreateFolder() {
   const addFolder = useAuthStore(s => s.addFolder);
@@ -8,7 +9,7 @@ export function useCreateFolder() {
   const removeFolder = useAuthStore(s => s.removeFolder);
 
   const router = useRouter();
-  const createFolder = async (name: string, isShared: boolean) => {
+  const createFolder = async (name: string, isShared: boolean): Promise<{ newFolder: Folder }> => {
     const tempId = `temp-${Date.now()}`;
     const now = new Date();
 
@@ -22,6 +23,7 @@ export function useCreateFolder() {
       links: [],
       inviteCode: null,
       shareKey: null,
+      isTemp: true,
     };
 
     addFolder(optimisticFolder);
@@ -34,6 +36,7 @@ export function useCreateFolder() {
       if (currentPath.includes(`/folders/${tempId}`)) {
         router.replace(`/folders/${newFolder.id}`);
       }
+      return { newFolder };
     } catch (err) {
       console.error('🔥 폴더 생성 실패:', err);
       removeFolder(tempId);

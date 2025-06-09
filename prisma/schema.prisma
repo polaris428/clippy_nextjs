@@ -27,10 +27,11 @@ model Folder {
   owner      User      @relation("OwnerFolders", fields: [ownerId], references: [id])
   links      Link[]    
   inviteCode String?   @unique  
-  shareKey   String?  @unique
+  shareKey   String?   @unique
   shares     UserFolderShare[]
-  isShared  Boolean  @default(false)
-  isInvite  Boolean  @default(false)
+  isShared   Boolean   @default(false)  // 웹 게시 여부
+  isInvite   Boolean   @default(false)  // 초대 기능 여부
+  isTemp     Boolean   @default(true)   // 임시 폴더 여부
   createdAt  DateTime  @default(now())
 }
 
