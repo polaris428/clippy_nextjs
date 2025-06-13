@@ -4,45 +4,32 @@ import { FolderUpdateDto } from '@/types/dto/folder/FolderUpdateDto';
 import { SharedUser } from '@/types/shear/shared-user';
 
 export const FolderService = {
-  async createFolder(name: string, isShared: boolean) {
-    const res = await fetchWithFirebaseRetry('/api/folders', {
+  async createFolder(name: string, isShared: boolean): Promise<{ newFolder: Folder }> {
+    return await fetchWithFirebaseRetry<{ newFolder: Folder }>('/api/folders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
       body: JSON.stringify({ name, isShared, isTemp: true }),
     });
-    if (!res.ok) {
-      throw new Error('폴더 생성 실패');
-    }
-    return await res.json();
   },
 
-  async deleteFolder(folderId: string) {
-    const res = await fetchWithFirebaseRetry(`/api/folders/${folderId}`, {
+  async deleteFolder(folderId: string): Promise<{ success: boolean; deletedFolder: Folder; isShared: boolean }> {
+    return await fetchWithFirebaseRetry<{ success: boolean; deletedFolder: Folder; isShared: boolean }>(`/api/folders/${folderId}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
       body: JSON.stringify({ folderId }),
     });
-    if (!res.ok) throw new Error('폴더 삭제 실패');
-    return await res.json();
   },
 
   async updateFolder(folderId: string, update: FolderUpdateDto): Promise<Folder> {
     try {
-      const res = await fetch(`/api/folders/${folderId}`, {
+      const data = await fetchWithFirebaseRetry<{ folder: Folder }>(`/api/folders/${folderId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify(update),
       });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        console.error('🔥 폴더 업데이트 실패:', data.error);
-        throw new Error(data.error || '폴더 수정 실패');
-      }
 
       return data.folder;
     } catch (err) {
@@ -51,16 +38,14 @@ export const FolderService = {
     }
   },
 
-  async getFolderById(id: string) {
-    const res = await fetch(`/api/folders/${id}`, { credentials: 'include' });
-    const data = await res.json();
-    console.log(data);
-    if (!res.ok) throw new Error('폴더 조회 실패');
-    return await data;
+  async getFolderById(id: string): Promise<{ folder: Folder }> {
+    return await fetchWithFirebaseRetry<{ folder: Folder }>(`/api/folders/${id}`, {
+      credentials: 'include',
+    });
   },
 
   async generateInviteCode(id: string, isInvite: boolean): Promise<string> {
-    const res = await fetch(`/api/folders/${id}`, {
+    const data = await fetchWithFirebaseRetry<{ inviteCode: string }>(`/api/folders/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -68,23 +53,19 @@ export const FolderService = {
       credentials: 'include',
       body: JSON.stringify({ isInvite: isInvite }),
     });
-    if (!res.ok) throw new Error('초대 코드 생성 실패');
-    const data = await res.json();
     return data.inviteCode;
   },
 
   async joinFolder(inviteCode: string): Promise<{ success: boolean; folderId?: string; error?: string }> {
     try {
-      const res = await fetch('/api/folders/join', {
+      const json = await fetchWithFirebaseRetry<{ success: boolean; folderId?: string; error?: string }>('/api/folders/join', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ inviteCode }),
       });
 
-      const json = await res.json();
-
-      if (!res.ok || !json.success) {
+      if (!json.success) {
         console.error('❌ 초대 실패:', json.error || '알 수 없는 오류');
         return { success: false, error: json.error || '폴더 참가 실패' };
       }
@@ -96,27 +77,18 @@ export const FolderService = {
     }
   },
   async fetchShares(folderId: string): Promise<{ users: SharedUser[] }> {
-    const res = await fetchWithFirebaseRetry(`/api/folders/${folderId}/shares`, {
+    return await fetchWithFirebaseRetry<{ users: SharedUser[] }>(`/api/folders/${folderId}/shares`, {
       method: 'GET',
       credentials: 'include',
     });
-
-    if (!res.ok) throw new Error('공유 목록 조회 실패');
-    return await res.json();
   },
 
   async updatePermission(folderId: string, userId: string, permission: 'READ' | 'WRITE') {
-    const res = await fetchWithFirebaseRetry(`/api/folders/${folderId}/shares/${userId}`, {
+    await fetchWithFirebaseRetry<void>(`/api/folders/${folderId}/shares/${userId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
       body: JSON.stringify({ permission }),
     });
-
-    if (!res.ok) {
-      const err = await res.json();
-      console.error('❌ 권한 변경 실패:', err?.error);
-      throw new Error(err?.error || '권한 변경 실패');
-    }
   },
 };
