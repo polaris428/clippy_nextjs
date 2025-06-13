@@ -69,6 +69,7 @@ export default function SidebarNavButton({
 
             {isMenuOpen && (
                 <FolderContextMenu
+                    folderId={folderId}
                     onClose={() => setMenuOpenFolderId(null)}
                     anchorRef={menuButtonRef}
                     onRequestDelete={onRequestDelete}

@@ -1,5 +1,7 @@
-// schema.prisma
-
+enum FolderPermission {
+  READ
+  WRITE
+}
 generator client {
   provider = "prisma-client-js"
 }
@@ -39,7 +41,7 @@ model UserFolderShare {
   id        String   @id @default(cuid())
   folderId  String
   userId    String
-  permission String
+  permission FolderPermission  
   folder    Folder  @relation(fields: [folderId], references: [id], onDelete: Cascade) 
   user      User     @relation(fields: [userId], references: [id])
   createdAt  DateTime  @default(now())

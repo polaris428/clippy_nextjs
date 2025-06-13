@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { Folder } from '@/types/folder/folder';
 import { IFolderRepository } from '@/domain/folder/IFolderRepository';
 import { FolderUpdateDto } from '@/types/dto/folder/FolderUpdateDto';
+import { FolderPermission } from '@prisma/client';
 @injectable()
 export class PrismaFolderRepository implements IFolderRepository {
   /**
@@ -147,7 +148,7 @@ export class PrismaFolderRepository implements IFolderRepository {
       create: {
         folderId: data.folderId,
         userId: data.userId,
-        permission: 'write', // default to write, 또는 필요에 따라 확장 가능
+        permission: FolderPermission.WRITE,
       },
     });
   }

@@ -2,7 +2,7 @@
 
 import { Switch } from '@/components/design-system';
 import { DefaultButton } from '@/components/design-system';
-import { useFolderShareToggle } from '@/hooks/folder/useShareFolder';
+import { useFolderShareToggle } from '@/hooks/folder/useFolderShareToggle';
 import { usePathname } from 'next/navigation';
 import { useAuthStore } from '@/stores/useAuthStore';
 

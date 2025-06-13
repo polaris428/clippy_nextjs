@@ -1,27 +1,26 @@
 import 'reflect-metadata';
 import '@/infrastructure/di/container';
 import { container } from 'tsyringe';
-import 'reflect-metadata';
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
 import { tryParseAuthHeaderAndSetCookie } from '@/lib/utils/authFromHeader';
+import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
 import { mergeCookies } from '@/lib/utils/mergeCookies';
-import { GetFolderIdUsecase } from '@/application/usecases/folder/GetFolderIdUsecase';
+
 import { HttpError } from '@/lib/errors/HttpError';
+import { GetFolderSharesUsecase } from '@/application/usecases/folder/share/GetFolderSharesUsecase';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const folderId = (await params).id;
+    const folderId = params.id;
+
+    // Firebase 인증 쿠키 처리
     const tempRes = await tryParseAuthHeaderAndSetCookie(req);
     const user = await getCurrentUserOrThrow(req);
-    const getFolderIdUsecase = container.resolve(GetFolderIdUsecase);
-    const data = await getFolderIdUsecase.execute({ userId: user.id, folderId: folderId });
 
-    const res = NextResponse.json({
-      success: true,
-      folder: data.folder,
-    });
+    const usecase = container.resolve(GetFolderSharesUsecase);
+    const shares = await usecase.execute({ folderId, userId: user.id });
 
+    const res = NextResponse.json(shares);
     if (tempRes) mergeCookies(tempRes, res);
 
     return res;

@@ -2,10 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useRouter } from 'next/navigation';
 
 interface FolderContextMenuProps {
     onClose: () => void;
     anchorRef: React.RefObject<HTMLButtonElement | null>;
+    folderId: string; // 🔥 폴더 ID가 필요
     onRequestDelete?: () => void;
     onRequestRename?: () => void;
 }
@@ -13,12 +15,14 @@ interface FolderContextMenuProps {
 export default function FolderContextMenu({
     onClose,
     anchorRef,
+    folderId,
     onRequestDelete,
     onRequestRename,
 }: FolderContextMenuProps) {
     const menuRef = useRef<HTMLDivElement>(null);
     const [coords, setCoords] = useState({ top: 0, left: 0 });
     const [isReady, setIsReady] = useState(false);
+    const router = useRouter();
 
     // 메뉴 위치 계산
     useEffect(() => {
@@ -68,6 +72,17 @@ export default function FolderContextMenu({
             >
                 이름 바꾸기
             </div>
+
+            <div
+                className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm cursor-pointer"
+                onClick={() => {
+                    onClose();
+                    router.push(`/folders/${folderId}/edit`);
+                }}
+            >
+                폴더 편집
+            </div>
+
             <div
                 className="w-full text-left px-4 py-2 text-red-500 hover:bg-red-100 text-sm cursor-pointer"
                 onClick={() => {
