@@ -1,6 +1,6 @@
 import { auth } from '@/lib/firebase/client';
 
-export async function fetchWithFirebaseRetry<T = unknown>(input: RequestInfo, init?: RequestInit): Promise<T> {
+export async function fetchWithFirebaseRetry(input: RequestInfo, init?: RequestInit): Promise<Response> {
   const user = auth.currentUser;
   if (!user) throw new Error('사용자 로그인 안됨');
 
@@ -26,32 +26,14 @@ export async function fetchWithFirebaseRetry<T = unknown>(input: RequestInfo, in
 
   try {
     const token = await getValidToken();
-    const res = await doFetch(token);
-    return await handleResponse(res);
+    return await doFetch(token);
   } catch (err) {
     if ((err as Error).message === 'TOKEN_EXPIRED') {
       console.log(' 토큰 만료 → Firebase에서 재발급 후 재요청');
       const newToken = await getValidToken(true);
-      const res = await doFetch(newToken);
-      return await handleResponse(res);
+      return await doFetch(newToken);
     }
 
     throw err;
-  }
-
-  async function handleResponse(res: Response): Promise<T> {
-    let json: any = null;
-    try {
-      json = await res.json();
-    } catch (_) {
-      // ignore json parse errors
-    }
-
-    if (!res.ok || (json && json.success === false)) {
-      const message = json?.error || json?.message || res.statusText;
-      throw new Error(message);
-    }
-
-    return json as T;
   }
 }
