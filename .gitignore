@@ -43,7 +43,7 @@ next-env.d.ts
 # prisma
 /prisma/migrations/
 /.prisma/
-
+src/generated/prisma/
 #test
 /public/test/
 
