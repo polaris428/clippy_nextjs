@@ -154,7 +154,7 @@ export default function Sidebar() {
                 <SidebarButton
                     icon={<PlusCircle size={18} />}
                     label="폴더 추가"
-                    onClick={() => navigate('/addFolder')}
+                    onClick={() => navigate('/folders/add')}
                 />
                 <SidebarButton
                     icon={<LinkSimple size={18} />}
