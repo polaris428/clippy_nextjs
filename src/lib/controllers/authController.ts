@@ -10,8 +10,6 @@ export async function loginUser(token?: string) {
     const name = decoded.name || decoded.displayName || 'Unnamed';
     const email = decoded.email || '';
 
-    console.log('✅ Firebase 토큰 디코딩:', { uid: firebaseUid, name, email });
-
     let user = await prisma.user.findUnique({
       where: { firebaseUid },
     });
@@ -25,18 +23,13 @@ export async function loginUser(token?: string) {
         },
       });
 
-      console.log('✅ 신규 유저 등록 완료:', user.id);
-
-      const folder = await prisma.folder.create({
+      await prisma.folder.create({
         data: {
           name: `${user.name}폴더`,
           ownerId: user.id,
         },
       });
-
-      console.log('📁 폴더 자동 생성 완료:', folder.id);
     } else {
-      console.log('✅ 기존 유저 로그인:', user.id);
     }
 
     // ✅ 모든 폴더 가져오기 (리팩터링 포인트)
@@ -44,8 +37,6 @@ export async function loginUser(token?: string) {
       where: { ownerId: user.id },
       orderBy: { createdAt: 'asc' },
     });
-
-    console.log('📂 전체 폴더 개수:', folders.length);
 
     return {
       user,

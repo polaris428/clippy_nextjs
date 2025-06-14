@@ -9,9 +9,7 @@ import { inject, injectable } from 'tsyringe';
 export class GetLinkByIdUseCase {
   constructor(@inject('ILinkRepository') private linkRepository: ILinkRepository) {}
 
-  async execute(linkId: string, userId: string): Promise<Link> {
-    console.log(userId);
-    console.log('아이디이이', linkId);
+  async execute(linkId: string): Promise<Link> {
     const link = await this.linkRepository.findById(linkId);
     if (!link) throw new Error('링크를 찾을 수 없습니다');
     return link;

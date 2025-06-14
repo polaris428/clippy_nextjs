@@ -54,7 +54,6 @@ export const FolderService = {
   async getFolderById(id: string) {
     const res = await fetch(`/api/folders/${id}`, { credentials: 'include' });
     const data = await res.json();
-    console.log(data);
     if (!res.ok) throw new Error('폴더 조회 실패');
     return await data;
   },

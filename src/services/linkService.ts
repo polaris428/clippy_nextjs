@@ -44,7 +44,6 @@ export const LinkService = {
     }
   },
   async getLinkById(linkId: string): Promise<Link> {
-    console.log('서비스', linkId);
     try {
       const res = await fetchWithFirebaseRetry(`/api/links/${linkId}`, {
         method: 'GET',
@@ -53,7 +52,6 @@ export const LinkService = {
       });
 
       const json = await res.json();
-      console.log('성공', json);
       if (!res.ok || !json.success) {
         const errorText = json?.message || '링크 조회 실패';
         console.error('❌ 링크 조회 실패:', errorText);

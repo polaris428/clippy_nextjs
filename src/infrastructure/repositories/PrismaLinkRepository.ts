@@ -23,13 +23,12 @@ export class PrismaLinkRepository implements ILinkRepository {
       throw new Response(JSON.stringify({ error: '접근 권한 없음' }), { status: 403 });
     }
   }
-  async deleteLink(linkId: string, userId: string): Promise<void> {
+  async deleteLink(linkId: string): Promise<void> {
     const link = await prisma.link.findUnique({
       where: { id: linkId },
       include: { folder: true },
     });
     if (!link) throw new Error('링크 없음');
-    console.log('folder.ownerId:', link.folder.ownerId, 'userId:', userId);
 
     await prisma.link.delete({ where: { id: linkId } });
   }
@@ -53,7 +52,6 @@ export class PrismaLinkRepository implements ILinkRepository {
     });
   }
   async findById(id: string): Promise<Link | null> {
-    console.log('아이디', id);
     return await prisma.link.findUnique({
       where: { id },
     });

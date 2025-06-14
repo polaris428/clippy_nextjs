@@ -18,11 +18,9 @@ export default function FolderEditPage() {
         const fetch = async () => {
             try {
                 const data = await FolderService.getFolderById(folderId);
-
-                console.log("성공", data.folder.isInvite)
                 setFolder(data.folder);
-            } catch (e) {
-                console.log(e)
+            } catch (err) {
+                console.error(err)
                 alert('폴더 정보를 불러오지 못했습니다');
             } finally {
                 setLoading(false);
@@ -30,16 +28,12 @@ export default function FolderEditPage() {
         };
         fetch();
     }, [folderId]);
-    useEffect(() => {
-        if (folder) {
-            console.log('✅ folder.isInvite 상태:', folder.isInvite);
-        }
-    }, [folder]);
+
     if (loading) return <div className="p-6">불러오는 중...</div>;
     if (!folder) return <div className="p-6 text-red-500">폴더가 존재하지 않습니다.</div>;
 
     const inviteLink = `${window.location.origin}/invite/${folder.id}`;
-    console.log(Boolean(folder.isInvite))
+
     return (
         <div className="max-w-2xl mx-auto py-12 px-6 space-y-8">
             <h1 className="text-2xl font-semibold">📁 폴더 공유 설정</h1>

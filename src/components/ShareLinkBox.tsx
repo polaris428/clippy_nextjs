@@ -16,8 +16,8 @@ export function ShareLinkBox({ title, description, url }: ShareLinkBoxProps) {
       await navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.log(err)
+    } catch {
+
       alert('복사에 실패했습니다.');
     }
   };

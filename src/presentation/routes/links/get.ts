@@ -11,9 +11,9 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   try {
     const linkId = params.id;
     const tempRes = await tryParseAuthHeaderAndSetCookie(req);
-    const user = await getCurrentUserOrThrow(req);
+    await getCurrentUserOrThrow(req);
     const getLinkByIdUseCase = container.resolve(GetLinkByIdUseCase);
-    const link = await getLinkByIdUseCase.execute(linkId, user.id);
+    const link = await getLinkByIdUseCase.execute(linkId);
     const res = NextResponse.json({ success: true, link });
     if (tempRes) mergeCookies(tempRes, res);
     return res;

@@ -14,7 +14,6 @@ export function useFetchCurrentUserData(user: User | null) {
           const data = await UserService.getMe();
           const store = useAuthStore.getState();
           store.setUser(data.user);
-          console.log('패치 폴더', data.folders);
           store.setFolders(data.folders);
           store.setSharedFolders(data.sharedFolders);
         } catch {

@@ -9,7 +9,7 @@ export function useFolderIsInviteToggle({ folderId }: UseFolderInviteTogglerops)
   const updateFolder = useAuthStore(s => s.updateFolder);
 
   if (!folder) throw new Error('폴더를 찾을 수 없습니다.');
-  console.log('폴더', folder);
+
   const isIsInvite = folder.isInvite ?? false;
   const inviteCode = folder.inviteCode ?? '';
 

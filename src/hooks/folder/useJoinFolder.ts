@@ -31,7 +31,6 @@ export function useJoinFolder(autoRedirect = true) {
           setErrorMessage(result.error || '폴더 참가에 실패했습니다.');
         }
       } catch (e) {
-        console.log('에러러러러?');
         if (e instanceof UnauthorizedError) {
           router.replace('/ko');
         }
@@ -42,7 +41,6 @@ export function useJoinFolder(autoRedirect = true) {
   }, [params.code, router, autoRedirect]);
 
   return {
-    status,
     errorMessage,
     isLoading: status === 'loading',
     isSuccess: status === 'success',

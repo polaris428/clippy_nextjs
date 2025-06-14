@@ -10,7 +10,7 @@ export function useFolderShares(folderId: string, isInvite: boolean) {
     try {
       setIsLoading(true);
       const data = await FolderService.fetchShares(folderId);
-      console.log('유저정보', data);
+
       setUsers(data.users);
     } catch (err) {
       console.error('📛 공유된 사용자 불러오기 실패:', err);

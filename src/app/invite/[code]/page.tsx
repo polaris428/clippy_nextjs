@@ -5,9 +5,9 @@ import { Loader2, CheckCircle, XCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function InvitePage() {
-    const { status, errorMessage, isLoading, isSuccess, isError } = useJoinFolder();
+    const { errorMessage, isLoading, isSuccess, isError } = useJoinFolder();
     const router = useRouter();
-    console.log('[join status]', status);
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
             <div className="max-w-md w-full bg-white shadow-xl rounded-2xl p-8 text-center space-y-4 border">

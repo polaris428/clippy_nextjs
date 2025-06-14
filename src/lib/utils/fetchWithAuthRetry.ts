@@ -30,7 +30,6 @@ export async function fetchWithFirebaseRetry(input: RequestInfo, init?: RequestI
     return await doFetch(token);
   } catch (err) {
     if ((err as Error).message === 'TOKEN_EXPIRED') {
-      console.log(' 토큰 만료 → Firebase에서 재발급 후 재요청');
       const newToken = await getValidToken(true);
       return await doFetch(newToken);
     }

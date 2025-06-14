@@ -94,8 +94,7 @@ export function useSaveLinkForm() {
       const realLink = await LinkService.createLink({ title, url, folderId });
       updateLink(folderId, tempId, realLink);
       router.push(`/folders/${folderId}`);
-    } catch (err) {
-      console.log(err);
+    } catch {
       updateLink(folderId, tempId, {
         ...dummyLink,
         title: '[저장 실패]',

@@ -11,13 +11,7 @@ export class PostDeleteFolderUsecase {
   async execute(userId: string, folderId: string): Promise<{ deletedFolder: Folder; isShared: boolean }> {
     const userFolders = await this.folderRepository.getFoldersByUserId(userId);
     const isOwner = userFolders.some(folder => folder.id === folderId);
-    console.log('isOwner', isOwner);
-    console.log('🧑‍ userId:', userId);
-    console.log('📁 요청한 folderId:', folderId);
-    console.log(
-      '📦 userFolders:',
-      userFolders.map(f => f.id)
-    );
+
     if (isOwner) {
       const deletedFolder = userFolders.find(folder => folder.id === folderId);
       if (!deletedFolder) {

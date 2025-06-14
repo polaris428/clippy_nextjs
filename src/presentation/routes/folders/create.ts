@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     const tempRes = await tryParseAuthHeaderAndSetCookie(req);
     const user = await getCurrentUserOrThrow(req);
     const { name, isShared, isInvite, isTemp = true } = await req.json();
-    console.log('새로운 폴더가 생성됬어요', name);
+
     const newFolder = await prisma.folder.create({
       data: {
         name,

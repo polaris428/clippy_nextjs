@@ -34,7 +34,6 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     }
     const patchUpdateFolderUsecase = container.resolve(PatchUpdateFolderUsecase);
     const updatedFolder = await patchUpdateFolderUsecase.execute({ folderId: folderId, data: updateData });
-    console.log('뜌시', updatedFolder);
     const res = NextResponse.json({
       success: true,
       folder: updatedFolder,

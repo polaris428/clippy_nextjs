@@ -1,6 +1,5 @@
 export const useGenerateInviteCode = () => {
   return async (folderId: string): Promise<string> => {
-    console.log('sdfsadfdfdsdsddsd');
     const res = await fetch(`/api/folders/${folderId}/invite`, {
       method: 'POST',
       credentials: 'include',
