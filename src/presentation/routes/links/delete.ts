@@ -1,16 +1,21 @@
 import { container } from 'tsyringe';
 import { DeleteLinkUsecase } from '@/application/usecases/link/DeleteLinkUsecase';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
+import { tryParseAuthHeaderAndSetCookie } from '@/lib/utils/authFromHeader';
+import { mergeCookies } from '@/lib/utils/mergeCookies';
 
-export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const linkId = (await params).id;
   try {
-    const user = await getCurrentUserOrThrow();
+    const tempRes = await tryParseAuthHeaderAndSetCookie(req);
+    const user = await getCurrentUserOrThrow(req);
 
     const deleteLink = container.resolve(DeleteLinkUsecase);
     await deleteLink.execute(linkId, user.id);
-    return NextResponse.json({ success: true });
+    const res = NextResponse.json({ success: true });
+    if (tempRes) mergeCookies(tempRes, res);
+    return res;
   } catch (err) {
     if (err instanceof Response) {
       return err;

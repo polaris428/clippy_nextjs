@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { container } from 'tsyringe';
+import { tryParseAuthHeaderAndSetCookie } from '@/lib/utils/authFromHeader';
 import { UpdateLinkUsecase } from '@/application/usecases/link/UpdateLinkUsecase';
 import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
+import { mergeCookies } from '@/lib/utils/mergeCookies';
+import { HttpError } from '@/lib/errors/HttpError';
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const linkId = (await params).id;
-
   try {
-    const user = await getCurrentUserOrThrow();
+    const linkId = (await params).id;
+    const tempRes = await tryParseAuthHeaderAndSetCookie(req);
+    const user = await getCurrentUserOrThrow(req);
+
     const body = await req.json();
 
     const updateLink = container.resolve(UpdateLinkUsecase);
@@ -16,13 +20,13 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       description: body.description,
       isPin: body.isPin,
     });
-
-    return NextResponse.json({ success: true, link: updatedLink }, { status: 200 });
+    const res = NextResponse.json({ success: true, link: updatedLink }, { status: 200 });
+    if (tempRes) mergeCookies(tempRes, res);
+    return res;
   } catch (err) {
-    if (err instanceof Response) {
-      return err;
+    if (err instanceof HttpError) {
+      return NextResponse.json({ error: err.message }, { status: err.statusCode });
     }
-
     console.error('❌ 링크 수정 실패:', err instanceof Error ? err.message : err);
     return NextResponse.json({ error: '서버 오류' }, { status: 500 });
   }
