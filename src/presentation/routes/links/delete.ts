@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
 import { tryParseAuthHeaderAndSetCookie } from '@/lib/utils/authFromHeader';
 import { mergeCookies } from '@/lib/utils/mergeCookies';
+import logger from '@/lib/logger/logger';
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const linkId = (await params).id;
@@ -20,7 +21,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     if (err instanceof Response) {
       return err;
     }
-    console.error('❌ 링크 삭제 실패:', err instanceof Error ? err.message : err);
+    logger.error('❌ 링크 삭제 실패:', err instanceof Error ? err.message : err);
     return NextResponse.json({ error: '서버 오류' }, { status: 500 });
   }
 }

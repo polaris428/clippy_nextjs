@@ -8,6 +8,7 @@ import { tryParseAuthHeaderAndSetCookie } from '@/lib/utils/authFromHeader';
 import { mergeCookies } from '@/lib/utils/mergeCookies';
 import { GetFolderIdUsecase } from '@/application/usecases/folder/GetFolderIdUsecase';
 import { HttpError } from '@/lib/errors/HttpError';
+import logger from '@/lib/logger/logger';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -29,7 +30,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     if (err instanceof HttpError) {
       return NextResponse.json({ error: err.message }, { status: err.statusCode });
     }
-    console.error('❌ 예기치 못한 에러:', err);
+    logger.error('❌ 예기치 못한 에러:', err);
     return NextResponse.json({ error: '서버 오류' }, { status: 500 });
   }
 }

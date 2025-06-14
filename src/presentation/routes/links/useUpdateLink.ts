@@ -5,6 +5,7 @@ import { UpdateLinkUsecase } from '@/application/usecases/link/UpdateLinkUsecase
 import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
 import { mergeCookies } from '@/lib/utils/mergeCookies';
 import { HttpError } from '@/lib/errors/HttpError';
+import logger from '@/lib/logger/logger';
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -27,7 +28,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     if (err instanceof HttpError) {
       return NextResponse.json({ error: err.message }, { status: err.statusCode });
     }
-    console.error('❌ 링크 수정 실패:', err instanceof Error ? err.message : err);
+    logger.error('❌ 링크 수정 실패:', err instanceof Error ? err.message : err);
     return NextResponse.json({ error: '서버 오류' }, { status: 500 });
   }
 }

@@ -1,6 +1,7 @@
 import { CreateLinkInput } from '@/types/CreateLinkInput';
 import { Link } from '@/types/links/link';
 import { fetchWithFirebaseRetry } from '@/lib/utils/fetchWithAuthRetry';
+import logger from '@/lib/logger/logger';
 export const LinkService = {
   async createLink({ title, url, description, image, favicon, folderId }: CreateLinkInput): Promise<Link> {
     try {
@@ -22,13 +23,13 @@ export const LinkService = {
 
       if (!res.ok || !json.success) {
         const errorText = await res.text();
-        console.error('❌ 링크 생성 실패:', errorText);
+        logger.error('❌ 링크 생성 실패:', errorText);
         throw new Error(errorText || '링크 생성 실패');
       }
 
       return json.link as Link;
     } catch (err) {
-      console.error('🔥 링크 생성 중 예외 발생:', err);
+      logger.error('🔥 링크 생성 중 예외 발생:', err);
       throw err;
     }
   },
@@ -54,13 +55,13 @@ export const LinkService = {
       const json = await res.json();
       if (!res.ok || !json.success) {
         const errorText = json?.message || '링크 조회 실패';
-        console.error('❌ 링크 조회 실패:', errorText);
+        logger.error('❌ 링크 조회 실패:', errorText);
         throw new Error(errorText);
       }
 
       return json.link as Link;
     } catch (err) {
-      console.error('🔥 링크 조회 중 예외 발생:', err);
+      logger.error('🔥 링크 조회 중 예외 발생:', err);
       throw err;
     }
   },
@@ -76,13 +77,13 @@ export const LinkService = {
       const json = await res.json();
       if (!res.ok || !json.success) {
         const errorText = await res.text();
-        console.error('❌ 링크 수정 실패:', errorText);
+        logger.error('❌ 링크 수정 실패:', errorText);
         throw new Error(errorText || '링크 수정 실패');
       }
 
       return json.link as Link;
     } catch (err) {
-      console.error('🔥 링크 수정 중 예외 발생:', err);
+      logger.error('🔥 링크 수정 중 예외 발생:', err);
       throw err;
     }
   },

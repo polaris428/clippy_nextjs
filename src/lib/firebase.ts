@@ -1,6 +1,7 @@
 import * as admin from 'firebase-admin';
 import * as fs from 'fs';
 import * as path from 'path';
+import logger from './logger/logger';
 
 const serviceAccountPath = path.resolve(process.cwd(), 'firebase-admin.json');
 
@@ -14,7 +15,7 @@ try {
     });
   }
 } catch (err) {
-  console.error('🔥 Failed to load firebase-admin.json:', err);
+  logger.error('🔥 Failed to load firebase-admin.json:', err);
 }
 export const verifyIdToken = (token: string) => {
   return admin.auth().verifyIdToken(token);

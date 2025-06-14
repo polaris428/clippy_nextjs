@@ -6,6 +6,7 @@ import { v4 as uuid } from 'uuid';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { LinkService } from '@/services/LinkService';
 import { Link } from '@/types/links/link';
+import logger from '@/lib/logger/logger';
 
 export function useSaveLinkForm() {
   const [url, setUrl] = useState('');
@@ -60,7 +61,7 @@ export function useSaveLinkForm() {
       lastCrawledUrl.current = inputUrl;
       setIsMetadataFetched(true);
     } catch (err) {
-      console.error('❌ 메타데이터 크롤링 실패:', err);
+      logger.error('❌ 메타데이터 크롤링 실패:', err);
       setTitle('값을 입력해주세요');
     } finally {
       setIsFetchingMeta(false);

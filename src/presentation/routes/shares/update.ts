@@ -9,6 +9,7 @@ import { HttpError } from '@/lib/errors/HttpError';
 
 import { FolderPermission } from '@prisma/client';
 import { UpdateCollaboratorPermissionUsecase } from '@/application/usecases/folder/share/UpdateCollaboratorPermissionUsecase';
+import logger from '@/lib/logger/logger';
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string; userId: string } }) {
   try {
@@ -42,7 +43,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       return NextResponse.json({ success: false, error: err.message }, { status: err.statusCode });
     }
 
-    console.error('❌ 예기치 못한 에러:', err);
+    logger.error('❌ 예기치 못한 에러:', err);
     return NextResponse.json({ success: false, error: '서버 오류' }, { status: 500 });
   }
 }

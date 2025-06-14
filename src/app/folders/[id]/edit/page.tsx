@@ -6,6 +6,7 @@ import { FolderService } from '@/services/FolderService';
 import { Folder } from '@/types/folder/folder';
 import { ShareLinkBox } from '@/components/ShareLinkBox';
 import { FolderShareManager } from '@/components/FolderShareManager';
+import logger from '@/lib/logger/logger';
 
 export default function FolderEditPage() {
     const params = useParams();
@@ -20,7 +21,7 @@ export default function FolderEditPage() {
                 const data = await FolderService.getFolderById(folderId);
                 setFolder(data.folder);
             } catch (err) {
-                console.error(err)
+                logger.error(err)
                 alert('폴더 정보를 불러오지 못했습니다');
             } finally {
                 setLoading(false);

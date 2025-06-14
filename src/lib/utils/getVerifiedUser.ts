@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { verifyIdToken } from '@/lib/firebase';
 import prisma from '@/lib/prisma';
+import logger from '../logger/logger';
 
 export async function getVerifiedUser() {
   const token = (await cookies()).get('token')?.value;
@@ -17,7 +18,7 @@ export async function getVerifiedUser() {
 
     return user;
   } catch (err) {
-    console.error('🔒 Token verification failed:', err);
+    logger.error('🔒 Token verification failed:', err);
     return null;
   }
 }

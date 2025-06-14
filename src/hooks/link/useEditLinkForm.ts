@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { LinkService } from '@/services/LinkService';
 import type { Link } from '@/types/links/link';
+import logger from '@/lib/logger/logger';
 
 export function useEditLinkForm(link: Link) {
   const [url, setUrl] = useState(link.url);
@@ -58,7 +59,7 @@ export function useEditLinkForm(link: Link) {
       lastCrawledUrl.current = inputUrl;
       setIsMetadataFetched(true);
     } catch (err) {
-      console.error('❌ 메타데이터 크롤링 실패:', err);
+      logger.error('❌ 메타데이터 크롤링 실패:', err);
       setTitle('값을 입력해주세요');
     } finally {
       setIsFetchingMeta(false);
@@ -82,7 +83,7 @@ export function useEditLinkForm(link: Link) {
       updateLink(folderId, link.id, updatedLink);
       router.push(`/folders/${folderId}`);
     } catch (err) {
-      console.error('❌ 링크 수정 실패:', err);
+      logger.error('❌ 링크 수정 실패:', err);
       alert('링크 수정에 실패했습니다.');
     } finally {
       setIsLoading(false);

@@ -6,6 +6,7 @@ import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
 import { tryParseAuthHeaderAndSetCookie } from '@/lib/utils/authFromHeader';
 import { mergeCookies } from '@/lib/utils/mergeCookies';
 import { PostDeleteFolderUsecase } from '@/application/usecases/folder/PostDeleteFolderUsecase';
+import logger from '@/lib/logger/logger';
 
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -28,7 +29,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     if (err instanceof Response) {
       return err;
     }
-    console.error('❌ 예기치 못한 에러:', err);
+    logger.error('❌ 예기치 못한 에러:', err);
     return NextResponse.json({ error: '서버 오류' }, { status: 500 });
   }
 }

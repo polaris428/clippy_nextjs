@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import logger from './logger/logger';
 
 export async function scrapeMetadata(url: string) {
   try {
@@ -26,7 +27,7 @@ export async function scrapeMetadata(url: string) {
       favicon,
     };
   } catch (e) {
-    console.error('❌ 메타데이터 크롤링 실패:', e);
+    logger.error('❌ 메타데이터 크롤링 실패:', e);
     return {
       title: '',
       description: '',

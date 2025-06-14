@@ -1,3 +1,4 @@
+import logger from '@/lib/logger/logger';
 import { FolderService } from '@/services/FolderService';
 import { useAuthStore } from '@/stores/useAuthStore';
 
@@ -23,7 +24,7 @@ export function useFolderShareToggle({ folderId }: UseFolderShareToggleProps) {
         shareKey: nextValue ? folder.shareKey : '',
       });
     } catch (err) {
-      console.error('📛 공유 상태 변경 실패:', err);
+      logger.error('📛 공유 상태 변경 실패:', err);
       updateFolder(folderId, { isShared: false, shareKey: '' });
     }
   };

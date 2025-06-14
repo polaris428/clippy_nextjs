@@ -7,6 +7,7 @@ import { randomUUID } from 'crypto';
 import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
 import { tryParseAuthHeaderAndSetCookie } from '@/lib/utils/authFromHeader';
 import { mergeCookies } from '@/lib/utils/mergeCookies';
+import logger from '@/lib/logger/logger';
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest) {
     if (err instanceof Response) {
       return err;
     }
-    console.error('❌ 예기치 못한 에러:', err);
+    logger.error('❌ 예기치 못한 에러:', err);
     return NextResponse.json({ error: '서버 오류' }, { status: 500 });
   }
 }

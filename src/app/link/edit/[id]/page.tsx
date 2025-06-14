@@ -5,8 +5,9 @@ import { useEffect, useState } from 'react';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useEditLinkForm } from '@/hooks/link/useEditLinkForm';
 import { LinkForm } from '@/components/LinkForm';
-import { LinkService } from '@/services/LinkService';
+import { LinkService } from '@/services/s';
 import type { Link } from '@/types/links/link';
+import logger from '@/lib/logger/logger';
 
 export default function EditLinkPage() {
     const params = useParams<{ id: string }>();
@@ -55,7 +56,7 @@ export default function EditLinkPage() {
                 setDescription(res.description || '');
                 setFolderId(res.folderId);
             } catch (e) {
-                console.error('❌ 링크 조회 중 오류:', e);
+                logger.error('❌ 링크 조회 중 오류:', e);
                 setError(true);
             }
         })();

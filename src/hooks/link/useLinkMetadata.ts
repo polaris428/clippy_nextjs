@@ -1,3 +1,4 @@
+import logger from '@/lib/logger/logger';
 import { useState, useEffect, useRef } from 'react';
 
 export function useLinkMetadata(url: string) {
@@ -36,7 +37,7 @@ export function useLinkMetadata(url: string) {
       lastCrawledUrl.current = inputUrl;
       setIsFetched(true);
     } catch (err) {
-      console.error('❌ 크롤링 실패:', err);
+      logger.error('❌ 크롤링 실패:', err);
       setTitle('값을 입력해주세요');
     } finally {
       setIsFetching(false);

@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { LinkService } from '@/services/LinkService';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { Link } from '@/types/links/link';
+import logger from '@/lib/logger/logger';
 
 type UpdateData = Partial<Pick<Link, 'title' | 'description' | 'isPin'>>;
 
@@ -23,7 +24,7 @@ export function useUpdateLink() {
         const updatedLink = await LinkService.updateLink(id, data);
         updateLinkInFolder(folder.id, id, updatedLink);
       } catch (err) {
-        console.error('❌ 링크 수정 실패:', err);
+        logger.error('❌ 링크 수정 실패:', err);
         alert('링크 수정에 실패했습니다.');
       }
     },

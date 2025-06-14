@@ -1,3 +1,4 @@
+import logger from '@/lib/logger/logger';
 import { scrapeMetadata } from '@/lib/scrapeMetadata';
 import { NextRequest } from 'next/server';
 
@@ -16,7 +17,7 @@ export async function POST(req: NextRequest) {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error('❌ API 오류:', error);
+    logger.error('❌ API 오류:', error);
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
   }
 }

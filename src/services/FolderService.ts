@@ -2,6 +2,7 @@ import { fetchWithFirebaseRetry } from '@/lib/utils/fetchWithAuthRetry';
 import { Folder } from './../types/folder/folder';
 import { FolderUpdateDto } from '@/types/dto/folder/FolderUpdateDto';
 import { SharedUser } from '@/types/share/shared-user';
+import logger from '@/lib/logger/logger';
 
 export const FolderService = {
   async createFolder(name: string, isShared: boolean) {
@@ -40,13 +41,13 @@ export const FolderService = {
       const data = await res.json();
 
       if (!res.ok) {
-        console.error('🔥 폴더 업데이트 실패:', data.error);
+        logger.error('🔥 폴더 업데이트 실패:', data.error);
         throw new Error(data.error || '폴더 수정 실패');
       }
 
       return data.folder;
     } catch (err) {
-      console.error('🔥 폴더 수정 요청 중 오류 발생:', err);
+      logger.error('🔥 폴더 수정 요청 중 오류 발생:', err);
       throw err;
     }
   },
@@ -83,7 +84,7 @@ export const FolderService = {
     const json = await res.json();
 
     if (!res.ok || !json.success) {
-      console.error('❌ 초대 실패:', json.error || '알 수 없는 오류');
+      logger.error('❌ 초대 실패:', json.error || '알 수 없는 오류');
       return { success: false, error: json.error || '폴더 참가 실패' };
     }
 
@@ -110,7 +111,7 @@ export const FolderService = {
 
     if (!res.ok) {
       const err = await res.json();
-      console.error('❌ 권한 변경 실패:', err?.error);
+      logger.error('❌ 권한 변경 실패:', err?.error);
       throw new Error(err?.error || '권한 변경 실패');
     }
   },

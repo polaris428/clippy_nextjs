@@ -6,6 +6,7 @@ import { setAuthCookie } from '@/lib/utils/cookies';
 import { container } from 'tsyringe';
 import { getAuthCookie } from '@/lib/utils/cookies';
 import { verifyIdToken } from '@/lib/firebase';
+import logger from '@/lib/logger/logger';
 export async function GET() {
   const token = await getAuthCookie();
 
@@ -25,7 +26,7 @@ export async function GET() {
 
     return response;
   } catch (err) {
-    console.error('❌ Login failed:', err);
+    logger.error('❌ Login failed:', err);
     return NextResponse.json({ error: 'Login failed' }, { status: 500 });
   }
 }

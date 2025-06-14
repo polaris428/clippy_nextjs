@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
 import { verifyIdToken } from '@/lib/firebase';
+import logger from '../logger/logger';
 
 export async function loginUser(token?: string) {
   if (!token) throw new Error('No auth token provided');
@@ -43,7 +44,7 @@ export async function loginUser(token?: string) {
       folders,
     };
   } catch (err) {
-    console.error('🔥 loginUser 에러:', err);
+    logger.error('🔥 loginUser 에러:', err);
     throw new Error('로그인 처리 중 문제가 발생했습니다.');
   }
 }

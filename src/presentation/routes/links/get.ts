@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
 import { tryParseAuthHeaderAndSetCookie } from '@/lib/utils/authFromHeader';
 import { mergeCookies } from '@/lib/utils/mergeCookies';
+import logger from '@/lib/logger/logger';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -20,7 +21,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   } catch (err) {
     if (err instanceof Response) return err;
 
-    console.error('❌ 링크 조회 실패:', err instanceof Error ? err.message : err);
+    logger.error('❌ 링크 조회 실패:', err instanceof Error ? err.message : err);
     return NextResponse.json({ success: false, message: '서버 오류' }, { status: 500 });
   }
 }

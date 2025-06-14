@@ -2,6 +2,7 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import { FolderService } from '@/services/FolderService';
 import { useRouter } from 'next/navigation';
 import { Folder } from '@/types/folder/folder';
+import logger from '@/lib/logger/logger';
 
 export function useCreateFolder() {
   const addFolder = useAuthStore(s => s.addFolder);
@@ -38,7 +39,7 @@ export function useCreateFolder() {
       }
       return { newFolder };
     } catch (err) {
-      console.error('🔥 폴더 생성 실패:', err);
+      logger.error('🔥 폴더 생성 실패:', err);
       removeFolder(tempId);
       throw err;
     }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FolderService } from '@/services/FolderService';
 import { SharedUser } from '@/types/share/shared-user';
+import logger from '@/lib/logger/logger';
 
 export function useFolderShares(folderId: string, isInvite: boolean) {
   const [users, setUsers] = useState<SharedUser[]>([]);
@@ -13,7 +14,7 @@ export function useFolderShares(folderId: string, isInvite: boolean) {
 
       setUsers(data.users);
     } catch (err) {
-      console.error('📛 공유된 사용자 불러오기 실패:', err);
+      logger.error('📛 공유된 사용자 불러오기 실패:', err);
     } finally {
       setIsLoading(false);
     }
@@ -24,7 +25,7 @@ export function useFolderShares(folderId: string, isInvite: boolean) {
       await FolderService.updatePermission(folderId, userId, permission);
       setUsers(prev => prev.map(user => (user.userId === userId ? { ...user, permission } : user)));
     } catch (err) {
-      console.error('📛 권한 변경 실패:', err);
+      logger.error('📛 권한 변경 실패:', err);
     }
   };
 

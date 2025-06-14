@@ -5,6 +5,7 @@ import { NextRequest } from 'next/server';
 
 import { ForbiddenError } from '../errors/ForbiddenError';
 import { UnauthorizedError } from '../errors/UnauthorizedError';
+import logger from '../logger/logger';
 /**
  * 인증된 유저 정보를 반환합니다.
  * 인증 실패 시 UnauthorizedError (401),
@@ -33,7 +34,7 @@ export async function getCurrentUserOrThrow(req?: NextRequest): Promise<{ id: st
     const decoded = await verifyIdToken(token);
     uid = decoded.uid;
   } catch (err) {
-    console.error('❌ 인증 토큰 검증 실패:', err);
+    logger.error('❌ 인증 토큰 검증 실패:', err);
     throw new UnauthorizedError('Firebase ID token has expired. Get a fresh ID token from your client app and try again');
   }
   const user = await prisma.user.findUnique({

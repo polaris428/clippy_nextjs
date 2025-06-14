@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import { UserService } from '@/services/UserService';
 import { useState } from 'react';
 import { LoginResponse } from '@/types/auth/loginResponse';
+import logger from '@/lib/logger/logger';
 
 export function useLogin() {
   const router = useRouter();
@@ -31,7 +32,7 @@ export function useLogin() {
       router.push(firstFolderId ? `/folders/${encodeURIComponent(firstFolderId)}` : '/no-folders');
     } catch (err) {
       const message = err instanceof Error ? err.message : '로그인 실패';
-      console.error('🔥 로그인 중 예외 발생:', message);
+      logger.error('🔥 로그인 중 예외 발생:', message);
       setError(message || '로그인 실패');
     } finally {
       setLoading(false);

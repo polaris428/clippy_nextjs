@@ -6,6 +6,7 @@ import { mergeCookies } from '@/lib/utils/mergeCookies';
 import { tryParseAuthHeaderAndSetCookie } from '@/lib/utils/authFromHeader';
 import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
 import { JoinFolderUsecase } from '@/application/usecases/folder/join/JoinFolderUsecase';
+import logger from '@/lib/logger/logger';
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,7 +25,7 @@ export async function POST(req: NextRequest) {
 
     return res;
   } catch (err) {
-    console.error('❌ 폴더 참가 실패:', err);
+    logger.error('❌ 폴더 참가 실패:', err);
     return NextResponse.json({ error: '폴더 참가 실패' }, { status: 400 });
   }
 }

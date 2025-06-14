@@ -12,6 +12,7 @@ import '@/infrastructure/di/container';
 import { setAuthCookie } from '@/lib/utils/cookies';
 import { verifyIdToken } from '@/lib/firebase';
 import { UnauthorizedError } from '@/lib/errors/UnauthorizedError';
+import logger from '@/lib/logger/logger';
 
 export async function POST() {
   const headerStore = headers();
@@ -40,7 +41,7 @@ export async function POST() {
 
     return response;
   } catch (err) {
-    console.error('❌ Login failed:', err);
+    logger.error('❌ Login failed:', err);
     return NextResponse.json({ error: 'Login failed' }, { status: 500 });
   }
 }
