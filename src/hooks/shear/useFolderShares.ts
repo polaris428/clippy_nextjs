@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { SharedUser } from '@/types/share/shared-user';
 import { FolderService } from '@/services/FolderService';
+import logger from '@/lib/logger/logger';
 
 export function useFolderShares(folderId: string, enabled: boolean) {
   const [users, setUsers] = useState<SharedUser[]>([]);
@@ -23,7 +24,7 @@ export function useFolderShares(folderId: string, enabled: boolean) {
       await FolderService.updatePermission(folderId, userId, permission);
       setUsers(prev => prev.map(user => (user.userId === userId ? { ...user, permission } : user)));
     } catch (e) {
-      console.log(e);
+      logger.error(e);
       alert('권한 변경 실패');
     } finally {
       setIsLoading(false);

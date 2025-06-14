@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Folder } from '@/types/folder/folder';
 import { FolderService } from '@/services/FolderService';
 import { useAuthStore } from '@/stores/useAuthStore';
+import logger from '@/lib/logger/logger';
 
 export function useCreateFolderForm() {
   const [folder, setFolder] = useState<Folder | null>(null);
@@ -35,7 +36,7 @@ export function useCreateFolderForm() {
         folderRef.current = newFolder;
         isTempRef.current = true;
       } catch (err) {
-        console.log(err);
+        logger.info(err);
         alert('임시 폴더 생성에 실패했습니다.');
         router.back();
       }
