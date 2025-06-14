@@ -89,23 +89,25 @@ export default function AddFolderPage() {
 
     return (
         <div className="max-w-2xl mx-auto py-12 px-6 space-y-8">
-            <h1 className="text-2xl font-semibold flex items-center gap-2">
-                📁 <span>새 폴더 만들기</span>
-            </h1>
 
-            <div className="rounded-2xl border shadow-sm p-6 space-y-4">
-                <label className="block text-sm font-medium">폴더 이름</label>
-                <Input
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="폴더 이름을 입력하세요"
-                    className="rounded-xl px-4 h-11"
-                    disabled={isLoading || !createdFolder}
-                />
-            </div>
 
             {createdFolder && (
+
                 <>
+                    <h1 className="text-2xl font-semibold flex items-center gap-2">
+                        📁 <span>새 폴더 만들기</span>
+                    </h1>
+
+                    <div className="rounded-2xl border shadow-sm p-6 space-y-4">
+                        <label className="block text-sm font-medium">폴더 이름</label>
+                        <Input
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="폴더 이름을 입력하세요"
+                            className="rounded-xl px-4 h-11"
+                            disabled={isLoading || !createdFolder}
+                        />
+                    </div>
                     <div className="rounded-2xl border shadow-sm p-6 space-y-4">
                         <div className="flex items-center justify-between">
                             <div>
@@ -139,15 +141,16 @@ export default function AddFolderPage() {
                             />
                         )}
                     </div>
+                    <div className="flex justify-end gap-3">
+                        <Button variant="outline" onClick={() => router.back()} disabled={isLoading}>취소</Button>
+                        <Button onClick={handleSubmit} disabled={isLoading || !createdFolder}>
+                            {isLoading ? '저장 중...' : '폴더 만들기'}
+                        </Button>
+                    </div>
                 </>
             )}
 
-            <div className="flex justify-end gap-3">
-                <Button variant="outline" onClick={() => router.back()} disabled={isLoading}>취소</Button>
-                <Button onClick={handleSubmit} disabled={isLoading || !createdFolder}>
-                    {isLoading ? '저장 중...' : '폴더 만들기'}
-                </Button>
-            </div>
+
         </div>
     );
 }
