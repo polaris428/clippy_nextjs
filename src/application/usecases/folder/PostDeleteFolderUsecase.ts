@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
-import type { IFolderRepository } from '@/domain/folder/IFolderRepository';
-import type { IShareFolderRepository } from '@/domain/shere-folder/IShareFolderRepository';
+import type { IFolderRepository } from '@/domain/repositories/folder/IFolderRepository';
+import type { IShareFolderRepository } from '@/domain/repositories/share-folder/IShareFolderRepository';
 import { ForbiddenError } from '@/lib/errors/ForbiddenError';
 import type { Folder } from '@/types/folder/folder';
 

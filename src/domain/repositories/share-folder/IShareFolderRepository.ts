@@ -1,6 +1,6 @@
 import { Folder } from '@/types/folder/folder';
 import { FolderPermission } from '@prisma/client';
-import { SharedUser } from '@/types/shear/shared-user';
+import { SharedUser } from '@/types/share/shared-user';
 export interface IShareFolderRepository {
   /**
    * 유저의 공유받은 전체체 폴더 조회

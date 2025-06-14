@@ -13,7 +13,6 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   try {
     const folderId = params.id;
 
-    // Firebase 인증 쿠키 처리
     const tempRes = await tryParseAuthHeaderAndSetCookie(req);
     const user = await getCurrentUserOrThrow(req);
 

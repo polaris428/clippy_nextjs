@@ -1,7 +1,7 @@
 import { injectable } from 'tsyringe';
 import { prisma } from '@/lib/prisma';
 import { Folder } from '@/types/folder/folder';
-import { IFolderRepository } from '@/domain/folder/IFolderRepository';
+import { IFolderRepository } from '@/domain/repositories/folder/IFolderRepository';
 import { FolderUpdateDto } from '@/types/dto/folder/FolderUpdateDto';
 import { FolderPermission } from '@prisma/client';
 @injectable()

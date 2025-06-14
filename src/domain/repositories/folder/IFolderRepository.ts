@@ -1,4 +1,4 @@
-import { Folder } from '../../types/folder/folder';
+import { Folder } from '../../../types/folder/folder';
 import type { FolderUpdateDto } from '@/types/dto/folder/FolderUpdateDto';
 export interface IFolderRepository {
   /**

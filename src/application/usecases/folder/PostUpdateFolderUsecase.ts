@@ -1,5 +1,5 @@
 import { injectable, inject } from 'tsyringe';
-import type { IFolderRepository } from '@/domain/folder/IFolderRepository';
+import type { IFolderRepository } from '@/domain/repositories/folder/IFolderRepository';
 import type { Folder } from '@/types/folder/folder';
 import type { FolderUpdateDto } from '@/types/dto/folder/FolderUpdateDto';
 import { NotFoundError } from '@/lib/errors/NotFoundError';
@@ -19,4 +19,4 @@ export class PostUpdateFolderUsecase {
 
     return await this.folderRepository.updateFolder({ id: folderId, data });
   }
-} 
+}

@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import '@/infrastructure/di/container';
 
-import type { ILinkRepository } from '@/domain/link/ILinkRepository';
+import type { ILinkRepository } from '@/domain/repositories/link/ILinkRepository';
 import { Link } from '@/types/links/link';
 import { inject, injectable } from 'tsyringe';
 

@@ -1,7 +1,7 @@
 import { injectable, inject } from 'tsyringe';
-import type { IFolderRepository } from '@/domain/folder/IFolderRepository';
+import type { IFolderRepository } from '@/domain/repositories/folder/IFolderRepository';
 import type { Folder } from '@/types/folder/folder';
-import type { IShareFolderRepository } from '@/domain/shere-folder/IShareFolderRepository';
+import type { IShareFolderRepository } from '@/domain/repositories/share-folder/IShareFolderRepository';
 
 @injectable()
 export class GetAllFolderUsecase {

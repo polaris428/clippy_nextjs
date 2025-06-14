@@ -1,7 +1,7 @@
 import { injectable } from 'tsyringe';
 import { prisma } from '@/lib/prisma';
 import { User } from '@/types/auth/user';
-import { IUserRepository } from '@/domain/user/IUserRepository';
+import { IUserRepository } from '@/domain/repositories/user/IUserRepository';
 
 @injectable()
 export class PrismaUserRepository implements IUserRepository {

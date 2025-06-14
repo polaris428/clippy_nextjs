@@ -1,5 +1,5 @@
 import { inject, injectable } from 'tsyringe';
-import type { ILinkRepository } from '@/domain/link/ILinkRepository';
+import type { ILinkRepository } from '@/domain/repositories/link/ILinkRepository';
 import { Link } from '@/types/links/link';
 
 @injectable()

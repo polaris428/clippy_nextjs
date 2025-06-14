@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { SharedUser } from '@/types/shear/shared-user';
+import { SharedUser } from '@/types/share/shared-user';
 import { FolderService } from '@/services/FolderService';
 
 export function useFolderShares(folderId: string, enabled: boolean) {

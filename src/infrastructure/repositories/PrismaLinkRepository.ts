@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { ILinkRepository } from '@/domain/link/ILinkRepository';
+import { ILinkRepository } from '@/domain/repositories/link/ILinkRepository';
 import { injectable } from 'tsyringe';
 import { Link } from '@/types/links/link';
 @injectable()
@@ -33,19 +33,8 @@ export class PrismaLinkRepository implements ILinkRepository {
 
     await prisma.link.delete({ where: { id: linkId } });
   }
-  async createLink({ title, url, thumbnail, description, favicon, folderId, userId }: { url: string; title: string; thumbnail: string; favicon: string; folderId: string; description: string; userId: string }): Promise<void> {
-    const folder = await prisma.folder.findUnique({
-      where: { id: folderId },
-    });
-    if (!folder) {
-      throw new Error('Folder not found');
-    }
-
-    if (!folder || folder.ownerId !== userId) {
-      throw new Error('Forbidden');
-    }
-
-    await prisma.link.create({
+  async createLink({ title, url, thumbnail, description, favicon, folderId }: { url: string; title: string; thumbnail: string; favicon: string; folderId: string; description: string; userId: string }): Promise<Link> {
+    return await prisma.link.create({
       data: { title, url, thumbnail, description, favicon, folderId },
     });
   }

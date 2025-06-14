@@ -1,5 +1,5 @@
 import { inject, injectable } from 'tsyringe';
-import type { IFolderRepository } from '@/domain/folder/IFolderRepository';
+import type { IFolderRepository } from '@/domain/repositories/folder/IFolderRepository';
 import type { FolderUpdateDto } from '@/types/dto/folder/FolderUpdateDto';
 @injectable()
 export class PatchUpdateFolderUsecase {

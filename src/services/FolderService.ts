@@ -1,7 +1,7 @@
 import { fetchWithFirebaseRetry } from '@/lib/utils/fetchWithAuthRetry';
 import { Folder } from './../types/folder/folder';
 import { FolderUpdateDto } from '@/types/dto/folder/FolderUpdateDto';
-import { SharedUser } from '@/types/shear/shared-user';
+import { SharedUser } from '@/types/share/shared-user';
 
 export const FolderService = {
   async createFolder(name: string, isShared: boolean) {

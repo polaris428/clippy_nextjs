@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FolderService } from '@/services/FolderService';
-import { SharedUser } from '@/types/shear/shared-user';
+import { SharedUser } from '@/types/share/shared-user';
 
 export function useFolderShares(folderId: string, isInvite: boolean) {
   const [users, setUsers] = useState<SharedUser[]>([]);

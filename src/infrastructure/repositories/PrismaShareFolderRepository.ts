@@ -1,10 +1,10 @@
 import { injectable } from 'tsyringe';
 import { prisma } from '@/lib/prisma';
 
-import { IShareFolderRepository } from '../../domain/shere-folder/IShareFolderRepository';
+import { IShareFolderRepository } from '../../domain/repositories/share-folder/IShareFolderRepository';
 import { Folder } from '@/types/folder/folder';
 import { FolderPermission } from '@prisma/client';
-import { SharedUser } from '@/types/shear/shared-user';
+import { SharedUser } from '@/types/share/shared-user';
 
 @injectable()
 export class PrismaShareFolderRepository implements IShareFolderRepository {

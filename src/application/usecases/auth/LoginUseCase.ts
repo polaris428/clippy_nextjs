@@ -4,8 +4,8 @@ import 'reflect-metadata';
 import '@/infrastructure/di/container';
 import { extractNameFromEmail } from '@/lib/utils/extractNameFromEmail';
 
-import type { IUserRepository } from '@/domain/user/IUserRepository';
-import type { IFolderRepository } from '@/domain/folder/IFolderRepository';
+import type { IUserRepository } from '@/domain/repositories/user/IUserRepository';
+import type { IFolderRepository } from '@/domain/repositories/folder/IFolderRepository';
 import { DecodedIdToken } from 'firebase-admin/auth';
 @injectable()
 export class LoginUseCase {

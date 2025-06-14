@@ -1,7 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 import type { FolderPermission } from '@prisma/client';
-import type { IShareFolderRepository } from '@/domain/shere-folder/IShareFolderRepository';
-import type { IFolderRepository } from '@/domain/folder/IFolderRepository';
+import type { IShareFolderRepository } from '@/domain/repositories/share-folder/IShareFolderRepository';
+import type { IFolderRepository } from '@/domain/repositories/folder/IFolderRepository';
 import { NotFoundError } from '@/lib/errors/NotFoundError';
 import { ForbiddenError } from '@/lib/errors/ForbiddenError';
 

@@ -1,14 +1,16 @@
 import { container } from 'tsyringe';
-import { IUserRepository } from '@/domain/user/IUserRepository';
+import { IUserRepository } from '@/domain/repositories/user/IUserRepository';
 import { PrismaUserRepository } from '@/infrastructure/repositories/PrismaUserRepository';
 
-import { IFolderRepository } from '@/domain/folder/IFolderRepository';
+import { IFolderRepository } from '@/domain/repositories/folder/IFolderRepository';
 import { PrismaFolderRepository } from '@/infrastructure/repositories/PrismaFolderRepository';
 
-import { ILinkRepository } from '@/domain/link/ILinkRepository';
+import { ILinkRepository } from '@/domain/repositories/link/ILinkRepository';
 import { PrismaLinkRepository } from '@/infrastructure/repositories/PrismaLinkRepository';
-import { IShareFolderRepository } from '@/domain/shere-folder/IShareFolderRepository';
+import { IShareFolderRepository } from '@/domain/repositories/share-folder/IShareFolderRepository';
 import { PrismaShareFolderRepository } from '@/infrastructure/repositories/PrismaShareFolderRepository';
+import { IMetadataScraperService } from '@/domain/services/IMetadataScraperService';
+import { PuppeteerMetadataScraperService } from '../services/PuppeteerMetadataScraperService';
 
 container.register<IUserRepository>('IUserRepository', {
   useClass: PrismaUserRepository,
@@ -24,4 +26,8 @@ container.register<IShareFolderRepository>('IShareFolderRepository', {
 
 container.register<ILinkRepository>('ILinkRepository', {
   useClass: PrismaLinkRepository,
+});
+
+container.register<IMetadataScraperService>('IMetadataScraperService', {
+  useClass: PuppeteerMetadataScraperService,
 });
