@@ -1,8 +1,9 @@
 import { auth } from '@/lib/firebase/client';
+import { UnauthorizedError } from '../errors/UnauthorizedError';
 
 export async function fetchWithFirebaseRetry(input: RequestInfo, init?: RequestInit): Promise<Response> {
   const user = auth.currentUser;
-  if (!user) throw new Error('사용자 로그인 안됨');
+  if (!user) throw new UnauthorizedError();
 
   const getValidToken = async (forceRefresh = false) => await user.getIdToken(forceRefresh);
 
@@ -17,7 +18,7 @@ export async function fetchWithFirebaseRetry(input: RequestInfo, init?: RequestI
     });
 
     if (res.status === 401) {
-      console.warn(' 401 Unauthorized 응답 수신 - 토큰 만료 추정');
+      console.warn('401 Unauthorized 응답 수신 - 토큰 만료 추정');
       throw new Error('TOKEN_EXPIRED');
     }
 
