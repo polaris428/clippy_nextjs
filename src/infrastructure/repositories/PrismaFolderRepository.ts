@@ -102,6 +102,8 @@ export class PrismaFolderRepository implements IFolderRepository {
       createdAt: folder.createdAt,
       links: folder.links,
       isInvite: folder.isInvite,
+      inviteCode: folder.inviteCode,
+      shareKey: folder.shareKey,
       isTemp: folder.isTemp,
     };
   }
