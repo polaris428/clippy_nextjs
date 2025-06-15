@@ -1,6 +1,7 @@
 import { verifyIdToken } from '@/lib/firebase';
 import { setAuthCookie } from './cookies';
 import { NextRequest, NextResponse } from 'next/server';
+import logger from '../logger/logger';
 
 export async function tryParseAuthHeaderAndSetCookie(req: NextRequest): Promise<NextResponse | null> {
   const authHeader = req.headers.get('Authorization');
@@ -14,7 +15,8 @@ export async function tryParseAuthHeaderAndSetCookie(req: NextRequest): Promise<
     setAuthCookie(res, tokenFromHeader);
     return res;
   } catch (err) {
-    console.warn('❌ Authorization 헤더 토큰 검증 실패:', err);
+    logger.warn('Authorization 헤더 토큰 검증 실패:', err);
+
     return null;
   }
 }

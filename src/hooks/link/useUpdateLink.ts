@@ -17,7 +17,8 @@ export function useUpdateLink() {
       try {
         const folder = folders.find(f => f.links?.some(l => l.id === id));
         if (!folder) {
-          console.warn('링크가 속한 폴더를 찾을 수 없습니다.');
+          logger.warn('링크가 속한 폴더를 찾을 수 없습니다.');
+
           return;
         }
 
