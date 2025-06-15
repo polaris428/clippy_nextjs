@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest"
   },
   "dependencies": {
     "@prisma/client": "^6.8.1",
@@ -40,7 +41,10 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
     "@types/express": "^5.0.2",
+    "@types/jest": "^29.5.14",
     "@types/node": "^20.17.47",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -48,10 +52,13 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
     "eslint-formatter-visualstudio": "^8.40.0",
+    "jest": "^30.0.0",
+    "jest-environment-jsdom": "^30.0.0",
     "pino-pretty": "^13.0.0",
     "postcss": "^8.5.3",
     "prisma": "^6.8.1",
     "tailwindcss": "^3.4.1",
+    "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }
