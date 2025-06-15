@@ -1,13 +1,12 @@
 import 'reflect-metadata';
 import '@/infrastructure/di/container';
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
-import 'reflect-metadata';
-import { randomUUID } from 'crypto';
+import { container } from 'tsyringe';
 import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
 import { tryParseAuthHeaderAndSetCookie } from '@/lib/utils/authFromHeader';
 import { mergeCookies } from '@/lib/utils/mergeCookies';
 import logger from '@/lib/logger/logger';
+import { PostCreateFolderUsecase } from '@/application/usecases/folder/PostCreateFolderUsecase';
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,17 +14,8 @@ export async function POST(req: NextRequest) {
     const user = await getCurrentUserOrThrow(req);
     const { name, isShared, isInvite, isTemp = true } = await req.json();
 
-    const newFolder = await prisma.folder.create({
-      data: {
-        name,
-        isShared: !!isShared,
-        isInvite: !!isInvite,
-        isTemp: isTemp,
-        ownerId: user.id,
-        inviteCode: randomUUID(),
-        shareKey: randomUUID(),
-      },
-    });
+    const postCreateFolderUsecase = container.resolve(PostCreateFolderUsecase);
+    const newFolder = await postCreateFolderUsecase.execute({ name, isShared, isInvite, isTemp, ownerId: user.id });
     const res = NextResponse.json({ newFolder });
     if (tempRes) mergeCookies(tempRes, res);
 

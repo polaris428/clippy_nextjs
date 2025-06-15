@@ -4,7 +4,7 @@ export interface IFolderRepository {
   /**
    * 폴더 생성
    */
-  createFolder(userId: string, name: string, isShared?: boolean): Promise<Folder>;
+  createFolder({ name, isShared, isInvite, isTemp, ownerId }: { name: string; isShared?: boolean; isInvite?: boolean; isTemp?: boolean; ownerId: string }): Promise<Folder>;
 
   /**
    * 유저의 전체 폴더 조회

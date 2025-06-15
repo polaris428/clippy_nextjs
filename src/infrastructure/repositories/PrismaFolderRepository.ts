@@ -4,18 +4,22 @@ import { Folder } from '@/types/folder/folder';
 import { IFolderRepository } from '@/domain/repositories/folder/IFolderRepository';
 import { FolderUpdateDto } from '@/types/dto/folder/FolderUpdateDto';
 import { FolderPermission } from '@prisma/client';
+import { randomUUID } from 'crypto';
 @injectable()
 export class PrismaFolderRepository implements IFolderRepository {
   /**
    * 폴더 생성
    */
-  async createFolder(userId: string, name: string, isShared: boolean = false): Promise<Folder> {
+  async createFolder({ name, isShared, isInvite, isTemp, ownerId }: { name: string; isShared?: boolean; isInvite?: boolean; isTemp?: boolean; ownerId: string }): Promise<Folder> {
     const folder = await prisma.folder.create({
       data: {
         name,
-        ownerId: userId,
-        isShared,
-        isTemp: true,
+        isShared: !!isShared,
+        isInvite: !!isInvite,
+        isTemp: isTemp,
+        ownerId: ownerId,
+        inviteCode: randomUUID(),
+        shareKey: randomUUID(),
       },
       include: {
         links: true, // ✅ 링크 포함
