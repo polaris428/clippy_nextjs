@@ -26,16 +26,16 @@ export class PrismaShareFolderRepository implements IShareFolderRepository {
       },
     });
 
-    return sharedFolders.map(shearFolder => ({
-      id: shearFolder.folder.id,
-      name: shearFolder.folder.name,
-      ownerId: shearFolder.folder.ownerId,
-      isShared: shearFolder.folder.isShared,
-      shareKey: shearFolder.folder.shareKey,
-      createdAt: shearFolder.createdAt,
-      links: shearFolder.folder.links,
-      isInvite: shearFolder.folder.isInvite,
-      isTemp: shearFolder.folder.isTemp,
+    return sharedFolders.map(shareFolder => ({
+      id: shareFolder.folder.id,
+      name: shareFolder.folder.name,
+      ownerId: shareFolder.folder.ownerId,
+      isShared: shareFolder.folder.isShared,
+      shareKey: shareFolder.folder.shareKey,
+      createdAt: shareFolder.createdAt,
+      links: shareFolder.folder.links,
+      isInvite: shareFolder.folder.isInvite,
+      isTemp: shareFolder.folder.isTemp,
     }));
   }
   async delete(userId: string, folderId: string): Promise<void> {

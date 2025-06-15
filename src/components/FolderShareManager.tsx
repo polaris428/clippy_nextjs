@@ -1,6 +1,6 @@
 'use client';
 
-import { useFolderShares } from '@/hooks/folder/shear/useShareFolder';
+import { useFolderShares } from '@/hooks/folder/share/useShareFolder';
 
 import { ShareLinkBox } from '@/components/ShareLinkBox';
 
