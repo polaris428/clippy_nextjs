@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useEditLinkForm } from '@/hooks/link/useEditLinkForm';
 import { LinkForm } from '@/components/LinkForm';
-import { LinkService } from '@/services/s';
+import { LinkService } from '@/services/LinkService';
 import type { Link } from '@/types/links/link';
 import logger from '@/lib/logger/logger';
 
@@ -60,7 +60,7 @@ export default function EditLinkPage() {
                 setError(true);
             }
         })();
-    }, [linkId, user, router]);
+    },);
 
     if (!user) return null;
     if (error) return <div className="text-red-500">링크를 불러올 수 없습니다.</div>;

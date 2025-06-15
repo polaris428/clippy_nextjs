@@ -31,7 +31,7 @@ export function useFolderShares(folderId: string, isInvite: boolean) {
 
   useEffect(() => {
     if (isInvite) fetchShares();
-  }, [folderId, isInvite]);
+  });
 
   return {
     users,

@@ -44,7 +44,7 @@ export default function AddFolderPage() {
         };
 
         createTempFolder();
-    }, []);
+    },);
 
     useEffect(() => {
         const handleBeforeUnload = () => {
