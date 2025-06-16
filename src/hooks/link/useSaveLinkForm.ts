@@ -61,7 +61,7 @@ export function useSaveLinkForm() {
       lastCrawledUrl.current = inputUrl;
       setIsMetadataFetched(true);
     } catch (err) {
-      logger.error('❌ 메타데이터 크롤링 실패:', err);
+      logger.error({ err }, '❌ 메타데이터 크롤링 실패:');
       setTitle('값을 입력해주세요');
     } finally {
       setIsFetchingMeta(false);

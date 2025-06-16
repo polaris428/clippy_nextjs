@@ -14,7 +14,7 @@ export function useFolderShares(folderId: string, isInvite: boolean) {
 
       setUsers(data.users);
     } catch (err) {
-      logger.error('📛 공유된 사용자 불러오기 실패:', err);
+      logger.error({ err }, '📛 공유된 사용자 불러오기 실패:');
     } finally {
       setIsLoading(false);
     }
@@ -25,7 +25,7 @@ export function useFolderShares(folderId: string, isInvite: boolean) {
       await FolderService.updatePermission(folderId, userId, permission);
       setUsers(prev => prev.map(user => (user.userId === userId ? { ...user, permission } : user)));
     } catch (err) {
-      logger.error('📛 권한 변경 실패:', err);
+      logger.error({ err }, '📛 권한 변경 실패:');
     }
   };
 

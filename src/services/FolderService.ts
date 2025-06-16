@@ -41,13 +41,13 @@ export const FolderService = {
       const data = await res.json();
 
       if (!res.ok) {
-        logger.error('🔥 폴더 업데이트 실패:', data.error);
+        logger.error({ data }, '🔥 폴더 업데이트 실패');
         throw new Error(data.error || '폴더 수정 실패');
       }
 
       return data.folder;
     } catch (err) {
-      logger.error('🔥 폴더 수정 요청 중 오류 발생:', err);
+      logger.error({ err }, '🔥 폴더 수정 요청 중 오류 발생');
       throw err;
     }
   },
@@ -84,7 +84,7 @@ export const FolderService = {
     const json = await res.json();
 
     if (!res.ok || !json.success) {
-      logger.error('❌ 초대 실패:', json.error || '알 수 없는 오류');
+      logger.error({ json }, '❌ 초대 실패:');
       return { success: false, error: json.error || '폴더 참가 실패' };
     }
 
@@ -111,7 +111,8 @@ export const FolderService = {
 
     if (!res.ok) {
       const err = await res.json();
-      logger.error('❌ 권한 변경 실패:', err?.error);
+
+      logger.error({ err }, '❌ 권한 변경 실패:');
       throw new Error(err?.error || '권한 변경 실패');
     }
   },

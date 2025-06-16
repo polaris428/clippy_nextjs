@@ -1,6 +1,7 @@
 import logger from '@/lib/logger/logger';
 import { FolderService } from '@/services/FolderService';
 import { useAuthStore } from '@/stores/useAuthStore';
+
 interface UseFolderInviteTogglerops {
   folderId: string;
 }
@@ -23,7 +24,7 @@ export function useFolderIsInviteToggle({ folderId }: UseFolderInviteTogglerops)
         inviteCode: nextValue ? folder.inviteCode : '',
       });
     } catch (err) {
-      logger.error('초대 상태 변경 실패:', err);
+      logger.error({ err }, '초대 상태 변경 실패:');
       updateFolder(folderId, { isInvite: false, inviteCode: '' });
     }
   };

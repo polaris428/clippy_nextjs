@@ -1,32 +1,32 @@
-import { NextResponse } from 'next/server';
-import { LoginUseCase } from '@/application/usecases/auth/LoginUseCase';
+import { NextRequest, NextResponse } from 'next/server';
 import { GetAllFolderUsecase } from '@/application/usecases/folder/GetAllFolderUsecase';
 import '@/infrastructure/di/container';
-import { setAuthCookie } from '@/lib/utils/cookies';
+
 import { container } from 'tsyringe';
-import { getAuthCookie } from '@/lib/utils/cookies';
-import { verifyIdToken } from '@/lib/firebase';
+
+import { tryParseAuthHeaderAndSetCookie } from '@/lib/utils/authFromHeader';
+import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
+import { mergeCookies } from '@/lib/utils/mergeCookies';
 import logger from '@/lib/logger/logger';
-export async function GET() {
-  const token = await getAuthCookie();
 
-  if (!token) {
-    return NextResponse.json({ error: 'No token provided' }, { status: 401 });
-  }
-
+export async function GET(req: NextRequest) {
   try {
-    const login = container.resolve(LoginUseCase);
-    const decoded = await verifyIdToken(token);
+    const tempRes = await tryParseAuthHeaderAndSetCookie(req);
+    const user = await getCurrentUserOrThrow(req);
     const allFolder = container.resolve(GetAllFolderUsecase);
-    const user = await login.execute(decoded);
+
     const { folders, sharedFolders } = await allFolder.execute(user.id);
 
-    const response = NextResponse.json({ user, folders, sharedFolders });
-    setAuthCookie(response, token);
+    const res = NextResponse.json({ user, folders, sharedFolders });
+    if (tempRes) mergeCookies(tempRes, res);
 
-    return response;
+    return res;
   } catch (err) {
-    logger.error('❌ Login failed:', err);
-    return NextResponse.json({ error: 'Login failed' }, { status: 500 });
+    if (err instanceof Response) {
+      return err;
+    }
+
+    logger.error({ err }, '❌ 예기치 못한 에러:');
+    return NextResponse.json({ error: '서버 오류' }, { status: 500 });
   }
 }

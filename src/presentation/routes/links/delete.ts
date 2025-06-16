@@ -21,7 +21,8 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     if (err instanceof Response) {
       return err;
     }
-    logger.error('❌ 링크 삭제 실패:', err instanceof Error ? err.message : err);
+
+    logger.error({ err }, '❌ 링크 삭제 실패');
     return NextResponse.json({ error: '서버 오류' }, { status: 500 });
   }
 }

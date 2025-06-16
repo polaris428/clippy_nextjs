@@ -26,8 +26,8 @@ export async function scrapeMetadata(url: string) {
       image,
       favicon,
     };
-  } catch (e) {
-    logger.error('❌ 메타데이터 크롤링 실패:', e);
+  } catch (err) {
+    logger.error({ err }, '❌ 메타데이터 크롤링 실패:');
     return {
       title: '',
       description: '',

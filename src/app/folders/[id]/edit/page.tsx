@@ -21,7 +21,8 @@ export default function FolderEditPage() {
                 const data = await FolderService.getFolderById(folderId);
                 setFolder(data.folder);
             } catch (err) {
-                logger.error(err)
+
+                logger.error({ err })
                 alert('폴더 정보를 불러오지 못했습니다');
             } finally {
                 setLoading(false);

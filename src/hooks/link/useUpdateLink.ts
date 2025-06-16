@@ -25,7 +25,7 @@ export function useUpdateLink() {
         const updatedLink = await LinkService.updateLink(id, data);
         updateLinkInFolder(folder.id, id, updatedLink);
       } catch (err) {
-        logger.error('❌ 링크 수정 실패:', err);
+        logger.error({ err }, '❌ 링크 수정 실패:');
         alert('링크 수정에 실패했습니다.');
       }
     },

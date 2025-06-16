@@ -20,7 +20,8 @@ export async function loginWithGoogleAndRedirect(): Promise<string | null> {
 
   if (!res.ok) {
     const text = await res.text();
-    logger.error('❌ 로그인 API 실패:', text);
+
+    logger.error({ text }, '❌ 로그인 API 실패:');
     throw new Error('로그인 실패');
   }
 

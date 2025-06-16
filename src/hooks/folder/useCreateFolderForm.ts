@@ -21,14 +21,14 @@ export function useCreateFolderForm() {
   const isTempRef = useRef(true);
   const folderRef = useRef<Folder | null>(null);
 
-  // í´ë” ìƒì„±
+  // Æú´õ »ı¼º
   useEffect(() => {
     if (hasCreatedRef.current) return;
     hasCreatedRef.current = true;
 
     const createTempFolder = async () => {
       try {
-        const { newFolder } = await FolderService.createFolder('ìƒˆ í´ë”', false);
+        const { newFolder } = await FolderService.createFolder('»õ Æú´õ', false);
         setFolder(newFolder);
         setName(newFolder.name ?? '');
         setIsShared(newFolder.isShared ?? false);
@@ -36,8 +36,8 @@ export function useCreateFolderForm() {
         folderRef.current = newFolder;
         isTempRef.current = true;
       } catch (err) {
-        logger.info(err);
-        alert('ì„ì‹œ í´ë” ìƒì„±ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.');
+        logger.info({ err }, 'ÀÓ½Ã Æú´õ »ı¼º¿¡ ½ÇÆĞÇß½À´Ï´Ù.');
+        alert('ÀÓ½Ã Æú´õ »ı¼º¿¡ ½ÇÆĞÇß½À´Ï´Ù.');
         router.back();
       }
     };
@@ -45,7 +45,7 @@ export function useCreateFolderForm() {
     createTempFolder();
   }, [router]);
 
-  // ì´íƒˆ ì‹œ ì„ì‹œ í´ë” ì‚­ì œ
+  // ÀÌÅ» ½Ã ÀÓ½Ã Æú´õ »èÁ¦
   useEffect(() => {
     const handleBeforeUnload = () => {
       const f = folderRef.current;
@@ -60,11 +60,11 @@ export function useCreateFolderForm() {
     };
   }, []);
 
-  // í´ë” ì €ì¥
+  // Æú´õ ÀúÀå
   const handleSubmit = useCallback(async () => {
     if (!folder) return;
     if (!name.trim()) {
-      alert('í´ë” ì´ë¦„ì„ ì…ë ¥í•˜ì„¸ìš”.');
+      alert('Æú´õ ÀÌ¸§À» ÀÔ·ÂÇÏ¼¼¿ä.');
       return;
     }
 
@@ -84,7 +84,7 @@ export function useCreateFolderForm() {
       addFolder(updated);
       router.push(`/folders/${updated.id}`);
     } catch {
-      alert('í´ë” ì €ì¥ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.');
+      alert('Æú´õ ÀúÀå¿¡ ½ÇÆĞÇß½À´Ï´Ù.');
     } finally {
       setIsLoading(false);
     }

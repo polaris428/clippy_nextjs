@@ -14,7 +14,7 @@ export function useDeleteLink() {
       try {
         await LinkService.deleteLink(link.id);
       } catch (err) {
-        logger.error('❌ 삭제 실패, 롤백 중...', err);
+        logger.error({ err }, '❌ 삭제 실패, 롤백 중...');
         alert('링크 삭제에 실패했습니다.');
         addLinkToFolder(link.folderId, link);
       }

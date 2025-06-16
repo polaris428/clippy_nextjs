@@ -37,7 +37,7 @@ export function useLinkMetadata(url: string) {
       lastCrawledUrl.current = inputUrl;
       setIsFetched(true);
     } catch (err) {
-      logger.error('❌ 크롤링 실패:', err);
+      logger.error({ err }, '❌ 크롤링 실패:');
       setTitle('값을 입력해주세요');
     } finally {
       setIsFetching(false);

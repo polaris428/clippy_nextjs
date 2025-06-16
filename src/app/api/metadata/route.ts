@@ -16,8 +16,8 @@ export async function POST(req: NextRequest) {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
-  } catch (error) {
-    logger.error('❌ API 오류:', error);
+  } catch (err) {
+    logger.error({ err }, '❌ Login failed');
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
   }
 }

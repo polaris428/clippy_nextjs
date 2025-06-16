@@ -18,7 +18,7 @@ export async function getVerifiedUser() {
 
     return user;
   } catch (err) {
-    logger.error('🔒 Token verification failed:', err);
+    logger.error({ err }, '🔒 Token verification failed:');
     return null;
   }
 }

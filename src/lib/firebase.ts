@@ -15,7 +15,7 @@ try {
     });
   }
 } catch (err) {
-  logger.error('🔥 Failed to load firebase-admin.json:', err);
+  logger.error({ err }, '🔥 Failed to load firebase-admin.json:');
 }
 export const verifyIdToken = (token: string) => {
   return admin.auth().verifyIdToken(token);

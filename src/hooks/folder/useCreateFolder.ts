@@ -39,7 +39,7 @@ export function useCreateFolder() {
       }
       return { newFolder };
     } catch (err) {
-      logger.error('🔥 폴더 생성 실패:', err);
+      logger.error({ err }, '🔥 폴더 생성 실패:');
       removeFolder(tempId);
       throw err;
     }

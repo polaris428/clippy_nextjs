@@ -2,6 +2,7 @@ import { CreateLinkInput } from '@/types/CreateLinkInput';
 import { Link } from '@/types/links/link';
 import { fetchWithFirebaseRetry } from '@/lib/utils/fetchWithAuthRetry';
 import logger from '@/lib/logger/logger';
+
 export const LinkService = {
   async createLink({ title, url, description, image, favicon, folderId }: CreateLinkInput): Promise<Link> {
     try {
@@ -23,13 +24,13 @@ export const LinkService = {
 
       if (!res.ok || !json.success) {
         const errorText = await res.text();
-        logger.error('❌ 링크 생성 실패:', errorText);
+        logger.error({ errorText }, '❌ 링크 생성 실패');
         throw new Error(errorText || '링크 생성 실패');
       }
 
       return json.link as Link;
     } catch (err) {
-      logger.error('🔥 링크 생성 중 예외 발생:', err);
+      logger.error({ err }, '🔥 링크 생성 중 예외 발생');
       throw err;
     }
   },
@@ -55,16 +56,17 @@ export const LinkService = {
       const json = await res.json();
       if (!res.ok || !json.success) {
         const errorText = json?.message || '링크 조회 실패';
-        logger.error('❌ 링크 조회 실패:', errorText);
+        logger.error(errorText, '❌ 링크 조회 실패:');
         throw new Error(errorText);
       }
 
       return json.link as Link;
     } catch (err) {
-      logger.error('🔥 링크 조회 중 예외 발생:', err);
+      logger.error({ err }, '🔥 링크 조회 중 예외 발생');
       throw err;
     }
   },
+
   async updateLink(linkId: string, data: Partial<Pick<Link, 'title' | 'description' | 'isPin'>>): Promise<Link> {
     try {
       const res = await fetch(`/api/links/${linkId}`, {
@@ -77,13 +79,13 @@ export const LinkService = {
       const json = await res.json();
       if (!res.ok || !json.success) {
         const errorText = await res.text();
-        logger.error('❌ 링크 수정 실패:', errorText);
+        logger.error({ errorText }, '❌ 링크 수정 실패');
         throw new Error(errorText || '링크 수정 실패');
       }
 
       return json.link as Link;
     } catch (err) {
-      logger.error('🔥 링크 수정 중 예외 발생:', err);
+      logger.error({ err }, '🔥 링크 수정 중 예외 발생');
       throw err;
     }
   },

@@ -44,7 +44,7 @@ export async function loginUser(token?: string) {
       folders,
     };
   } catch (err) {
-    logger.error('🔥 loginUser 에러:', err);
+    logger.error({ err }, '🔥 loginUser 에러:');
     throw new Error('로그인 처리 중 문제가 발생했습니다.');
   }
 }

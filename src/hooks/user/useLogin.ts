@@ -32,7 +32,8 @@ export function useLogin() {
       router.push(firstFolderId ? `/folders/${encodeURIComponent(firstFolderId)}` : '/no-folders');
     } catch (err) {
       const message = err instanceof Error ? err.message : '로그인 실패';
-      logger.error('🔥 로그인 중 예외 발생:', message);
+
+      logger.error({ message }, '🔥 로그인 중 예외 발생:');
       setError(message || '로그인 실패');
     } finally {
       setLoading(false);

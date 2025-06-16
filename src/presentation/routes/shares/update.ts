@@ -43,7 +43,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       return NextResponse.json({ success: false, error: err.message }, { status: err.statusCode });
     }
 
-    logger.error('❌ 예기치 못한 에러:', err);
+    logger.error({ err }, '❌ 예기치 못한 에러:');
     return NextResponse.json({ success: false, error: '서버 오류' }, { status: 500 });
   }
 }

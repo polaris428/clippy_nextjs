@@ -21,7 +21,7 @@ describe('PostCreateFolderUsecase', () => {
   beforeEach(() => jest.clearAllMocks()); // 매 테스트마다 mock 초기화
 
   it('createFolder를 호출하고 그대로 값을 돌려준다', async () => {
-    const dto = { name: 'Test', ownerId: 'u1', isShared: true };
+    const dto = { name: 'Test', ownerId: 'u1', isShared: true, isTemp: false, isInvite: false };
     const folder = {
       id: 'f1',
       name: 'Test',
@@ -44,6 +44,6 @@ describe('PostCreateFolderUsecase', () => {
   it('레포지토리에서 오류가 나면 그대로 throw한다', async () => {
     repo.createFolder.mockRejectedValue(new Error('DB down'));
 
-    await expect(usecase.execute({ name: 'Oops', ownerId: 'u1' })).rejects.toThrow('DB down');
+    await expect(usecase.execute({ name: 'Oops', ownerId: 'u1', isTemp: false, isInvite: false, isShared: false })).rejects.toThrow('DB down');
   });
 });

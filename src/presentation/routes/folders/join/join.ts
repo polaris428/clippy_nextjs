@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
 
     return res;
   } catch (err) {
-    logger.error('❌ 폴더 참가 실패:', err);
+    logger.error({ err }, '❌ 폴더 참가 실패:');
     return NextResponse.json({ error: '폴더 참가 실패' }, { status: 400 });
   }
 }

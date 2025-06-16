@@ -28,7 +28,8 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     if (err instanceof HttpError) {
       return NextResponse.json({ error: err.message }, { status: err.statusCode });
     }
-    logger.error('❌ 링크 수정 실패:', err instanceof Error ? err.message : err);
+
+    logger.error({ err }, '❌ 링크 수정 실패:');
     return NextResponse.json({ error: '서버 오류' }, { status: 500 });
   }
 }

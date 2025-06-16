@@ -1,4 +1,3 @@
-// src/lib/firebase/signInWithGoogle.ts
 import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from './client';
 import logger from '../logger/logger';
@@ -9,7 +8,7 @@ export const signInWithGoogle = async () => {
 
     return result.user;
   } catch (err) {
-    logger.error('로그인 실패:', err);
+    logger.error({ err }, '로그인 실패:');
     return null;
   }
 };

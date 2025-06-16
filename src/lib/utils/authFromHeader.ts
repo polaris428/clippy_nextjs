@@ -15,7 +15,7 @@ export async function tryParseAuthHeaderAndSetCookie(req: NextRequest): Promise<
     setAuthCookie(res, tokenFromHeader);
     return res;
   } catch (err) {
-    logger.warn('Authorization 헤더 토큰 검증 실패:', err);
+    logger.warn({ err }, 'Authorization 헤더 토큰 검증 실패:');
 
     return null;
   }

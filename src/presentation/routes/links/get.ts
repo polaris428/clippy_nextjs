@@ -21,7 +21,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   } catch (err) {
     if (err instanceof Response) return err;
 
-    logger.error('❌ 링크 조회 실패:', err instanceof Error ? err.message : err);
+    logger.error({ err }, '❌ 링크 조회 실패:');
     return NextResponse.json({ success: false, message: '서버 오류' }, { status: 500 });
   }
 }

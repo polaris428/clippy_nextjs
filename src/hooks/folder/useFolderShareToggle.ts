@@ -24,7 +24,7 @@ export function useFolderShareToggle({ folderId }: UseFolderShareToggleProps) {
         shareKey: nextValue ? folder.shareKey : '',
       });
     } catch (err) {
-      logger.error('📛 공유 상태 변경 실패:', err);
+      logger.error({ err }, '📛 공유 상태 변경 실패:');
       updateFolder(folderId, { isShared: false, shareKey: '' });
     }
   };

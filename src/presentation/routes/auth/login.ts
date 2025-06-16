@@ -12,6 +12,9 @@ import '@/infrastructure/di/container';
 import { setAuthCookie } from '@/lib/utils/cookies';
 import { verifyIdToken } from '@/lib/firebase';
 import { UnauthorizedError } from '@/lib/errors/UnauthorizedError';
+
+import { PostCreateUser } from '@/application/usecases/auth/PostCreateUser';
+import { PostCreateFolderUsecase } from '@/application/usecases/folder/PostCreateFolderUsecase';
 import logger from '@/lib/logger/logger';
 
 export async function POST() {
@@ -32,16 +35,25 @@ export async function POST() {
   try {
     const login = container.resolve(LoginUseCase);
     const user = await login.execute(decoded);
+    let userId = user?.id;
+    if (!user) {
+      const newUser = container.resolve(PostCreateUser);
+      const user = await newUser.execute(decoded);
+      userId = user?.id;
+      const newFolder = container.resolve(PostCreateFolderUsecase);
+      await newFolder.execute({ name: user.name + '개인 폴더', isTemp: false, ownerId: user.name, isInvite: false, isShared: false });
+    }
 
     const getAllFolderUsecase = container.resolve(GetAllFolderUsecase);
-    const { folders, sharedFolders } = await getAllFolderUsecase.execute(user.id);
+    const { folders, sharedFolders } = await getAllFolderUsecase.execute(userId!);
 
     const response = NextResponse.json({ user, folders, sharedFolders });
     setAuthCookie(response, token);
 
+    logger.info({ userId: user?.id, folders: folders.length, shared: sharedFolders.length }, '✅ 로그인 성공');
     return response;
   } catch (err) {
-    logger.error('❌ Login failed:', err);
+    logger.error({ err }, '❌ Login failed');
     return NextResponse.json({ error: 'Login failed' }, { status: 500 });
   }
 }

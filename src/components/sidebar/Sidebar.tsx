@@ -19,6 +19,7 @@ import SidebarTopNavButton from '../design-system/Button/SidebarButton/SidebarTo
 import { useNavigate } from '@/lib/utils/navigation';
 import logger from '@/lib/logger/logger';
 
+
 export default function Sidebar() {
     const pathname = usePathname();
     const currentFolderId = pathname.split('/folders/')[1]?.split('/')[0];
@@ -56,7 +57,8 @@ export default function Sidebar() {
                 }
             }
         } catch (err) {
-            logger.error('폴더 삭제 중 오류 발생:', err);
+
+            logger.error({ err }, '폴더 삭제 중 오류 발생:');
         }
 
         setTargetFolderId(null);

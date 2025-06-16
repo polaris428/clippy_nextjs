@@ -9,6 +9,9 @@ import { LinkService } from '@/services/LinkService';
 import type { Link } from '@/types/links/link';
 import logger from '@/lib/logger/logger';
 
+
+
+
 export default function EditLinkPage() {
     const params = useParams<{ id: string }>();
     const linkId = params.id;
@@ -50,13 +53,14 @@ export default function EditLinkPage() {
                 }
                 setLink(res);
 
-                // 🔄 서버에서 받아온 값을 상태에 반영
+
                 setUrl(res.url);
                 setTitle(res.title);
                 setDescription(res.description || '');
                 setFolderId(res.folderId);
-            } catch (e) {
-                logger.error('❌ 링크 조회 중 오류:', e);
+            } catch (err) {
+
+                logger.error({ err }, '❌ 링크 조회 중 오류:');
                 setError(true);
             }
         })();
