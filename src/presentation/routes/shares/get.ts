@@ -7,7 +7,7 @@ import { getCurrentUserOrThrow } from '@/lib/utils/getCurrentUserOrThrow';
 import { mergeCookies } from '@/lib/utils/mergeCookies';
 
 import { HttpError } from '@/lib/errors/HttpError';
-import { GetFolderSharesUsecase } from '@/application/usecases/folder/share/GetFolderSharesUsecase';
+import { GetFolderSharesUsecase } from '@/application/usecases/shateFolder/GetFolderSharesUsecase';
 import logger from '@/lib/logger/logger';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {

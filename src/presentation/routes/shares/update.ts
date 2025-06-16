@@ -8,7 +8,7 @@ import { mergeCookies } from '@/lib/utils/mergeCookies';
 import { HttpError } from '@/lib/errors/HttpError';
 
 import { FolderPermission } from '@prisma/client';
-import { UpdateCollaboratorPermissionUsecase } from '@/application/usecases/folder/share/UpdateCollaboratorPermissionUsecase';
+import { UpdateCollaboratorPermissionUsecase } from '@/application/usecases/shateFolder/UpdateCollaboratorPermissionUsecase';
 import logger from '@/lib/logger/logger';
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string; userId: string } }) {
