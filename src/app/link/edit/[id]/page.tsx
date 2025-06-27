@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useEditLinkForm } from '@/hooks/link/useEditLinkForm';
 import { LinkForm } from '@/components/LinkForm';
-import { LinkService } from '@/services/LinkService';
+import { LinkService } from '@/services/linkService';
 import type { Link } from '@/types/links/link';
 import logger from '@/lib/logger/logger';
 

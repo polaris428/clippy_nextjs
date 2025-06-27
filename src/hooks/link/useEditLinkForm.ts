@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/useAuthStore';
-import { LinkService } from '@/services/LinkService';
+import { LinkService } from '@/services/linkService';
 import logger from '@/lib/logger/logger';
 
 export function useEditLinkForm() {
