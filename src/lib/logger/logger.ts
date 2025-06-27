@@ -1,7 +1,7 @@
 import pino from 'pino';
 
 const logger = pino({
-  level: 'debug',
+  level: 'info',
 });
 
 export default logger;
