@@ -41,7 +41,7 @@ export async function POST() {
       const user = await newUser.execute(decoded);
       userId = user?.id;
       const newFolder = container.resolve(PostCreateFolderUsecase);
-      await newFolder.execute({ name: user.name + '개인 폴더', isTemp: false, ownerId: user.name, isInvite: false, isShared: false });
+      await newFolder.execute({ name: user.name + '개인 폴더', isTemp: false, ownerId: user.id, isInvite: false, isShared: false });
     }
 
     const getAllFolderUsecase = container.resolve(GetAllFolderUsecase);
