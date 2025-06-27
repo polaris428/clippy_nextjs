@@ -9,9 +9,6 @@ import { LinkService } from '@/services/LinkService';
 import type { Link } from '@/types/links/link';
 import logger from '@/lib/logger/logger';
 
-
-
-
 export default function EditLinkPage() {
     const params = useParams<{ id: string }>();
     const linkId = params.id;
@@ -34,10 +31,10 @@ export default function EditLinkPage() {
         setTitle,
         setDescription,
         setFolderId,
+        setLinkId,
         handleSubmit,
-    } = useEditLinkForm(link ?? ({} as Link));
+    } = useEditLinkForm();
 
-    // ✅ fetch 후 초기화 로직을 먼저 실행 가능하도록 위치 조정
     useEffect(() => {
         if (!user || !linkId) {
             router.push('/ko');
@@ -51,20 +48,19 @@ export default function EditLinkPage() {
                     setError(true);
                     return;
                 }
+
                 setLink(res);
-
-
+                setLinkId(res.id);
                 setUrl(res.url);
                 setTitle(res.title);
                 setDescription(res.description || '');
                 setFolderId(res.folderId);
             } catch (err) {
-
                 logger.error({ err }, '❌ 링크 조회 중 오류:');
                 setError(true);
             }
         })();
-    },);
+    }, [user, linkId, router, setLinkId, setUrl, setTitle, setDescription, setFolderId]);
 
     if (!user) return null;
     if (error) return <div className="text-red-500">링크를 불러올 수 없습니다.</div>;
@@ -72,7 +68,6 @@ export default function EditLinkPage() {
 
     return (
         <div className="max-w-4xl mx-auto py-14 px-8 space-y-8">
-
             <LinkForm
                 mode="edit"
                 url={url}

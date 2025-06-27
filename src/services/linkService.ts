@@ -47,7 +47,7 @@ export const LinkService = {
   },
   async getLinkById(linkId: string): Promise<Link> {
     try {
-      const res = await fetchWithFirebaseRetry(`/api/links/${linkId}`, {
+      const res = await fetch(`/api/links/${linkId}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

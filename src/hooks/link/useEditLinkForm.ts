@@ -1,28 +1,29 @@
+// src/hooks/link/useEditLinkForm.ts
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { LinkService } from '@/services/LinkService';
-import type { Link } from '@/types/links/link';
 import logger from '@/lib/logger/logger';
 
-export function useEditLinkForm(link: Link) {
-  const [url, setUrl] = useState(link.url);
-  const [title, setTitle] = useState(link.title);
-  const [description, setDescription] = useState(link.description || '');
-  const [image, setImage] = useState(link.thumbnail || '');
-  const [favicon, setFavicon] = useState(link.favicon || '');
-  const [folderId, setFolderId] = useState(link.folderId);
+export function useEditLinkForm() {
+  const [url, setUrl] = useState('');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [image, setImage] = useState('');
+  const [favicon, setFavicon] = useState('');
+  const [folderId, setFolderId] = useState('');
+  const [linkId, setLinkId] = useState<string>(''); // 추가
 
   const [isFetchingMeta, setIsFetchingMeta] = useState(false);
-  const [isMetadataFetched, setIsMetadataFetched] = useState(true); // 기존 메타데이터 있음
+  const [isMetadataFetched, setIsMetadataFetched] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
   const updateLink = useAuthStore(s => s.updateLinkInFolder);
 
-  const lastCrawledUrl = useRef(link.url);
+  const lastCrawledUrl = useRef('');
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -75,12 +76,12 @@ export function useEditLinkForm(link: Link) {
     setIsLoading(true);
 
     try {
-      const updatedLink = await LinkService.updateLink(link.id, {
+      const updatedLink = await LinkService.updateLink(linkId, {
         title,
         description,
       });
 
-      updateLink(folderId, link.id, updatedLink);
+      updateLink(folderId, linkId, updatedLink);
       router.push(`/folders/${folderId}`);
     } catch (err) {
       logger.error({ err }, '❌ 링크 수정 실패:');
@@ -104,6 +105,7 @@ export function useEditLinkForm(link: Link) {
     setTitle,
     setDescription,
     setFolderId,
+    setLinkId,
     handleSubmit,
   };
 }

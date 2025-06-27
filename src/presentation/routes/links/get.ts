@@ -10,7 +10,7 @@ import logger from '@/lib/logger/logger';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const linkId = params.id;
+    const linkId = (await params).id;
     const tempRes = await tryParseAuthHeaderAndSetCookie(req);
     await getCurrentUserOrThrow(req);
     const getLinkByIdUseCase = container.resolve(GetLinkByIdUseCase);
