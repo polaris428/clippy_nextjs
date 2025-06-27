@@ -10,9 +10,15 @@ import { HttpError } from '@/lib/errors/HttpError';
 import { GetFolderSharesUsecase } from '@/application/usecases/shateFolder/GetFolderSharesUsecase';
 import logger from '@/lib/logger/logger';
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+type Context = {
+  params: {
+    id: string;
+  };
+};
+
+export async function GET(req: NextRequest, context: Context) {
   try {
-    const folderId = params.id;
+    const folderId = context.params.id;
 
     const tempRes = await tryParseAuthHeaderAndSetCookie(req);
     const user = await getCurrentUserOrThrow(req);
