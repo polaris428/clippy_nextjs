@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback } from 'react';
-import { LinkService } from '@/services/LinkService';
+import { LinkService } from '@/services/linkService';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { Link } from '@/types/links/link';
 import logger from '@/lib/logger/logger';
