@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { NextRequest, NextResponse } from 'next/server';
 import { GetAllFolderUsecase } from '@/application/usecases/folder/GetAllFolderUsecase';
 import '@/infrastructure/di/container';
