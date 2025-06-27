@@ -8,9 +8,10 @@ import { tryParseAuthHeaderAndSetCookie } from '@/lib/utils/authFromHeader';
 import { mergeCookies } from '@/lib/utils/mergeCookies';
 import logger from '@/lib/logger/logger';
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
-    const linkId = (await params).id;
+    const { id } = await context.params;
+    const linkId = id;
     const tempRes = await tryParseAuthHeaderAndSetCookie(req);
     await getCurrentUserOrThrow(req);
     const getLinkByIdUseCase = container.resolve(GetLinkByIdUseCase);

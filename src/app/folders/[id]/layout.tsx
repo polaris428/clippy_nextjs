@@ -3,17 +3,9 @@
 import Sidebar from '@/components/sidebar/Sidebar';
 import AppHeader from '@/components/Header/AppHeader';
 import { useAuthStore } from '@/stores/useAuthStore';
-import { Folder } from '@/types/folder/folder';
-import { User } from '@/types/auth/user';
 import { useFetchCurrentUserData } from '@/hooks/user/useFetchCurrentUserData';
 
-interface FolderLayoutClientProps {
-  user: User;
-  folders: Folder[];
-  children: React.ReactNode;
-}
-
-export default function FolderLayoutClient({ children }: FolderLayoutClientProps) {
+export default function FolderLayoutClient({ children }: { children: React.ReactNode }) {
   const currentUser = useAuthStore((s) => s.user);
   useFetchCurrentUserData(currentUser);
   if (!currentUser) {

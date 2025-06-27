@@ -6,8 +6,9 @@ import { tryParseAuthHeaderAndSetCookie } from '@/lib/utils/authFromHeader';
 import { mergeCookies } from '@/lib/utils/mergeCookies';
 import logger from '@/lib/logger/logger';
 
-export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const linkId = (await params).id;
+export async function DELETE(req: NextRequest, context: { params: Promise<{ id: string }> }) {
+  const { id } = await context.params;
+  const linkId = id;
   try {
     const tempRes = await tryParseAuthHeaderAndSetCookie(req);
     const user = await getCurrentUserOrThrow(req);

@@ -8,14 +8,14 @@ import { mergeCookies } from '@/lib/utils/mergeCookies';
 import { PostDeleteFolderUsecase } from '@/application/usecases/folder/PostDeleteFolderUsecase';
 import logger from '@/lib/logger/logger';
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     const tempRes = await tryParseAuthHeaderAndSetCookie(req);
     const user = await getCurrentUserOrThrow(req);
-    const folderId = params.id;
+    const { id } = await context.params;
 
     const deleteFolderUsecase = container.resolve(PostDeleteFolderUsecase);
-    const { deletedFolder, isShared } = await deleteFolderUsecase.execute(user.id, folderId);
+    const { deletedFolder, isShared } = await deleteFolderUsecase.execute(user.id, id);
 
     const res = NextResponse.json({
       success: true,

@@ -11,10 +11,9 @@ import { FolderPermission } from '@prisma/client';
 import { UpdateCollaboratorPermissionUsecase } from '@/application/usecases/shateFolder/UpdateCollaboratorPermissionUsecase';
 import logger from '@/lib/logger/logger';
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string; userId: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string; userId: string }> }) {
   try {
-    const folderId = params.id;
-    const targetUserId = params.userId;
+    const { id: folderId, userId: targetUserId } = await params;
 
     const tempRes = await tryParseAuthHeaderAndSetCookie(req);
     const currentUser = await getCurrentUserOrThrow(req);

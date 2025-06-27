@@ -9,18 +9,14 @@ import { mergeCookies } from '@/lib/utils/mergeCookies';
 import { GetFolderIdUsecase } from '@/application/usecases/folder/GetFolderIdUsecase';
 import { HttpError } from '@/lib/errors/HttpError';
 import logger from '@/lib/logger/logger';
-type Context = {
-  params: {
-    id: string;
-  };
-};
-export async function GET(req: NextRequest, context: Context) {
+
+export async function GET(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
-    const folderId = (await context.params).id;
+    const { id } = await context.params;
     const tempRes = await tryParseAuthHeaderAndSetCookie(req);
     const user = await getCurrentUserOrThrow(req);
     const getFolderIdUsecase = container.resolve(GetFolderIdUsecase);
-    const data = await getFolderIdUsecase.execute({ userId: user.id, folderId: folderId });
+    const data = await getFolderIdUsecase.execute({ userId: user.id, folderId: id });
 
     const res = NextResponse.json({
       success: true,

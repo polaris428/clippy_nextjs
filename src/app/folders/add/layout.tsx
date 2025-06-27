@@ -2,13 +2,10 @@
 
 import AppHeader from '@/components/Header/AppHeader';
 import { useAuthStore } from '@/stores/useAuthStore';
-import { Folder } from '@/types/folder/folder';
-import { User } from '@/types/auth/user';
 import { useFetchCurrentUserData } from '@/hooks/user/useFetchCurrentUserData';
 
 interface FolderLayoutClientProps {
-    user: User;
-    folders: Folder[];
+
     children: React.ReactNode;
 }
 

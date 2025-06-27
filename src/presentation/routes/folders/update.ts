@@ -10,13 +10,13 @@ import { PatchUpdateFolderUsecase } from '@/application/usecases/folder/PatchUpd
 import { FolderUpdateDto, FolderUpdateDtoKeys } from '@/types/dto/folder/FolderUpdateDto';
 import logger from '@/lib/logger/logger';
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     const tempRes = await tryParseAuthHeaderAndSetCookie(req);
     const user = await getCurrentUserOrThrow(req);
 
-    const folderId = params.id;
-
+    const { id } = await context.params;
+    const folderId = id;
     const getFolderIdUsecase = container.resolve(GetFolderIdUsecase);
     await getFolderIdUsecase.execute({ userId: user.id, folderId: folderId });
 
