@@ -18,6 +18,10 @@ import { PostCreateFolderUsecase } from '@/application/usecases/folder/PostCreat
 import logger from '@/lib/logger/logger';
 
 export async function POST() {
+  console.log('test');
+  logger.info('test');
+  logger.warn('test');
+  logger.error('test');
   const headerStore = headers();
   const rawAuth = (await headerStore).get('authorization');
   const token = rawAuth?.replace('Bearer ', '');
