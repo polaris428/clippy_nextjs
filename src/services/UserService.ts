@@ -1,7 +1,8 @@
+import { fetchWithFirebaseRetry } from '@/lib/utils/fetchWithAuthRetry';
 import { LoginResponse } from '@/types/auth/loginResponse';
 export const UserService = {
   async getMe(): Promise<LoginResponse> {
-    const res = await fetch('/api/auth/me', {
+    const res = await fetchWithFirebaseRetry('/api/auth/me', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -11,7 +12,7 @@ export const UserService = {
   },
 
   async postLogIn(token: string): Promise<LoginResponse> {
-    const res = await fetch('/api/auth/login', {
+    const res = await fetchWithFirebaseRetry('/api/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

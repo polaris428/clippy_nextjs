@@ -31,7 +31,7 @@ export const FolderService = {
 
   async updateFolder(folderId: string, update: FolderUpdateDto): Promise<Folder> {
     try {
-      const res = await fetch(`/api/folders/${folderId}`, {
+      const res = await fetchWithFirebaseRetry(`/api/folders/${folderId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -53,14 +53,14 @@ export const FolderService = {
   },
 
   async getFolderById(id: string) {
-    const res = await fetch(`/api/folders/${id}`, { credentials: 'include' });
+    const res = await fetchWithFirebaseRetry(`/api/folders/${id}`, { credentials: 'include' });
     const data = await res.json();
     if (!res.ok) throw new Error('폴더 조회 실패');
     return await data;
   },
 
   async generateInviteCode(id: string, isInvite: boolean): Promise<string> {
-    const res = await fetch(`/api/folders/${id}`, {
+    const res = await fetchWithFirebaseRetry(`/api/folders/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

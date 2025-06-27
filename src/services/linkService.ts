@@ -36,7 +36,7 @@ export const LinkService = {
   },
 
   async deleteLink(linkId: string): Promise<void> {
-    const res = await fetch(`/api/links/${linkId}`, {
+    const res = await fetchWithFirebaseRetry(`/api/links/${linkId}`, {
       method: 'DELETE',
       credentials: 'include',
     });
@@ -47,7 +47,7 @@ export const LinkService = {
   },
   async getLinkById(linkId: string): Promise<Link> {
     try {
-      const res = await fetch(`/api/links/${linkId}`, {
+      const res = await fetchWithFirebaseRetry(`/api/links/${linkId}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -69,7 +69,7 @@ export const LinkService = {
 
   async updateLink(linkId: string, data: Partial<Pick<Link, 'title' | 'description' | 'isPin'>>): Promise<Link> {
     try {
-      const res = await fetch(`/api/links/${linkId}`, {
+      const res = await fetchWithFirebaseRetry(`/api/links/${linkId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
